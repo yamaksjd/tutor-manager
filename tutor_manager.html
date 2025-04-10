@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutoring Center Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tutor_manager.css">
+</head>
+<body>
+  <header>Tutoring Center Manager</header>
+  <main>
+    <aside class="sidebar">
+      <h2>Students</h2>
+      <ul class="student-list">
+        <li>Alice</li>
+        <li>Bob</li>
+        <li>Charlie</li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <div class="section">
+        <h3>Add New Session</h3>
+        <form id="sessionForm">
+          <select name="student" id="student-selection" required>
+            <option value="">Select Student</option>
+            <option value="Alice">Alice</option>
+            <option value="Bob">Bob</option>
+            <option value="Charlie">Charlie</option>
+          </select>
+          <input type="date" name="date" id="date" required />
+          <input type="number" name="duration" id="duration" step="0.25" placeholder="Duration (hours)" required />
+          <button type="submit">Save Session</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h3>Session History</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Total ($)</th>
+            </tr>
+          </thead>
+          <tbody id="sessionTable">
+            <!-- JS will populate rows here -->
+          </tbody>
+        </table>
+
+        <div class="summary">
+          <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
+          <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
