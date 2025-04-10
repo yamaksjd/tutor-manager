@@ -1,5 +1,5 @@
 window.addEventListener("load", () => {
-    const form = getElementById("sessionForm")
+    const form = document.getElementById("sessionForm")
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         const student = document.getElementById("student-selection").value
