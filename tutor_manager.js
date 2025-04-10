@@ -10,7 +10,6 @@ window.addEventListener("load", () => {
             alert("Please fill out all of the requirements in the form")
             return;
         }
-
+        console.log("Form submitted! " + student +" "+ date + " "+ duration)
     })
-    console.log("Form submitted! " + student +" "+ date + " " + duration)
 })
