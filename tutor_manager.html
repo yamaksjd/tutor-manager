@@ -11,62 +11,53 @@
   <header>Tutoring Center Manager</header>
   <main>
     <aside class="sidebar">
-      <h2>Students</h2>
-      <ul class="student-list">
-        <li>Alice</li>
-        <li>Bob</li>
-        <li>Charlie</li>
-      </ul>
+      <nav>
+        <ul class="nav">
+          <li data-view="home" class="active">Home</li>
+          <li data-view="students">Students</li>
+          <li data-view="tutors">Tutors</li>
+        </ul>
+      </nav>
+
+      <div class="list-container">
+        <div id="student-list-view" class="list-view">
+          <h2>Students</h2>
+          <ul class="student-list">
+            <li class="clickable" data-type="student">Alice</li>
+            <li class="clickable" data-type="student">Bob</li>
+            <li class="clickable" data-type="student">Charlie</li>
+          </ul>
+        </div>
+
+        <div id="tutor-list-view" class="list-view hidden">
+          <h2>Tutors</h2>
+          <ul class="tutor-list">
+            <li class="clickable" data-type="tutor">Maria</li>
+            <li class="clickable" data-type="tutor">John</li>
+            <li class="clickable" data-type="tutor">Lina</li>
+          </ul>
+        </div>
+      </div>
     </aside>
 
     <section class="content">
-      <div class="section">
-        <h3>Add New Session</h3>
-        <form id="sessionForm">
-          <select name="student" id="student-selection" required>
-            <option value="">Select Student</option>
-            <option value="Alice">Alice</option>
-            <option value="Bob">Bob</option>
-            <option value="Charlie">Charlie</option>
-          </select>
-        
-          <select name="tutor" id="tutor-selection" required>
-            <option value="">Select Tutor</option>
-            <option value="Maria">Maria</option>
-            <option value="John">John</option>
-            <option value="Lina">Lina</option>
-          </select>
-        
-          <input type="date" name="date" id="date" required />
-          <input type="number" name="duration" id="duration" step="0.25" placeholder="Duration (hours)" required />
-          
-          <button type="submit">Save Session</button>
-        </form>        
+      <div id="home-view" class="view">
+        <!-- Session Form and History (same as before) -->
+        <!-- Keep your form and table here -->
       </div>
 
-      <div class="section">
-        <h3>Session History</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Student</th>
-              <th>Duration</th>
-              <th>Total ($)</th>
-            </tr>
-          </thead>
-          <tbody id="sessionTable">
-            <!-- JS will populate rows here -->
-          </tbody>
-        </table>
+      <div id="student-details" class="view hidden">
+        <h3>Student Details</h3>
+        <p id="student-info"></p>
+      </div>
 
-        <div class="summary">
-          <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
-          <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
-        </div>
+      <div id="tutor-details" class="view hidden">
+        <h3>Tutor Details</h3>
+        <p id="tutor-info"></p>
       </div>
     </section>
   </main>
   <script src="tutor_manager.js"></script>
 </body>
+
 </html>

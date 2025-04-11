@@ -117,4 +117,33 @@
   form select#tutor-selection {
     margin-bottom: 1rem;
   }
+
+  .nav {
+    list-style: none;
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+  
+  .nav li {
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: 0.3rem;
+    font-weight: 500;
+  }
+  
+  .nav li.active {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .list-view.hidden,
+  .view.hidden {
+    display: none;
+  }
+  
+  .clickable {
+    cursor: pointer;
+  }
   
