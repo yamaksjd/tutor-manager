@@ -113,3 +113,8 @@
     background-color: #f3f4f6;
     border-radius: 0.5rem;
   }
+
+  form select#tutor-selection {
+    margin-bottom: 1rem;
+  }
+  
