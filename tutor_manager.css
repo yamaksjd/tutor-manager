@@ -1,149 +1,152 @@
+/* RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
-  body {
-    background-color: #f9fafb;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+body {
+  background-color: #f9fafb;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  header {
-    background-color: #1f2937;
-    color: white;
-    padding: 1rem 2rem;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
+header {
+  background-color: #1f2937;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
 
-  main {
-    flex: 1;
-    display: flex;
-    padding: 2rem;
-    gap: 2rem;
-  }
+main {
+  flex: 1;
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+}
 
-  .sidebar {
-    width: 200px;
-    background: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
+/* SIDEBAR */
+.sidebar {
+  width: 200px;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
 
-  .sidebar h2 {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
+.sidebar nav ul {
+  list-style: none;
+}
 
-  .student-list {
-    list-style: none;
-  }
+.sidebar nav li {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  background-color: #f3f4f6;
+  border-radius: 0.3rem;
+  transition: background-color 0.2s;
+}
 
-  .student-list li {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: #f3f4f6;
-    border-radius: 0.3rem;
-  }
+.sidebar nav li:hover,
+.sidebar nav li.active {
+  background-color: #e0e7ff;
+}
 
-  .content {
-    flex: 1;
-    background: white;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
+/* CONTENT AREA */
+.content {
+  flex: 1;
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
 
-  .section {
-    margin-bottom: 2rem;
-  }
+.section {
+  margin-bottom: 2rem;
+}
 
-  .section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
+.section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
 
-  form input, form select, form button {
-    display: block;
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.3rem;
-    font-size: 1rem;
-  }
+form input, form select, form button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
 
-  form button {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+form button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
-  form button:hover {
-    background-color: #2563eb;
-  }
+form button:hover {
+  background-color: #2563eb;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  table th, table td {
-    padding: 0.75rem;
-    border: 1px solid #e5e7eb;
-    text-align: left;
-  }
+table th, table td {
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
 
-  table th {
-    background-color: #f3f4f6;
-  }
+table th {
+  background-color: #f3f4f6;
+}
 
-  .summary {
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: #f3f4f6;
-    border-radius: 0.5rem;
-  }
+.summary {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+}
 
-  form select#tutor-selection {
-    margin-bottom: 1rem;
-  }
+/* STUDENT AND TUTOR LIST */
+.student-list,
+.tutor-list {
+  list-style: none;
+  margin-top: 1rem;
+}
 
-  .nav {
-    list-style: none;
-    margin-bottom: 1rem;
-    padding: 0;
-  }
-  
-  .nav li {
-    cursor: pointer;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    background-color: #f3f4f6;
-    border-radius: 0.3rem;
-    font-weight: 500;
-  }
-  
-  .nav li.active {
-    background-color: #3b82f6;
-    color: white;
-  }
-  
-  .list-view.hidden,
-  .view.hidden {
-    display: none;
-  }
-  
-  .clickable {
-    cursor: pointer;
-  }
-  
+.student-list li,
+.tutor-list li {
+  margin-bottom: 0.5rem;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.student-list li:hover,
+.tutor-list li:hover {
+  background-color: #e5e7eb;
+}
+
+/* VIEWS */
+.view {
+  display: none;
+}
+
+.view:not(.hidden) {
+  display: block;
+}
