@@ -66,7 +66,7 @@ window.addEventListener("load", () => {
       durationUI.textContent = session.duration;
       newTableRow.appendChild(durationUI)
       const paidUI = document.createElement("td");
-      paidUI.textContent = session.paid ? "Yes" : "No";
+      paidUI.textContent = session.paid ? "Received" : "Not Received";
       newTableRow.appendChild(paidUI)
       const totalUI = document.createElement("td");
       totalUI.textContent = session.total;
