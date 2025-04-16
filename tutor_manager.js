@@ -16,13 +16,21 @@ window.addEventListener("load", () => {
       const student = document.getElementById("student-selection").value;
       const tutor = document.getElementById("tutor-selection").value;
       const date = document.getElementById("date").value;
-      const duration = parseFloat(document.getElementById("duration").value);
+      const durationRaw = document.getElementById("duration").value
+      const duration = parseFloat(durationRaw);
       
-      if (!student || !tutor || !date || !duration) {
+      console.log("student:", student);
+      console.log("tutor:", tutor);
+      console.log("date:", date);
+      console.log("durationRaw (before parse):", durationRaw);
+      console.log("duration (after parse):", duration);
+      console.log("isNaN(duration)?", isNaN(duration));
+
+      if (!student || !tutor || !date || isNaN(duration) || duration<=0) {
         alert("Please fill out all of the requirements in the form");
         return;
       }
-      
+
       /*
       // Get rate from selected tutor
       const rate = tutorRates[tutor];
@@ -71,7 +79,7 @@ window.addEventListener("load", () => {
       const currentAmount = parseFloat(totalAmountEl.textContent);
       totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
       const totalHours = document.getElementById("totalHours");
-      const currentHours = parseInt(totalHours.textContent);
+      const currentHours = parseFloat(totalHours.textContent);
       totalHours.textContent = (currentHours + session.duration);
 
       */
