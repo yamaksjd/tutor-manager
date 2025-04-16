@@ -44,7 +44,7 @@ window.addEventListener("load", () => {
       i++;
 
       //update UI 
-      const sessionsTable = document.getElementsById("sessionTable") 
+      const sessionsTable = document.getElementById("sessionTable") 
       const newTableRow = document.createElement("tr");
       const dateUI = document.createElement("td");
       dateUI.textContent(session.date);
