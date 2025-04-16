@@ -67,6 +67,10 @@ window.addEventListener("load", () => {
       newTableRow.appendChild(durationUI)
       const paidUI = document.createElement("td");
       paidUI.textContent = session.paid ? "Received" : "Not Received";
+      const paidCheckbox = document.createElement("input");
+      paidCheckbox.type = "checkbox";
+      paidCheckbox.checked = session.paid;
+      paidUI.appendChild(paidCheckbox);
       newTableRow.appendChild(paidUI)
       const totalUI = document.createElement("td");
       totalUI.textContent = session.total;
