@@ -31,7 +31,7 @@ window.addEventListener("load", () => {
         return;
       }
 
-      /*
+      
       // Get rate from selected tutor
       const rate = tutorRates[tutor];
       const total = duration * rate;
@@ -82,7 +82,6 @@ window.addEventListener("load", () => {
       const currentHours = parseFloat(totalHours.textContent);
       totalHours.textContent = (currentHours + session.duration);
 
-      */
     });
   });
   
