@@ -1,7 +1,9 @@
 window.addEventListener("load", () => {
     const form = document.getElementById("sessionForm");
-  
-    // Define tutor rates
+    //creation of array to store sessions - change to localStorage() later
+    let sessions = [];
+
+    // Define tutor rates - change later 
     const tutorRates = {
       Maria: 20,
       John: 25,
@@ -32,12 +34,44 @@ window.addEventListener("load", () => {
         date,
         duration,
         rate,
-        total
+        total, 
+        paid: false
       };
-  
-      console.log("Session created:", session);
-  
-      // Next step: append this to the table & update totals
+      
+      //storing session object created in temporary array 
+      i = 0;
+      sessions[i] = session;
+      i++;
+
+      //update UI 
+      const sessionsTable = document.getElementsById("sessionTable") 
+      const newTableRow = document.createElement("tr");
+      const dateUI = document.createElement("td");
+      dateUI.textContent(session.date);
+      newTableRow.appendChild(dateUI)
+      const studentUI = document.createElement("td");
+      studentUI.textContent(session.student);
+      newTableRow.appendChild(studentUI)
+      const durationUI = document.createElement("td");
+      durationUI.textContent(session.duration);
+      newTableRow.appendChild(durationUI)
+      const tutorUI = document.createElement("td");
+      tutorUI.textContent(session[tutor]);
+      newTableRow.appendChild(tutorUI)
+      const totalUI = document.createElement("td");
+      totalUI.textContent(session[total]);
+      newTableRow.appendChild(totalUI)
+      const paidUI = document.createElement("td");
+      paidUI.textContent(session[paid]);
+      newTableRow.appendChild(paidUI)
+      sessionsTable.appendChild(newTableRow)
+
+      // update totals 
+
+      const totalAmount = document.getElementById("totalAmount").value;
+      totalAmount += session[total];
+      const totalHours = document.getElementById("totalHours").value;
+      totalHours += session[duration];
     });
   });
   
