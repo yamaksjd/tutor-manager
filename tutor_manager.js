@@ -39,39 +39,39 @@ window.addEventListener("load", () => {
       };
       
       //storing session object created in temporary array 
-      i = 0;
-      sessions[i] = session;
-      i++;
+      sessions.push(session);
 
       //update UI 
       const sessionsTable = document.getElementById("sessionTable") 
       const newTableRow = document.createElement("tr");
       const dateUI = document.createElement("td");
-      dateUI.textContent(session.date);
+      dateUI.textContent = session.date;
       newTableRow.appendChild(dateUI)
       const studentUI = document.createElement("td");
-      studentUI.textContent(session.student);
+      studentUI.textContent = session.student;
       newTableRow.appendChild(studentUI)
       const durationUI = document.createElement("td");
-      durationUI.textContent(session.duration);
+      durationUI.textContent = session.duration;
       newTableRow.appendChild(durationUI)
       const tutorUI = document.createElement("td");
-      tutorUI.textContent(session[tutor]);
+      tutorUI.textContent = session.tutor;
       newTableRow.appendChild(tutorUI)
       const totalUI = document.createElement("td");
-      totalUI.textContent(session[total]);
+      totalUI.textContent = session.total;
       newTableRow.appendChild(totalUI)
       const paidUI = document.createElement("td");
-      paidUI.textContent(session[paid]);
+      paidUI.textContent = session.paid;
       newTableRow.appendChild(paidUI)
       sessionsTable.appendChild(newTableRow)
 
       // update totals 
 
-      const totalAmount = document.getElementById("totalAmount").value;
-      totalAmount += session[total];
-      const totalHours = document.getElementById("totalHours").value;
-      totalHours += session[duration];
+      const totalAmountEl = document.getElementById("totalAmount");
+      const currentAmount = parseFloat(totalAmountEl.textContent);
+      totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
+      const totalHours = document.getElementById("totalHours");
+      const currentHours = parseInt(totalHours.textContent);
+      totalHours.textContent = (currentHours + session.duration);
     });
   });
   
