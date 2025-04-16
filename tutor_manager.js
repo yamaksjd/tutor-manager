@@ -16,13 +16,14 @@ window.addEventListener("load", () => {
       const student = document.getElementById("student-selection").value;
       const tutor = document.getElementById("tutor-selection").value;
       const date = document.getElementById("date").value;
-      const duration = parseFloat(document.getElementById("duration").textContent);
-  
+      const duration = parseFloat(document.getElementById("duration").value);
+      
       if (!student || !tutor || !date || !duration) {
         alert("Please fill out all of the requirements in the form");
         return;
       }
-  
+      
+      /*
       // Get rate from selected tutor
       const rate = tutorRates[tutor];
       const total = duration * rate;
@@ -72,6 +73,8 @@ window.addEventListener("load", () => {
       const totalHours = document.getElementById("totalHours");
       const currentHours = parseInt(totalHours.textContent);
       totalHours.textContent = (currentHours + session.duration);
+
+      */
     });
   });
   
