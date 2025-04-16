@@ -16,7 +16,7 @@ window.addEventListener("load", () => {
       const student = document.getElementById("student-selection").value;
       const tutor = document.getElementById("tutor-selection").value;
       const date = document.getElementById("date").value;
-      const duration = parseFloat(document.getElementById("duration").value);
+      const duration = parseFloat(document.getElementById("duration").textContent);
   
       if (!student || !tutor || !date || !duration) {
         alert("Please fill out all of the requirements in the form");
@@ -60,7 +60,7 @@ window.addEventListener("load", () => {
       totalUI.textContent = session.total;
       newTableRow.appendChild(totalUI)
       const paidUI = document.createElement("td");
-      paidUI.textContent = session.paid;
+      paidUI.textContent = session.paid ? "Yes" : "No";
       newTableRow.appendChild(paidUI)
       sessionsTable.appendChild(newTableRow)
 
