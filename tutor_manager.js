@@ -59,18 +59,18 @@ window.addEventListener("load", () => {
       const studentUI = document.createElement("td");
       studentUI.textContent = session.student;
       newTableRow.appendChild(studentUI)
-      const durationUI = document.createElement("td");
-      durationUI.textContent = session.duration;
-      newTableRow.appendChild(durationUI)
       const tutorUI = document.createElement("td");
       tutorUI.textContent = session.tutor;
       newTableRow.appendChild(tutorUI)
-      const totalUI = document.createElement("td");
-      totalUI.textContent = session.total;
-      newTableRow.appendChild(totalUI)
+      const durationUI = document.createElement("td");
+      durationUI.textContent = session.duration;
+      newTableRow.appendChild(durationUI)
       const paidUI = document.createElement("td");
       paidUI.textContent = session.paid ? "Yes" : "No";
       newTableRow.appendChild(paidUI)
+      const totalUI = document.createElement("td");
+      totalUI.textContent = session.total;
+      newTableRow.appendChild(totalUI)
       sessionsTable.appendChild(newTableRow)
 
       // update totals 
