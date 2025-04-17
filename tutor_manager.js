@@ -69,6 +69,7 @@ window.addEventListener("load", () => {
       const paidText = document.createElement("span");
       paidText.textContent = session.paid ? "Received" : "Not Received";
       paidText.style.margin = "10px"; 
+      paidUI.appendChild(paidText);
       const paidCheckbox = document.createElement("input");
       paidCheckbox.type = "checkbox";
       paidCheckbox.checked = session.paid;
