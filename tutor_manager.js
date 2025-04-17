@@ -66,9 +66,9 @@ window.addEventListener("load", () => {
       durationUI.textContent = session.duration;
       newTableRow.appendChild(durationUI)
       const paidUI = document.createElement("td");
-      let paidText = paidUI.textContent 
-      paidText = session.paid ? "Received" : "Not Received";
-      paidText.style.marginRight = "10px"; 
+      const paidText = document.createElement("span");
+      paidText.textContent = session.paid ? "Received" : "Not Received";
+      paidText.style.margin = "10px"; 
       const paidCheckbox = document.createElement("input");
       paidCheckbox.type = "checkbox";
       paidCheckbox.checked = session.paid;
