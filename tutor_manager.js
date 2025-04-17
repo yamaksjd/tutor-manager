@@ -90,5 +90,12 @@ window.addEventListener("load", () => {
       totalHours.textContent = (currentHours + session.duration);
 
     });
+
+    /*
+    paidCheckbox.addEventListener("click",(e) => {
+      e.preventDefault();
+      session.paid = 
+    })
+    */
   });
   
