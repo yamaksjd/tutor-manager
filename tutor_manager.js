@@ -51,34 +51,55 @@ window.addEventListener("load", () => {
       sessions.push(session);
 
       //update UI 
+
       const sessionsTable = document.getElementById("sessionTable") 
+      //creating new row
       const newTableRow = document.createElement("tr");
+
+      // putting data column
       const dateUI = document.createElement("td");
       dateUI.textContent = session.date;
       newTableRow.appendChild(dateUI)
+
+      // adding student column
       const studentUI = document.createElement("td");
       studentUI.textContent = session.student;
       newTableRow.appendChild(studentUI)
+
+      //adding tutor column
       const tutorUI = document.createElement("td");
       tutorUI.textContent = session.tutor;
       newTableRow.appendChild(tutorUI)
+
+      //adding duration column
       const durationUI = document.createElement("td");
       durationUI.textContent = session.duration;
       newTableRow.appendChild(durationUI)
+
+      //adding paid column text and checkbox
       const paidUI = document.createElement("td");
+
+      // paid text
       const paidText = document.createElement("span");
       paidText.textContent = session.paid ? "Received" : "Not Received";
       paidText.style.margin = "10px"; 
+
+      //paid checkbox
       paidUI.appendChild(paidText);
       const paidCheckbox = document.createElement("input");
       paidCheckbox.type = "checkbox";
+
+      //setting checkbox state based on session object (false by default)
       paidCheckbox.checked = session.paid;
+      paidCheckbox.setAttribute("data-id",session.id);
       paidUI.appendChild(paidCheckbox);
-      newTableRow.appendChild(paidUI)
+      newTableRow.appendChild(paidUI);
+
+      //making total column (money made in that specific session)
       const totalUI = document.createElement("td");
       totalUI.textContent = session.total;
-      newTableRow.appendChild(totalUI)
-      sessionsTable.appendChild(newTableRow)
+      newTableRow.appendChild(totalUI);
+      sessionsTable.appendChild(newTableRow);
 
       // update totals 
 
@@ -91,11 +112,16 @@ window.addEventListener("load", () => {
 
     });
 
-    /*
-    paidCheckbox.addEventListener("click",(e) => {
+    document.getElementById("sessionTable").addEventListener("change", (e) => {
       e.preventDefault();
-      session.paid = 
-    })
-    */
+      if (e.target.type === "checkbox") {
+        const sessionId = parseInt(e.target.getAttribute("data-id"));
+        const sessionToUpdate = sessions.find((s) => s.id === sessionId);
+        sessionToUpdate.paid = e.target.checked;
+        const paidText2 = e.target.parentElement.querySelector("span");
+        paidText2.textContent = e.target.checked ? "Received" : "Not Received";
+      }
+    });
+    
   });
   
