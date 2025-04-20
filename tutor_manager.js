@@ -101,7 +101,7 @@ window.addEventListener("load", () => {
       newTableRow.appendChild(totalUI);
       sessionsTable.appendChild(newTableRow);
 
-      // update totals 
+      // update total Amount and Hours
 
       const totalAmountEl = document.getElementById("totalAmount");
       const currentAmount = parseFloat(totalAmountEl.textContent);
@@ -109,6 +109,22 @@ window.addEventListener("load", () => {
       const totalHours = document.getElementById("totalHours");
       const currentHours = parseFloat(totalHours.textContent);
       totalHours.textContent = (currentHours + session.duration);
+
+      // update total received
+
+      const totalReceivedEl = document.getElementById("totalReceived");
+      const receivedcurrentAmount = parseFloat(totalReceivedEl.textContent);
+      if(session.paid === true) {
+        totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
+      }
+
+      // update total not received
+
+      const totalNotReceivedEl = document.getElementById("totalNotReceived");
+      const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
+      if(session.paid === false) {
+        totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
+      }
 
     });
 
@@ -120,8 +136,37 @@ window.addEventListener("load", () => {
         sessionToUpdate.paid = e.target.checked;
         const paidText2 = e.target.parentElement.querySelector("span");
         paidText2.textContent = e.target.checked ? "Received" : "Not Received";
+
+        updateTotals();
       }
     });
     
+    function updateTotals() {
+      // get totals from DOM
+      const totalAmountEl = document.getElementById("totalAmount");
+      const totalReceivedEl = document.getElementById("totalReceived");
+      const totalNotReceivedEl = document.getElementById("totalNotReceived");
+
+      // define current values
+      const total = parseFloat(totalAmountEl.textContent);
+      const totalReceived = parseFloat(totalReceivedEl.textContent)
+      const totalNotReceived = parseFloat(totalNotReceivedEl.textContent)
+
+      //loop through array for summing totals 
+      for(i=0; i<sessions.length; i++) {
+        total += sessions[i].total;
+        if(sessions[i].paid === true) {
+          totalReceived += sessions[i].total;
+        } else {
+          totalNotReceived += sessions[i].total;
+        }
+
+        //update in the DOM
+        totalAmountEl.textContent = (total).toFixed(2);
+        totalReceivedEl.textContent = (totalReceived).toFixed(2); 
+        totalNotReceivedEl.textContent = (totalNotReceived).toFixed(2); 
+
+      }
+    }
   });
   
