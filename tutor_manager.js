@@ -142,15 +142,10 @@ window.addEventListener("load", () => {
     });
     
     function updateTotals() {
-      // get totals from DOM
-      const totalAmountEl = document.getElementById("totalAmount");
-      const totalReceivedEl = document.getElementById("totalReceived");
-      const totalNotReceivedEl = document.getElementById("totalNotReceived");
-
       // define current values
-      const total = parseFloat(totalAmountEl.textContent);
-      const totalReceived = parseFloat(totalReceivedEl.textContent)
-      const totalNotReceived = parseFloat(totalNotReceivedEl.textContent)
+      let total = 0;
+      let totalReceived = 0;
+      let totalNotReceived = 0;
 
       //loop through array for summing totals 
       for(i=0; i<sessions.length; i++) {
@@ -162,6 +157,10 @@ window.addEventListener("load", () => {
         }
 
         //update in the DOM
+        const totalAmountEl = document.getElementById("totalAmount");
+        const totalReceivedEl = document.getElementById("totalReceived");
+        const totalNotReceivedEl = document.getElementById("totalNotReceived");
+
         totalAmountEl.textContent = (total).toFixed(2);
         totalReceivedEl.textContent = (totalReceived).toFixed(2); 
         totalNotReceivedEl.textContent = (totalNotReceived).toFixed(2); 
