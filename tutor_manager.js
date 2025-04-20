@@ -167,5 +167,20 @@ window.addEventListener("load", () => {
 
       }
     }
+
+    document.getElementById("nav-home").addEventListener("click", () => showView("home-view"))
+    document.getElementById("nav-students").addEventListener("click", () => showView("students-view"))
+    document.getElementById("nav-tutors").addEventListener("click", () => showView("tutors-view"))
+
+    function showView(viewId) {
+      //put all views none
+      document.getElementById("home-view").style.display = "none";
+      document.getElementById("students-view").style.display = "none";
+      document.getElementById("tutors-view").style.display = "none";
+
+      //activate selected view
+      document.getElementById(viewId).style.display = "block";
+
+    }
   });
   
