@@ -123,7 +123,7 @@ window.addEventListener("load", () => {
       const totalNotReceivedEl = document.getElementById("totalNotReceived");
       const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
       if(session.paid === false) {
-        totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
+        totalNotReceivedEl.textContent = (notReceivedCurrentAmount + session.total).toFixed(2); 
       }
 
     });
