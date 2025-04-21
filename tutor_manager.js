@@ -181,6 +181,22 @@ window.addEventListener("load", () => {
       //activate selected view
       document.getElementById(viewId).style.display = "block";
 
+      // remove active class from all the navigation buttons
+      document.querySelectorAll(".sidebar nav li").forEach((el) => el.classList.remove("active"));
+
+      //add active class to active tab
+      switch(viewId) {
+        case viewId === "nav-home": 
+          document.getElementById("nav-home").classlist.add("active")
+          break
+        case viewId === "nav-students":
+          document.getElementById("nav-students").classlist.add("active")
+          break
+        case viewId === "nav-tutors": 
+          document.getElementById("nav-tutors").classlist.add("active")
+          break
+      }
+
     }
   });
   
