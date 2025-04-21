@@ -186,13 +186,13 @@ window.addEventListener("load", () => {
 
       //add active class to active tab
       switch(viewId) {
-        case "nav-home": 
+        case "home-view": 
           document.getElementById("nav-home").classList.add("active")
           break
-        case "nav-students":
+        case "students-view":
           document.getElementById("nav-students").classList.add("active")
           break
-        case "nav-tutors": 
+        case "tutors-view": 
           document.getElementById("nav-tutors").classList.add("active")
           break
       }
