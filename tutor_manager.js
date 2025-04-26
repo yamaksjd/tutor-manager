@@ -281,6 +281,7 @@ window.addEventListener("load", () => {
           <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
           <br></br>
           <button id="back-to-students">Back to Students List</button>
+          <br></br>
 
           <div class="section">
           <h3>${studnetToViewDetails.name}´s sessions</h3>
