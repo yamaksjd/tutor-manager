@@ -199,12 +199,13 @@ window.addEventListener("load", () => {
     function showView(viewId) {
       //put all views none
       document.querySelectorAll(".view").forEach((view) => {
-        view.classList.add("hidden");
+        view.classList.remove("hidden");
+        
+        if(view.id != viewId) {
+          view.classList.add("hidden");
+        }
       })
-
-      //activate selected view
-      document.getElementById(viewId).classList.remove("hidden");
-
+      
       // remove active class from all the navigation buttons
       document.querySelectorAll(".sidebar nav li").forEach((el) => el.classList.remove("active"));
 
