@@ -301,7 +301,7 @@ window.addEventListener("load", () => {
           </table>
 
           <div class="summary">
-            <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
+            <p><strong>Total Hours:</strong> <span id="totalHours${studnetToViewDetails.name}">0</span></p>
             <div id="totals">
               <p><strong>Total Amount:</strong> $<span id="totalAmount${studnetToViewDetails.name}">0.00</span></p>
               <p><strong>Received Amount:</strong> $<span id="totalReceived${studnetToViewDetails.name}">0.00</span></p>
@@ -322,7 +322,7 @@ window.addEventListener("load", () => {
     }
       function renderStudentSessions(studentName) {
         sessions.forEach((session) => {
-          if(session.name === studentName) {
+          if(session.student === studentName) {
       
             const sessionsTable = document.getElementById(`sessionTable${studentName}`) 
             //creating new row
