@@ -250,7 +250,7 @@ window.addEventListener("load", () => {
       const view = document.getElementById("student-details")
       // how to specify which studnet ??
       const studentID = parseInt(e.target.getAttribute("data-id"));
-      const studnetToViewDetails = studnets.find((s) => s.id === studentID);
+      const studnetToViewDetails = students.find((s) => s.id === studentID);
       view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <p><strong>Parent:</strong>${studnetToViewDetails.parent}</p>
