@@ -2,7 +2,31 @@ window.addEventListener("load", () => {
     const form = document.getElementById("sessionForm");
     //creation of array to store sessions - change to localStorage() later
     let sessions = [];
+    let students = [
+      {
+        id: Date.now,
+        name:"Alice",
+        parent:"Jane Smith",
+        contact: "jane.smith@example.com",
+        notes:"prefers morning sessions",
+      },
+      {
+        id: Date.now,
+        name:"Bob",
+        parent:"Mark Johnson",
+        contact: "mark.j@example.com",
+        notes:"Needs help with algebra",
+      },
+      {
+        id: Date.now,
+        name:"Charlie",
+        parent:"Laura Miller",
+        contact: "laura.m@example.com",
+        notes:"Has a short attention span",
+      }
+    ];
 
+    renderStudentList()
     // Define tutor rates - change later 
     const tutorRates = {
       Maria: 20,
@@ -174,9 +198,9 @@ window.addEventListener("load", () => {
 
     function showView(viewId) {
       //put all views none
-      document.getElementById("home-view").style.display = "none";
-      document.getElementById("students-view").style.display = "none";
-      document.getElementById("tutors-view").style.display = "none";
+      document.querySelectorAll(".view").forEach((view) => {
+        view.style.display = "none"
+      })
 
       //activate selected view
       document.getElementById(viewId).style.display = "block";
@@ -187,16 +211,49 @@ window.addEventListener("load", () => {
       //add active class to active tab
       switch(viewId) {
         case "home-view": 
-          document.getElementById("nav-home").classList.add("active")
-          break
+          document.getElementById("nav-home").classList.add("active");
+          break;
         case "students-view":
-          document.getElementById("nav-students").classList.add("active")
-          break
+          document.getElementById("nav-students").classList.add("active");
+          break;
         case "tutors-view": 
-          document.getElementById("nav-tutors").classList.add("active")
-          break
+          document.getElementById("nav-tutors").classList.add("active");
+          break;
+        default: // new thing learned!
+          break;
       }
 
+    }
+
+    function renderStudentList() {
+      // defining function that puts all of the studnets from the students array in the UI
+      const listContainer = document.getElementById("student-list");
+      listContainer.innerHTML = ""; 
+
+      students.forEach( (student) => {
+        const li = document.createElement("li");
+        li.textContent = student.name;
+        li.setAttribute("data-id", student.id);
+        li.addEventListener("click", () => {
+          showStudentDetails();
+        })
+        listContainer.appendChild(li);
+      });
+    }
+
+    function showStudentDetails() {
+      const view = document.getElementById("student-details")
+      view.innerHTML = `
+          <h3>${student.name}'s Details</h3>
+          <p><strong>Parent:</strong>${student.parent}</p>
+          <p><strong>Contact:</strong>${student.parent}</p>
+          <p><strong>Notes:</strong>${student.parent}</p>
+          <button id="back-to-students">Back to Students List</button>
+      `
+      showView("student-details")
+      document.getElementById("back-to-students").addEventListener("click", () => {
+        showView("students-view");
+      });
     }
   });
   
