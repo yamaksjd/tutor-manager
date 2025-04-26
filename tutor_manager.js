@@ -198,10 +198,10 @@ window.addEventListener("load", () => {
 
     function showView(viewId) {
       //put all views none
-      document.querySelectorAll(".view").forEach((view) => {
-        view.classList.remove("hidden");
-        
-        if(view.id != viewId) {
+      document.querySelectorAll(".view").forEach((view) => {        
+        if(view.id = viewId) {
+          view.classList.remove("hidden");
+        } else {
           view.classList.add("hidden");
         }
       })
@@ -244,6 +244,7 @@ window.addEventListener("load", () => {
 
     function showStudentDetails() {
       const view = document.getElementById("student-details")
+      // how to specify which studnet ??
       view.innerHTML = `
           <h3>${student.name}'s Details</h3>
           <p><strong>Parent:</strong>${student.parent}</p>
