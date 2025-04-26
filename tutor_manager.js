@@ -240,7 +240,7 @@ window.addEventListener("load", () => {
         li.textContent = student.name;
         li.setAttribute("data-id", student.id);
         li.addEventListener("click", () => {
-          const idStudent = student.id;
+          let idStudent = student.id;
           showStudentDetails(idStudent);
         })
         listContainer.appendChild(li);
@@ -249,6 +249,7 @@ window.addEventListener("load", () => {
 
     function showStudentDetails(idStudent) {
       const view = document.getElementById("student-details")
+      view.innerHTML = " "
       const studnetToViewDetails = students.find((s) => s.id === idStudent);
       view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
