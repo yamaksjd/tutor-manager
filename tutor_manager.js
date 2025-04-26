@@ -4,21 +4,21 @@ window.addEventListener("load", () => {
     let sessions = [];
     let students = [
       {
-        id: Date.now,
+        id: 1,
         name:"Alice",
         parent:"Jane Smith",
         contact: "jane.smith@example.com",
         notes:"prefers morning sessions",
       },
       {
-        id: Date.now,
+        id: 2,
         name:"Bob",
         parent:"Mark Johnson",
         contact: "mark.j@example.com",
         notes:"Needs help with algebra",
       },
       {
-        id: Date.now,
+        id: 3,
         name:"Charlie",
         parent:"Laura Miller",
         contact: "laura.m@example.com",
@@ -254,8 +254,8 @@ window.addEventListener("load", () => {
       view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <p><strong>Parent:</strong>${studnetToViewDetails.parent}</p>
-          <p><strong>Contact:</strong>${studnetToViewDetails.parent}</p>
-          <p><strong>Notes:</strong>${studnetToViewDetails.parent}</p>
+          <p><strong>Contact:</strong>${studnetToViewDetails.contact}</p>
+          <p><strong>Notes:</strong>${studnetToViewDetails.notes}</p>
           <button id="back-to-students">Back to Students List</button>
       `
       showView("student-details")
