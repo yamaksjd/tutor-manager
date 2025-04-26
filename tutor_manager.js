@@ -251,7 +251,8 @@ window.addEventListener("load", () => {
       const view = document.getElementById("student-details")
       view.innerHTML = " "
       const studnetToViewDetails = students.find((s) => s.id === idStudent);
-      view.innerHTML = `
+      if (!(sessions.find((session) => session.student === studnetToViewDetails.name))) {
+        view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <br></br>
           <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
@@ -261,7 +262,55 @@ window.addEventListener("load", () => {
           <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
           <br></br>
           <button id="back-to-students">Back to Students List</button>
+
+          <div class="section">
+            <h3>${studnetToViewDetails.name}´s sessions</h3>
+            <p>No sessions found!</p>
+          </div>
       `
+      } else {
+        view.innerHTML = `
+          <h3>${studnetToViewDetails.name}'s Details</h3>
+          <br></br>
+          <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
+          <br></br>
+          <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
+          <br></br>
+          <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
+          <br></br>
+          <button id="back-to-students">Back to Students List</button>
+
+          <div class="section">
+          <h3>${studnetToViewDetails.name}´s sessions</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Student</th>
+                <th>Tutor</th>
+                <th>Duration (hours)</th>
+                <th>Payment Status</th>
+                <th>Total ($)</th>
+              </tr>
+            </thead>
+            <tbody id="sessionTable">
+              <!-- JS will populate rows here -->
+            </tbody>
+          </table>
+
+          <div class="summary">
+            <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
+            <div id="totals">
+              <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
+              <p><strong>Received Amount:</strong> $<span id="totalReceived">0.00</span></p>
+              <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived">0.00</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      `
+      }
+      
       showView("student-details")
       document.getElementById("back-to-students").addEventListener("click", () => {
         showView("students-view");
