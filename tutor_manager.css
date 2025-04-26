@@ -121,14 +121,14 @@ table th {
 }
 
 /* STUDENT AND TUTOR LIST */
-#student-list,
-#tutor-list {
+.student-list,
+.tutor-list {
   list-style: none;
   margin-top: 1rem;
 }
 
-#student-list li,
-#tutor-list li {
+.student-list li,
+.tutor-list li {
   margin-bottom: 0.5rem;
   padding: 0.75rem;
   background-color: #f3f4f6;
@@ -137,8 +137,8 @@ table th {
   transition: background-color 0.2s ease;
 }
 
-#student-list li:hover,
-#tutor-list li:hover {
+.student-list li:hover,
+.tutor-list li:hover {
   background-color: #e5e7eb;
 }
 
@@ -161,4 +161,20 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+/* DETAILS */
+
+#student-details button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+#student-details button:hover {
+  background-color: #2563eb;
 }

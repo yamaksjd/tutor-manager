@@ -199,7 +199,7 @@ window.addEventListener("load", () => {
     function showView(viewId) {
       //put all views none
       document.querySelectorAll(".view").forEach((view) => {        
-        if(view.id = viewId) {
+        if(view.id == viewId) {
           view.classList.remove("hidden");
         } else {
           view.classList.add("hidden");
