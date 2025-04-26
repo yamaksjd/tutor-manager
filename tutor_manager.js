@@ -262,9 +262,11 @@ window.addEventListener("load", () => {
           <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
           <br></br>
           <button id="back-to-students">Back to Students List</button>
+          <br></br>
 
           <div class="section">
             <h3>${studnetToViewDetails.name}´s sessions</h3>
+            <br></br>
             <p>No sessions found!</p>
           </div>
       `
@@ -293,7 +295,7 @@ window.addEventListener("load", () => {
                 <th>Total ($)</th>
               </tr>
             </thead>
-            <tbody id="sessionTable">
+            <tbody id="sessionTable${studnetToViewDetails.name}">
               <!-- JS will populate rows here -->
             </tbody>
           </table>
@@ -301,20 +303,102 @@ window.addEventListener("load", () => {
           <div class="summary">
             <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
             <div id="totals">
-              <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
-              <p><strong>Received Amount:</strong> $<span id="totalReceived">0.00</span></p>
-              <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived">0.00</span></p>
+              <p><strong>Total Amount:</strong> $<span id="totalAmount${studnetToViewDetails.name}">0.00</span></p>
+              <p><strong>Received Amount:</strong> $<span id="totalReceived${studnetToViewDetails.name}">0.00</span></p>
+              <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived${studnetToViewDetails.name}">0.00</span></p>
             </div>
           </div>
         </div>
       </div>
       `
+      studentName = studnetToViewDetails.name;
+      renderStudentSessions(studentName);
       }
-      
+
       showView("student-details")
       document.getElementById("back-to-students").addEventListener("click", () => {
         showView("students-view");
       });
     }
+      function renderStudentSessions(studentName) {
+        sessions.forEach((session) => {
+          if(session.name === studentName) {
+      
+            const sessionsTable = document.getElementById(`sessionTable${studentName}`) 
+            //creating new row
+            const newTableRow = document.createElement("tr");
+
+            // putting data column
+            const dateUI = document.createElement("td");
+            dateUI.textContent = session.date;
+            newTableRow.appendChild(dateUI)
+
+            // adding student column
+            const studentUI = document.createElement("td");
+            studentUI.textContent = session.student;
+            newTableRow.appendChild(studentUI)
+
+            //adding tutor column
+            const tutorUI = document.createElement("td");
+            tutorUI.textContent = session.tutor;
+            newTableRow.appendChild(tutorUI)
+
+            //adding duration column
+            const durationUI = document.createElement("td");
+            durationUI.textContent = session.duration;
+            newTableRow.appendChild(durationUI)
+
+            //adding paid column text and checkbox
+            const paidUI = document.createElement("td");
+
+            // paid text
+            const paidText = document.createElement("span");
+            paidText.textContent = session.paid ? "Received" : "Not Received";
+            paidText.style.margin = "10px"; 
+
+            //paid checkbox
+            paidUI.appendChild(paidText);
+            const paidCheckbox = document.createElement("input");
+            paidCheckbox.type = "checkbox";
+
+            //setting checkbox state based on session object (false by default)
+            paidCheckbox.checked = session.paid;
+            paidCheckbox.setAttribute("data-id",session.id);
+            paidUI.appendChild(paidCheckbox);
+            newTableRow.appendChild(paidUI);
+
+            //making total column (money made in that specific session)
+            const totalUI = document.createElement("td");
+            totalUI.textContent = session.total;
+            newTableRow.appendChild(totalUI);
+            sessionsTable.appendChild(newTableRow);
+
+            // update total Amount and Hours
+
+            const totalAmountEl = document.getElementById(`totalAmount${studentName}`);
+            const currentAmount = parseFloat(totalAmountEl.textContent);
+            totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
+            const totalHours = document.getElementById(`totalHours${studentName}`);
+            const currentHours = parseFloat(totalHours.textContent);
+            totalHours.textContent = (currentHours + session.duration);
+
+            // update total received
+
+            const totalReceivedEl = document.getElementById(`totalReceived${studentName}`);
+            const receivedcurrentAmount = parseFloat(totalReceivedEl.textContent);
+            if(session.paid === true) {
+              totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
+            }
+
+            // update total not received
+
+            const totalNotReceivedEl = document.getElementById("totalNotReceived");
+            const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
+            if(session.paid === false) {
+              totalNotReceivedEl.textContent = (notReceivedCurrentAmount + session.total).toFixed(2); 
+            }
+          }
+          })
+      }
   });
   
