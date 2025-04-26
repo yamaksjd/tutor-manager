@@ -239,18 +239,17 @@ window.addEventListener("load", () => {
         const li = document.createElement("li");
         li.textContent = student.name;
         li.setAttribute("data-id", student.id);
-        li.addEventListener("click", (e) => {
-          showStudentDetails(e);
+        li.addEventListener("click", () => {
+          const idStudent = student.id;
+          showStudentDetails(idStudent);
         })
         listContainer.appendChild(li);
       });
     }
 
-    function showStudentDetails(e) {
+    function showStudentDetails(idStudent) {
       const view = document.getElementById("student-details")
-      // how to specify which studnet ??
-      const studentID = parseInt(e.target.getAttribute("data-id"));
-      const studnetToViewDetails = students.find((s) => s.id === studentID);
+      const studnetToViewDetails = students.find((s) => s.id === idStudent);
       view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <p><strong>Parent:</strong>${studnetToViewDetails.parent}</p>
