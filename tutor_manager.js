@@ -229,7 +229,7 @@ window.addEventListener("load", () => {
     function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
       const listContainer = document.getElementsByClassName("student-list");
-      listContainer.innerHTML = ""; 
+      listContainer.innerHTML = "<ul class=" + "student-list" + "> </ul>"; 
 
       students.forEach( (student) => {
         const li = document.createElement("li");
