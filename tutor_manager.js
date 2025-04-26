@@ -253,6 +253,7 @@ window.addEventListener("load", () => {
       const studnetToViewDetails = students.find((s) => s.id === idStudent);
       view.innerHTML = `
           <h3>${studnetToViewDetails.name}'s Details</h3>
+          <br></br>
           <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
           <br></br>
           <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
