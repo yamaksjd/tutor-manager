@@ -200,11 +200,15 @@ window.addEventListener("load", () => {
       //put all views none
       document.querySelectorAll(".view").forEach((view) => {        
         if(view.id == viewId) {
-          view.classList.remove("hidden");
-        } else {
-          view.classList.add("hidden");
+          if(view.classList.contains("hidden")) {
+            view.classList.remove("hidden");
+        } 
+      } else {
+          if(!(view.classList.contains("hidden"))){
+            view.classList.add("hidden")
+          }
         }
-      })
+    })
 
       // remove active class from all the navigation buttons
       document.querySelectorAll(".sidebar nav li").forEach((el) => el.classList.remove("active"));
