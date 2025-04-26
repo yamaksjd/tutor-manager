@@ -205,7 +205,7 @@ window.addEventListener("load", () => {
           view.classList.add("hidden");
         }
       })
-      
+
       // remove active class from all the navigation buttons
       document.querySelectorAll(".sidebar nav li").forEach((el) => el.classList.remove("active"));
 
@@ -228,7 +228,7 @@ window.addEventListener("load", () => {
 
     function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
-      const listContainer = document.getElementById("student-list");
+      const listContainer = document.getElementsByClassName("student-list");
       listContainer.innerHTML = ""; 
 
       students.forEach( (student) => {
