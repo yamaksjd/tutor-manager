@@ -365,7 +365,7 @@ window.addEventListener("load", () => {
             //setting checkbox state based on session object (false by default)
             paidCheckbox.checked = session.paid;
             paidCheckbox.setAttribute("data-id",session.id);
-            paidCheckbox.disabled = true;
+            paidCheckbox.readOnly = true;
             paidUI.appendChild(paidCheckbox);
             newTableRow.appendChild(paidUI);
 
