@@ -151,7 +151,7 @@ table th {
   display: block;
 }
 
-input[type="checkbox"] .sessionTable {
+input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -159,7 +159,7 @@ input[type="checkbox"] .sessionTable {
   transform: scale(1.1);
 }
 
-input[type="checkbox"]:hover .sessionTable{
+input[type="checkbox"]:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
