@@ -166,7 +166,6 @@ input[type="checkbox"]:hover {
 input[type="checkbox"] .copiedSessionTable{
   width: 18px;
   height: 18px;
-  cursor: pointer;
   accent-color: #3b82f6;
 }
 
