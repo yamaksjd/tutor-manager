@@ -112,6 +112,7 @@ window.addEventListener("load", () => {
       paidUI.appendChild(paidText);
       const paidCheckbox = document.createElement("input");
       paidCheckbox.type = "checkbox";
+      paidCheckbox.classList.add("sessionTable");
 
       //setting checkbox state based on session object (false by default)
       paidCheckbox.checked = session.paid;
@@ -364,8 +365,9 @@ window.addEventListener("load", () => {
 
             //setting checkbox state based on session object (false by default)
             paidCheckbox.checked = session.paid;
+            paidCheckbox.classList.add("copiedSessionTable")
             paidCheckbox.setAttribute("data-id",session.id);
-            paidCheckbox.readOnly = true;
+            paidCheckbox.disabled = true;
             paidUI.appendChild(paidCheckbox);
             newTableRow.appendChild(paidUI);
 
