@@ -282,9 +282,7 @@ window.addEventListener("load", () => {
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <br></br>
           <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
-          <br></br>
           <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
-          <br></br>
           <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
           <br></br>
           <button id="back-to-students">Back to Students List</button>
@@ -301,11 +299,8 @@ window.addEventListener("load", () => {
           <h3>${studnetToViewDetails.name}'s Details</h3>
           <br></br>
           <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
-          <br></br>
           <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
-          <br></br>
           <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
-          <br></br>
           <button id="back-to-students">Back to Students List</button>
           <br></br>
 
