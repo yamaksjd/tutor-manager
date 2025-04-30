@@ -231,15 +231,40 @@ window.addEventListener("load", () => {
 
     }
 
+    function createIcon(name, className) {
+      const icon = document.createElement("ion-icon");
+      icon.classList.add(className);
+      icon.setAttribute("name", name);
+      return icon
+    }
+
     function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
       const listContainer = document.getElementById("student-list");
-      listContainer.innerHTML = "<ul class=" + "student-list" + "> </ul>"; 
+      listContainer.innerHTML = " "; 
 
       students.forEach( (student) => {
         const li = document.createElement("li");
-        li.textContent = student.name;
         li.setAttribute("data-id", student.id);
+        const studentName = document.createElement("span");
+        studentName.textContent = student.name;
+        studentName.classList.add("student-name");
+        const studentActions = document.createElement("div");
+        studentActions.classList.add("student-actions");
+        const deleteIcon = createIcon("trash-outline", "deleteIcon");
+        const editIcon = createIcon("create-outline", "editIcon");
+        deleteIcon.addEventListener("click", (e) => {
+          deleteStudent(e)
+          console.log("You deleted "+ student.name);
+        })
+        editIcon.addEventListener("click", (e) => {
+          editStudent(e)
+          console.log("You edited "+ student.name);
+        })
+        studentActions.appendChild(deleteIcon)
+        studentActions.appendChild(editIcon)        
+        li.appendChild(studentName);
+        li.appendChild(studentActions)
         li.addEventListener("click", () => {
           let idStudent = student.id;
           showStudentDetails(idStudent);

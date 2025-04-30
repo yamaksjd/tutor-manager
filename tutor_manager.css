@@ -190,6 +190,38 @@ input[type="checkbox"] .copiedSessionTable{
   transition: background-color 0.2s ease;
 }
 
+#student-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.3rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.student-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.student-actions ion-icon {
+  font-size: 1.2rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.student-actions ion-icon:hover {
+  color: #ef4444; /* red for delete, or you can target specifically */
+}
+
+.student-actions .editIcon:hover {
+  color: #3b82f6; /* blue for edit */
+}
+
+
 #addStudentBtn {
   background-color: #10b981; /* green */
   color: white;
@@ -198,17 +230,6 @@ input[type="checkbox"] .copiedSessionTable{
 #addStudentBtn:hover {
   background-color: #059669;
 }
-
-#deleteStudentBtn {
-  background-color: #ef4444; /* red */
-  color: white;
-}
-
-#deleteStudentBtn:hover {
-  background-color: #dc2626;
-}
-
-
 
 /* DETAILS */
 

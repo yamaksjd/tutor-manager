@@ -82,9 +82,27 @@
         <h3>Students</h3>
         <ul id="student-list">
           <!--
-          <li data-name="Alice">Alice</li>
-          <li data-name="Bob">Bob</li>
-          <li data-name="Charlie">Charlie</li>
+          <li data-name="Alice">
+            <span class="student-name">Alice</span>
+            <div class="student-actions">
+              <ion-icon name="trash-outline"></ion-icon>
+              <ion-icon name="create-outline"></ion-icon>
+            </div>
+          </li>
+          <li data-name="Bob">
+            <span class="student-name">Bob</span>
+            <div class="student-actions">
+              <ion-icon name="trash-outline"></ion-icon>
+              <ion-icon name="create-outline"></ion-icon>
+            </div>
+          </li>
+          <li data-name="Charlie">
+            <span class="student-name">Charlie</span>
+            <div class="student-actions">
+              <ion-icon name="trash-outline"></ion-icon>
+              <ion-icon name="create-outline"></ion-icon>
+            </div>
+          </li>
           (populated by the renderStudnetList())
           -->
         </ul>
@@ -93,10 +111,6 @@
           <button id="addStudentBtn">
             <ion-icon name="add-circle-outline"></ion-icon>
             Add Student
-          </button>
-          <button id="deleteStudentBtn">
-            <ion-icon name="trash-outline"></ion-icon>
-            Delete Student
           </button>
         </div>
       </div>
