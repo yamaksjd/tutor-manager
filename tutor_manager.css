@@ -169,6 +169,47 @@ input[type="checkbox"] .copiedSessionTable{
   accent-color: #3b82f6;
 }
 
+/*Delete and Add buttons */
+.student-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Styling for Add and Delete buttons */
+.student-controls button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#addStudentBtn {
+  background-color: #10b981; /* green */
+  color: white;
+}
+
+#addStudentBtn:hover {
+  background-color: #059669;
+}
+
+#deleteStudentBtn {
+  background-color: #ef4444; /* red */
+  color: white;
+}
+
+#deleteStudentBtn:hover {
+  background-color: #dc2626;
+}
+
+
+
 /* DETAILS */
 
 #student-details button {
