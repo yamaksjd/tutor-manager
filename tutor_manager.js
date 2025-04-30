@@ -255,11 +255,11 @@ window.addEventListener("load", () => {
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
           //deleteStudent(e)
-          e.stopPropagation;
+          e.stopPropagation();
           console.log("You deleted "+ student.name);
         })
         editIcon.addEventListener("click", (e) => {
-          e.stopPropagation;
+          e.stopPropagation();
           //editStudent(e)
           console.log("You edited "+ student.name);
         })
