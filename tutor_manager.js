@@ -254,11 +254,13 @@ window.addEventListener("load", () => {
         const deleteIcon = createIcon("trash-outline", "deleteIcon");
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
-          deleteStudent(e)
+          //deleteStudent(e)
+          e.stopPropagation;
           console.log("You deleted "+ student.name);
         })
         editIcon.addEventListener("click", (e) => {
-          editStudent(e)
+          e.stopPropagation;
+          //editStudent(e)
           console.log("You edited "+ student.name);
         })
         studentActions.appendChild(deleteIcon)
