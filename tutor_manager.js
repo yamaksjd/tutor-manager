@@ -246,6 +246,7 @@ window.addEventListener("load", () => {
       students.forEach( (student) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", student.id);
+        const studentsArea = document.createElement("div");
         const studentName = document.createElement("span");
         studentName.textContent = student.name;
         studentName.classList.add("student-name");
@@ -254,19 +255,21 @@ window.addEventListener("load", () => {
         const deleteIcon = createIcon("trash-outline", "deleteIcon");
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
-          //deleteStudent(e)
+          let idStudent = student.id;
+          deleteStudent(idStudent);
           e.stopPropagation();
           console.log("You deleted "+ student.name);
         })
         editIcon.addEventListener("click", (e) => {
+          let idStudent = student.id;
           e.stopPropagation();
-          //editStudent(e)
+          editStudent(idStudent);
           console.log("You edited "+ student.name);
         })
-        studentActions.appendChild(deleteIcon)
-        studentActions.appendChild(editIcon)        
+        studentActions.appendChild(deleteIcon);
+        studentActions.appendChild(editIcon);
+        li.appendChild(studentActions);
         li.appendChild(studentName);
-        li.appendChild(studentActions)
         li.addEventListener("click", () => {
           let idStudent = student.id;
           showStudentDetails(idStudent);
@@ -275,6 +278,17 @@ window.addEventListener("load", () => {
       });
     }
 
+    function deleteStudent(idStudent) {
+      students = students.filter((s) => s.id !== idStudent);
+      renderStudentList();      
+    }
+/*
+    function editStudent(idStudent) {
+      const studentToEdit = students.find((s) => s.id === idStudent);
+      studentArea = document.getElementById(`${studentToEdit.name}area`);
+
+    }
+*/
     function showStudentDetails(idStudent) {
       const view = document.getElementById("student-details")
       view.innerHTML = " "
