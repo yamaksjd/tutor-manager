@@ -268,8 +268,8 @@ window.addEventListener("load", () => {
         })
         studentActions.appendChild(deleteIcon);
         studentActions.appendChild(editIcon);
-        li.appendChild(studentActions);
         li.appendChild(studentName);
+        li.appendChild(studentActions);
         li.addEventListener("click", () => {
           let idStudent = student.id;
           showStudentDetails(idStudent);
