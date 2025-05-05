@@ -280,7 +280,8 @@ window.addEventListener("load", () => {
 
     function deleteStudent(idStudent) {
       students = students.filter((s) => s.id !== idStudent);
-      renderStudentList();      
+      renderStudentList();
+      updateDropDown();   
     }
 /*
     function editStudent(idStudent) {
@@ -289,6 +290,16 @@ window.addEventListener("load", () => {
 
     }
 */
+function updateDropDown() {
+  studnetSelection = document.getElementById("student-selection");
+  studentSelection.innerHTML = `<option value="">Select Student</option>`;
+  students.forEach((s) => {
+    option = document.createElement("option");
+    option.setAttribute("value", s.name);
+    option.textContent = s.name;
+    studentSelection.appendChild(option);
+  });
+}
     function showStudentDetails(idStudent) {
       const view = document.getElementById("student-details")
       view.innerHTML = " "
