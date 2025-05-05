@@ -291,10 +291,10 @@ window.addEventListener("load", () => {
     }
 */
 function updateDropDown() {
-  studnetSelection = document.getElementById("student-selection");
+  const studentSelection = document.getElementById("student-selection");
   studentSelection.innerHTML = `<option value="">Select Student</option>`;
   students.forEach((s) => {
-    option = document.createElement("option");
+    const option = document.createElement("option");
     option.setAttribute("value", s.name);
     option.textContent = s.name;
     studentSelection.appendChild(option);
