@@ -285,7 +285,21 @@ window.addEventListener("load", () => {
     }
     
     document.getElementById("addStudentBtn").addEventListener(() => {
-      
+      //shows the student form
+      const studentListContainer = document.getElementById("student-list-container");
+      studentListContainer.style.classList.add("hidden");
+      const addStudentForm = document.getElementById("add-student-form");
+      addStudentForm.style.classList.remove("hidden");
+      // hide add button
+      const addStudentBtn = document.getElementById("addStudentBtn");
+      addStudentBtn.style.display = "none";
+
+      const cancelBtn = document.getElementById("cancelAddStudent");
+      cancelBtn.addEventListener(()=>{
+        addStudentForm.style.classList.add("hidden");        
+        studentListContainer.style.classList.remove("hidden");
+        addStudentBtn.style.display = "block";
+      }) 
     })
 /*
     function editStudent(idStudent) {

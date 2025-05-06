@@ -147,6 +147,14 @@ table th {
   display: none;
 }
 
+.sub-view {
+  display: none;
+}
+
+.sub-view:not(.hidden) {
+  display: block;
+}
+
 .view:not(.hidden) {
   display: block;
 }
