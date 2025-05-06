@@ -117,6 +117,23 @@
             Add Student
           </button>
         </div>
+
+        <!--Add Student Form Section (hidden initially)-->
+
+        <div id="add-student-form" class="hidden">
+          <h3>Add New Student</h3>
+          <form id="newStudentForm">
+            <input type="text" name="name" placeholder="Student Name" required />
+            <input type="text" name="parent" placeholder="Parent's Name" required />
+            <input type="text" name="contact" placeholder="Contact Info" required />
+            <textarea name="notes" placeholder="Notes about student..."></textarea>
+            <div class="form-buttons">
+              <button type="submit">Save</button>
+              <button type="button" id="cancelAddStudent">Cancel</button>
+            </div>
+          </form>
+        </div>
+
       </div>
 
       <!-- TUTORS VIEW -->

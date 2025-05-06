@@ -283,6 +283,10 @@ window.addEventListener("load", () => {
       renderStudentList();
       updateDropDown();   
     }
+    
+    document.getElementById("addStudentBtn").addEventListener(() => {
+      
+    })
 /*
     function editStudent(idStudent) {
       const studentToEdit = students.find((s) => s.id === idStudent);
