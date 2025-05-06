@@ -284,7 +284,7 @@ window.addEventListener("load", () => {
       updateDropDown();   
     }
     
-    document.getElementById("addStudentBtn").addEventListener((e) => {
+    document.getElementById("addStudentBtn").addEventListener("click",(e) => {
       e.preventDefault();
       //shows the student form
       const studentListContainer = document.getElementById("student-list-container");
@@ -296,7 +296,7 @@ window.addEventListener("load", () => {
       addStudentBtn.style.display = "none";
 
       const cancelBtn = document.getElementById("cancelAddStudent");
-      cancelBtn.addEventListener((e)=>{
+      cancelBtn.addEventListener("click",(e)=>{
         e.preventDefault();
         addStudentForm.style.classList.add("hidden");        
         studentListContainer.style.classList.remove("hidden");
