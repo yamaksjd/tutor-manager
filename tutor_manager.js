@@ -288,9 +288,9 @@ window.addEventListener("load", () => {
       e.preventDefault();
       //shows the student form
       const studentListContainer = document.getElementById("student-list-container");
-      studentListContainer.style.classList.add("hidden");
+      studentListContainer.classList.add("hidden");
       const addStudentForm = document.getElementById("add-student-form");
-      addStudentForm.style.classList.remove("hidden");
+      addStudentForm.classList.remove("hidden");
       // hide add button
       const addStudentBtn = document.getElementById("addStudentBtn");
       addStudentBtn.style.display = "none";
@@ -298,8 +298,8 @@ window.addEventListener("load", () => {
       const cancelBtn = document.getElementById("cancelAddStudent");
       cancelBtn.addEventListener("click",(e)=>{
         e.preventDefault();
-        addStudentForm.style.classList.add("hidden");        
-        studentListContainer.style.classList.remove("hidden");
+        addStudentForm.classList.add("hidden");        
+        studentListContainer.classList.remove("hidden");
         addStudentBtn.style.display = "block";
       }) 
     })
