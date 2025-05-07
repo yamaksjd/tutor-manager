@@ -328,7 +328,7 @@ window.addEventListener("load", () => {
       addStudentForm.reset();     
       addStudentForm.classList.add("hidden");
       studentListContainer.classList.remove("hidden");
-      addStudentBtn.style.display = "block";
+      addStudentButton.style.display = "block";
   })
     /*
     document.getElementById("addStudentBtn").addEventListener("click",(e) => {
