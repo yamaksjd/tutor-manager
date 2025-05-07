@@ -328,6 +328,7 @@ window.addEventListener("load", () => {
 
         students.push(student);
         renderStudentList();
+        updateDropDown();
         addStudentForm.classList.add("hidden");
         studentListContainer.classList.remove("hidden");
         addStudentBtn.style.display = "block";     
