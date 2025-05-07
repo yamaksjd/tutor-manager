@@ -317,7 +317,7 @@ window.addEventListener("load", () => {
           alert("Please fill in all of the requirements in the form");
         }
         //change Id generation later
-        id = idCounter++
+        const id = idCounter++
         const student = {
           id,
           name,
