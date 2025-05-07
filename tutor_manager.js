@@ -307,7 +307,7 @@ window.addEventListener("load", () => {
       }) 
 
       addStudentForm.addEventListener("submit", (e) => {
-        e.preventDefault
+        e.preventDefault()
         const name = document.getElementById("nameAdd").value;
         const parent = document.getElementById("parentAdd").value;
         const contact = document.getElementById("contactAdd").value;
@@ -326,7 +326,7 @@ window.addEventListener("load", () => {
           notes,
         }
 
-        students.append(student);
+        students.push(student);
         renderStudentList();
         addStudentForm.classList.add("hidden");
         studentListContainer.classList.remove("hidden");
