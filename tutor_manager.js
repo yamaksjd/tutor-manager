@@ -287,23 +287,24 @@ window.addEventListener("load", () => {
       updateDropDown();   
     }
     const addStudentButton = document.getElementById("addStudentBtn");
-    const addStudentForm = document.getElementById("newStudentForm");;
+    const addStudentForm = document.getElementById("newStudentForm");
+    const addStudentContainer = document.getElementById("add-student-form")
     const studentListContainer = document.getElementById("student-list");
     const cancelBtn = document.getElementById("cancelAddStudent");
 
     addStudentButton.addEventListener("click",()=>{
       studentListContainer.classList.add("hidden");
-      addStudentForm.classList.remove("hidden");
+      addStudentContainer.classList.remove("hidden");
       addStudentButton.style.display = "none";
     })
 
     cancelBtn.addEventListener("click",()=>{
-        addStudentForm.classList.add("hidden");        
+      addStudentContainer.classList.add("hidden");        
         studentListContainer.classList.remove("hidden");
         addStudentButton.style.display = "block";
     })    
 
-    addStudentForm.addEventListener("submit", (e) => {
+    addStudentContainer.addEventListener("submit", (e) => {
       e.preventDefault()
       const name = document.getElementById("nameAdd").value;
       const parent = document.getElementById("parentAdd").value;
