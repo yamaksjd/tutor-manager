@@ -287,7 +287,7 @@ window.addEventListener("load", () => {
     document.getElementById("addStudentBtn").addEventListener("click",(e) => {
       e.preventDefault();
       //shows the student form
-      const studentListContainer = document.getElementById("student-list-container");
+      const studentListContainer = document.getElementById("student-list");
       studentListContainer.classList.add("hidden");
       const addStudentForm = document.getElementById("add-student-form");
       addStudentForm.classList.remove("hidden");
