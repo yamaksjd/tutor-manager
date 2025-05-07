@@ -1,6 +1,9 @@
 window.addEventListener("load", () => {
     const form = document.getElementById("sessionForm");
     //creation of array to store sessions - change to localStorage() later
+    //id counter (change this later)
+
+    const idCounter = 3;
     let sessions = [];
     let students = [
       {
@@ -302,6 +305,33 @@ window.addEventListener("load", () => {
         studentListContainer.classList.remove("hidden");
         addStudentBtn.style.display = "block";
       }) 
+
+      addStudentForm.addEventListener("submit", (e) => {
+        e.preventDefault
+        const name = document.getElementById("nameAdd").value;
+        const parent = document.getElementById("parentAdd").value;
+        const contact = document.getElementById("contactAdd").value;
+        const notes = document.getElementById("notesAdd").value;
+
+        if(!name || !parent || !contact || !notes) {
+          alert("Please fill in all of the requirements in the form");
+        }
+        //change Id generation later
+        id = idCounter++
+        const student = {
+          id,
+          name,
+          parent,
+          contact,
+          notes,
+        }
+
+        students.append(student);
+        renderStudentList();
+        addStudentForm.classList.add("hidden");
+        studentListContainer.classList.remove("hidden");
+        addStudentBtn.style.display = "block";     
+    })
     })
 /*
     function editStudent(idStudent) {
