@@ -3,7 +3,7 @@ window.addEventListener("load", () => {
     //creation of array to store sessions - change to localStorage() later
     //id counter (change this later)
 
-    const idCounter = 3;
+    let idCounter = 3;
     let sessions = [];
     let students = [
       {
@@ -286,7 +286,50 @@ window.addEventListener("load", () => {
       renderStudentList();
       updateDropDown();   
     }
-    
+    const addStudentButton = document.getElementById("addStudentBtn");
+    const addStudentForm = document.getElementById("newStudentForm");;
+    const studentListContainer = document.getElementById("student-list");
+    const cancelBtn = document.getElementById("cancelAddStudent");
+
+    addStudentButton.addEventListener("click",()=>{
+      studentListContainer.classList.add("hidden");
+      addStudentForm.classList.remove("hidden");
+      addStudentButton.style.display = "none";
+    })
+
+    cancelBtn.addEventListener("click",()=>{
+        addStudentForm.classList.add("hidden");        
+        studentListContainer.classList.remove("hidden");
+        addStudentButton.style.display = "block";
+    })    
+
+    addStudentForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+      const name = document.getElementById("nameAdd").value;
+      const parent = document.getElementById("parentAdd").value;
+      const contact = document.getElementById("contactAdd").value;
+      const notes = document.getElementById("notesAdd").value;
+
+      if(!name || !parent || !contact || !notes) {
+        alert("Please fill in all of the requirements in the form");
+        return
+      }
+      //change Id generation later
+      const id = ++idCounter
+      const student = {id, name, parent, contact, notes};
+      students.push(student);
+      console.log("You added "+ name);
+
+      renderStudentList();
+      updateDropDown();
+
+      //reset and hide form
+      addStudentForm.reset();     
+      addStudentForm.classList.add("hidden");
+      studentListContainer.classList.remove("hidden");
+      addStudentBtn.style.display = "block";
+  })
+    /*
     document.getElementById("addStudentBtn").addEventListener("click",(e) => {
       e.preventDefault();
       //shows the student form
@@ -315,6 +358,7 @@ window.addEventListener("load", () => {
 
         if(!name || !parent || !contact || !notes) {
           alert("Please fill in all of the requirements in the form");
+          return
         }
         //change Id generation later
         const id = idCounter + 1
@@ -333,9 +377,11 @@ window.addEventListener("load", () => {
         updateDropDown();
         addStudentForm.classList.add("hidden");
         studentListContainer.classList.remove("hidden");
-        addStudentBtn.style.display = "block";     
+        addStudentBtn.style.display = "block";
+        addStudentForm.reset();     
     })
     })
+    */
 /*
     function editStudent(idStudent) {
       const studentToEdit = students.find((s) => s.id === idStudent);
