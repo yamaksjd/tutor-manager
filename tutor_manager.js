@@ -326,6 +326,8 @@ window.addEventListener("load", () => {
           notes,
         }
 
+        console.log("You added "+ name);
+
         students.push(student);
         renderStudentList();
         updateDropDown();
