@@ -343,22 +343,22 @@ window.addEventListener("load", () => {
       addStudentButton.style.display = "none";
 
       // put all of the previous details pre filled
-      const name = document.getElementById("nameEdit");
-      const parent = document.getElementById("parentEdit");
-      const contact = document.getElementById("contactEdit");
-      const notes = document.getElementById("notesEdit");
+      const name = document.getElementById("nameEdit").value;
+      const parent = document.getElementById("parentEdit").value;
+      const contact = document.getElementById("contactEdit").value;
+      const notes = document.getElementById("notesEdit").value;
 
-      name.value = studentToEdit.name;
-      parent.value = studentToEdit.parent;
-      contact.value = studentToEdit.contact;
-      notes.value = studentToEdit.notes;
+      name = studentToEdit.name;
+      parent = studentToEdit.parent;
+      contact = studentToEdit.contact;
+      notes = studentToEdit.notes;
 
       editStudentForm.addEventListener("submit", () => {
-        updateStudent(studentToEdit)
+        //updateStudent(studentToEdit)
+        console.log("form submitted! :)")
       })
-
     }
-
+/*
     function updateStudent(studentToEdit) {
       const name = document.getElementById("nameEdit").value;
       const parent = document.getElementById("parentEdit").value;
@@ -377,7 +377,7 @@ window.addEventListener("load", () => {
       studentListContainer.classList.remove("hidden");
       addStudentButton.style.display = "block";
     }
-
+*/
 
     cancelEditStudent.addEventListener("click", () => {
       editStudentContainer.classList.add("hidden");        
