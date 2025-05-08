@@ -300,8 +300,8 @@ window.addEventListener("load", () => {
 
     cancelBtn.addEventListener("click",()=>{
       addStudentContainer.classList.add("hidden");        
-        studentListContainer.classList.remove("hidden");
-        addStudentButton.style.display = "block";
+      studentListContainer.classList.remove("hidden");
+      addStudentButton.style.display = "block";
     })    
 
     addStudentContainer.addEventListener("submit", (e) => {
@@ -330,76 +330,71 @@ window.addEventListener("load", () => {
       studentListContainer.classList.remove("hidden");
       addStudentButton.style.display = "block";
   })
-    /*
-    document.getElementById("addStudentBtn").addEventListener("click",(e) => {
-      e.preventDefault();
-      //shows the student form
-      const studentListContainer = document.getElementById("student-list");
-      studentListContainer.classList.add("hidden");
-      const addStudentForm = document.getElementById("add-student-form");
-      addStudentForm.classList.remove("hidden");
-      // hide add button
-      const addStudentBtn = document.getElementById("addStudentBtn");
-      addStudentBtn.style.display = "none";
+    
+    const cancelEditStudent = document.getElementById("cancelEditStudent");
+    const editStudentForm = document.getElementById("editStudentForm");
+    const editStudentContainer = document.getElementById("edit-student-form")
 
-      const cancelBtn = document.getElementById("cancelAddStudent");
-      cancelBtn.addEventListener("click",(e)=>{
-        e.preventDefault();
-        addStudentForm.classList.add("hidden");        
-        studentListContainer.classList.remove("hidden");
-        addStudentBtn.style.display = "block";
-      }) 
 
-      addStudentForm.addEventListener("submit", (e) => {
-        e.preventDefault()
-        const name = document.getElementById("nameAdd").value;
-        const parent = document.getElementById("parentAdd").value;
-        const contact = document.getElementById("contactAdd").value;
-        const notes = document.getElementById("notesAdd").value;
-
-        if(!name || !parent || !contact || !notes) {
-          alert("Please fill in all of the requirements in the form");
-          return
-        }
-        //change Id generation later
-        const id = idCounter + 1
-        const student = {
-          id,
-          name,
-          parent,
-          contact,
-          notes,
-        }
-
-        console.log("You added "+ name);
-
-        students.push(student);
-        renderStudentList();
-        updateDropDown();
-        addStudentForm.classList.add("hidden");
-        studentListContainer.classList.remove("hidden");
-        addStudentBtn.style.display = "block";
-        addStudentForm.reset();     
-    })
-    })
-    */
-/*
     function editStudent(idStudent) {
       const studentToEdit = students.find((s) => s.id === idStudent);
-      studentArea = document.getElementById(`${studentToEdit.name}area`);
+      studentListContainer.classList.add("hidden");
+      editStudentContainer.classList.remove("hidden");
+      addStudentButton.style.display = "none";
+
+      // put all of the previous details pre filled
+      const name = document.getElementById("nameEdit");
+      const parent = document.getElementById("parentEdit");
+      const contact = document.getElementById("contactEdit");
+      const notes = document.getElementById("notesEdit");
+
+      name.value = studentToEdit.name;
+      parent.value = studentToEdit.parent;
+      contact.value = studentToEdit.contact;
+      notes.value = studentToEdit.notes;
+
+      editStudentForm.addEventListener("submit", () => {
+        updateStudent(studentToEdit)
+      })
 
     }
-*/
-function updateDropDown() {
-  const studentSelection = document.getElementById("student-selection");
-  studentSelection.innerHTML = `<option value="">Select Student</option>`;
-  students.forEach((s) => {
-    const option = document.createElement("option");
-    option.setAttribute("value", s.name);
-    option.textContent = s.name;
-    studentSelection.appendChild(option);
-  });
-}
+
+    function updateStudent(studentToEdit) {
+      const name = document.getElementById("nameEdit").value;
+      const parent = document.getElementById("parentEdit").value;
+      const contact = document.getElementById("contactEdit").value;
+      const notes = document.getElementById("notesEdit").value;
+
+      studentToEdit.name = name;
+      studentToEdit.parent = parent;
+      studentToEdit.conatact = contact;
+      studentToEdit.notes = notes;
+
+      updateDropDown();
+      renderStudentList();
+      editStudentForm.reset();     
+      editStudentContainer.classList.add("hidden");
+      studentListContainer.classList.remove("hidden");
+      addStudentButton.style.display = "block";
+    }
+
+
+    cancelEditStudent.addEventListener("click", () => {
+      editStudentContainer.classList.add("hidden");        
+      studentListContainer.classList.remove("hidden");
+      addStudentButton.style.display = "block";
+    }) 
+    
+    function updateDropDown() {
+    const studentSelection = document.getElementById("student-selection");
+    studentSelection.innerHTML = `<option value="">Select Student</option>`;
+    students.forEach((s) => {
+      const option = document.createElement("option");
+      option.setAttribute("value", s.name);
+      option.textContent = s.name;
+      studentSelection.appendChild(option);
+    });
+    }
     function showStudentDetails(idStudent) {
       const view = document.getElementById("student-details")
       view.innerHTML = " "

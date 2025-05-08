@@ -135,6 +135,21 @@
           </form>
         </div>
 
+        <!-- Edit Student Form Section (hidden initially) -->
+        <div id="edit-student-form" class="sub-view hidden">
+          <h3>Edit Student</h3>
+          <form id="editStudentForm">
+            <input type="text" id="nameEdit" placeholder="Student Name" required />
+            <input type="text" id="parentEdit" placeholder="Parent's Name" required />
+            <input type="text" id="contactEdit" placeholder="Contact Info" required />
+            <textarea id="notesEdit" placeholder="Notes about student..."></textarea>
+            <div class="form-buttons">
+              <button type="submit">Update</button>
+              <button type="button" id="cancelEditStudent">Cancel</button>
+            </div>
+          </form>
+        </div>
+
       </div>
 
       <!-- TUTORS VIEW -->
