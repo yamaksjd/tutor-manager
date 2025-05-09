@@ -5,6 +5,28 @@ window.addEventListener("load", () => {
 
     let idCounter = 3;
     let sessions = [];
+    let tutors = [
+      {
+      id: 1,
+      name: "Maria",
+      contact: "maria.james@example.com",
+      notes: "prefers to teach math",
+      rate: 20
+    },
+    {
+      id: 1,
+      name: "John",
+      contact: "john.watson@example.com",
+      notes: "prefers to teach physics",
+      rate: 25
+    },
+    {
+      id: 1,
+      name: "Lina",
+      contact: "lina.james@example.com",
+      notes: "prefers to teach biology",
+      rate: 18
+    },]
     let students = [
       {
         id: 1,
@@ -31,11 +53,6 @@ window.addEventListener("load", () => {
 
     renderStudentList()
     // Define tutor rates - change later 
-    const tutorRates = {
-      Maria: 20,
-      John: 25,
-      Lina: 18
-    };
   
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -58,9 +75,10 @@ window.addEventListener("load", () => {
         return;
       }
 
+      const tutorObj = tutors.find((t) => t.name === tutor); 
       
       // Get rate from selected tutor
-      const rate = tutorRates[tutor];
+      const rate = tutorObj.rate;
       const total = duration * rate;
   
       const session = {
