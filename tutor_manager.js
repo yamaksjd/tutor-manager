@@ -353,8 +353,9 @@ window.addEventListener("load", () => {
       contact.value = studentToEdit.contact;
       notes.value = studentToEdit.notes;
 
-      editStudentForm.addEventListener("submit", () => {
+      editStudentForm.addEventListener("submit", (e) => {
         //updateStudent(studentToEdit)
+        e.preventDefault();
         console.log("form submitted! :)")
       })
     }
