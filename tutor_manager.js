@@ -358,7 +358,7 @@ window.addEventListener("load", () => {
         e.preventDefault();
       })
     }
-/*
+
     function updateStudent(studentToEdit) {
       const name = document.getElementById("nameEdit").value;
       const parent = document.getElementById("parentEdit").value;
@@ -377,7 +377,6 @@ window.addEventListener("load", () => {
       studentListContainer.classList.remove("hidden");
       addStudentButton.style.display = "block";
     }
-*/
 
     cancelEditStudent.addEventListener("click", () => {
       editStudentContainer.classList.add("hidden");        
