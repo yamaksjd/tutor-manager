@@ -343,10 +343,10 @@ window.addEventListener("load", () => {
       addStudentButton.style.display = "none";
 
       // put all of the previous details pre filled
-      const name = document.getElementById("nameEdit").value;
-      const parent = document.getElementById("parentEdit").value;
-      const contact = document.getElementById("contactEdit").value;
-      const notes = document.getElementById("notesEdit").value;
+      let name = document.getElementById("nameEdit").value;
+      let parent = document.getElementById("parentEdit").value;
+      let contact = document.getElementById("contactEdit").value;
+      let notes = document.getElementById("notesEdit").value;
 
       name = studentToEdit.name;
       parent = studentToEdit.parent;
