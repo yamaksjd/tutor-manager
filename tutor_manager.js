@@ -343,15 +343,15 @@ window.addEventListener("load", () => {
       addStudentButton.style.display = "none";
 
       // put all of the previous details pre filled
-      let name = document.getElementById("nameEdit").value;
-      let parent = document.getElementById("parentEdit").value;
-      let contact = document.getElementById("contactEdit").value;
-      let notes = document.getElementById("notesEdit").value;
+      const name = document.getElementById("nameEdit");
+      const parent = document.getElementById("parentEdit");
+      const contact = document.getElementById("contactEdit");
+      const notes = document.getElementById("notesEdit");
 
-      name = studentToEdit.name;
-      parent = studentToEdit.parent;
-      contact = studentToEdit.contact;
-      notes = studentToEdit.notes;
+      name.value = studentToEdit.name;
+      parent.value = studentToEdit.parent;
+      contact.value = studentToEdit.contact;
+      notes.value = studentToEdit.notes;
 
       editStudentForm.addEventListener("submit", () => {
         //updateStudent(studentToEdit)
