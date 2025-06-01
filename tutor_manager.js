@@ -52,6 +52,7 @@ window.addEventListener("load", () => {
     ];
 
     renderStudentList()
+    renderTutorList()
     // Define tutor rates - change later 
   
     form.addEventListener("submit", (e) => {
@@ -563,5 +564,62 @@ window.addEventListener("load", () => {
           }
           })
       }
+
+    function renderTutorList() {
+      const listContainer = document.getElementById("tutor-list");
+      listContainer.innerHTML = " ";
+
+      tutors.forEach((tutor) => {
+        const li = document.createElement("li");
+        li.setAttribute("data-id", tutor.id);
+        const tutorName = document.createElement("span");
+        tutorName.textContent = `${tutor.name} - $${tutor.rate}/hr`;
+        tutorName.classList.add("tutor-name");
+        const tutorActions = document.createElement("div");
+        tutorActions.classList.add("tutor-actions");
+        const deleteIcon = createIcon("trash-outline", "deleteIcon");
+        const editIcon = createIcon("create-outline", "editIcon");
+        
+        deleteIcon.addEventListener("click", (e) => {
+          let idTutor = tutor.id;
+          deleteTutor(idTutor);
+          e.stopPropagation();
+          console.log("You deleted "+ tutor.name);
+        });
+        
+        editIcon.addEventListener("click", (e) => {
+          let idTutor = tutor.id;
+          e.stopPropagation();
+          editTutor(idTutor);
+          console.log("You edited "+ tutor.name);
+        });
+        
+        tutorActions.appendChild(deleteIcon);
+        tutorActions.appendChild(editIcon);
+        li.appendChild(tutorName);
+        li.appendChild(tutorActions);
+        li.addEventListener("click", () => {
+          let idTutor = tutor.id;
+          showTutorDetails(idTutor);
+        });
+        listContainer.appendChild(li);
+      });
+    }
+
+    function deleteTutor(idTutor) {
+      tutors = tutors.filter((t) => t.id !== idTutor);
+      renderTutorList();
+      updateDropDown();   
+    }
+
+    function editTutor(idTutor) {
+      // This function will be implemented later for editing tutors
+      console.log("Edit tutor functionality coming soon");
+    }
+
+    function showTutorDetails(idTutor) {
+      // This function will be implemented later for showing tutor details
+      console.log("Tutor details functionality coming soon");
+    }
   });
   

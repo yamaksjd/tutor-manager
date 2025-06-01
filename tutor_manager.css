@@ -328,3 +328,43 @@ input[type="checkbox"] .copiedSessionTable{
   font-size: 1rem;
   cursor: pointer;
 }
+
+.tutor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tutor-actions ion-icon {
+  font-size: 1.2rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tutor-actions ion-icon:hover {
+  color: #ef4444; /* red for delete */
+}
+
+.tutor-actions .editIcon:hover {
+  color: #3b82f6; /* blue for edit */
+}
+
+.tutor-name {
+  font-size: 1rem;
+  color: #374151;
+}
+
+#tutor-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.3rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+#tutor-list li:hover {
+  background-color: #e5e7eb;
+}
