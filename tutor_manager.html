@@ -182,6 +182,29 @@
           -->
         </ul>
 
+        <div class="tutor-controls">
+          <button id="addTutorBtn">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            Add Tutor
+          </button>
+        </div>
+
+        <!-- Add Tutor Form Section (hidden initially) -->
+        <div id="add-tutor-form" class="sub-view hidden">
+          <h3>Add New Tutor</h3>
+          <br></br>
+          <form id="newTutorForm">
+            <input type="text" name="name" placeholder="Tutor Name" id="tutorNameAdd" required />
+            <input type="text" name="contact" placeholder="Contact Info" id="tutorContactAdd" required />
+            <input type="number" name="rate" placeholder="Hourly Rate" id="tutorRateAdd" required />
+            <textarea name="notes" placeholder="Notes about tutor..." id="tutorNotesAdd"></textarea>
+            <div class="form-buttons">
+              <button type="submit">Save</button>
+              <button type="button" id="cancelAddTutor">Cancel</button>
+            </div>
+          </form>
+        </div>
+
         <!-- Edit Tutor Form Section (hidden initially) -->
         <div id="edit-tutor-form" class="sub-view hidden">
           <h3>Edit Tutor</h3>
