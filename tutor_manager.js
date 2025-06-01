@@ -14,19 +14,20 @@ window.addEventListener("load", () => {
       rate: 20
     },
     {
-      id: 1,
+      id: 2,
       name: "John",
       contact: "john.watson@example.com",
       notes: "prefers to teach physics",
       rate: 25
     },
     {
-      id: 1,
+      id: 3,
       name: "Lina",
       contact: "lina.james@example.com",
       notes: "prefers to teach biology",
       rate: 18
-    },]
+    }
+  ]
     let students = [
       {
         id: 1,
@@ -268,7 +269,6 @@ window.addEventListener("load", () => {
       students.forEach( (student) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", student.id);
-        const studentsArea = document.createElement("div");
         const studentName = document.createElement("span");
         studentName.textContent = student.name;
         studentName.classList.add("student-name");
@@ -277,7 +277,7 @@ window.addEventListener("load", () => {
         const deleteIcon = createIcon("trash-outline", "deleteIcon");
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
-          let idStudent = student.id;
+          const idStudent = student.id;
           deleteStudent(idStudent);
           e.stopPropagation();
           console.log("You deleted "+ student.name);
@@ -581,16 +581,16 @@ window.addEventListener("load", () => {
         const editIcon = createIcon("create-outline", "editIcon");
         
         deleteIcon.addEventListener("click", (e) => {
-          let idTutor = tutor.id;
-          deleteTutor(idTutor);
+          const tutorId = tutor.id;
+          deleteTutor(tutorId);
           e.stopPropagation();
           console.log("You deleted "+ tutor.name);
         });
         
         editIcon.addEventListener("click", (e) => {
-          let idTutor = tutor.id;
+          const tutorId = tutor.id;
           e.stopPropagation();
-          editTutor(idTutor);
+          editTutor(tutorId);
           console.log("You edited "+ tutor.name);
         });
         
@@ -599,21 +599,21 @@ window.addEventListener("load", () => {
         li.appendChild(tutorName);
         li.appendChild(tutorActions);
         li.addEventListener("click", () => {
-          let idTutor = tutor.id;
-          showTutorDetails(idTutor);
+          const tutorId = tutor.id;
+          showTutorDetails(tutorId);
         });
         listContainer.appendChild(li);
       });
     }
 
-    function deleteTutor(idTutor) {
-      tutors = tutors.filter((t) => t.id !== idTutor);
+    function deleteTutor(tutorId) {
+      tutors = tutors.filter((t) => t.id !== tutorId);
       renderTutorList();
       updateDropDown();   
     }
 
-    function editTutor(idTutor) {
-      const tutorToEdit = tutors.find((t) => t.id === idTutor);
+    function editTutor(tutorId) {
+      const tutorToEdit = tutors.find((t) => t.id === tutorId);
       const tutorListContainer = document.getElementById("tutor-list");
       const editTutorContainer = document.getElementById("edit-tutor-form");
 
@@ -667,10 +667,10 @@ window.addEventListener("load", () => {
       tutorListContainer.classList.remove("hidden");
     });
 
-    function showTutorDetails(idTutor) {
+    function showTutorDetails(tutorId) {
       const view = document.getElementById("tutor-details");
       view.innerHTML = "";
-      const tutorToViewDetails = tutors.find((t) => t.id === idTutor);
+      const tutorToViewDetails = tutors.find((t) => t.id === tutorId);
       
       // Check if tutor has any sessions
       const tutorSessions = sessions.filter((session) => session.tutor === tutorToViewDetails.name);
@@ -847,9 +847,15 @@ window.addEventListener("load", () => {
         return;
       }
 
-      //change Id generation later
-      const id = ++idCounter;
-      const tutor = {id, name, contact, rate, notes};
+      // Increment counter before using it for the new tutor
+      idCounter++;
+      const tutor = {
+        id: idCounter,
+        name,
+        contact,
+        rate,
+        notes
+      };
       tutors.push(tutor);
       console.log("You added " + name);
 
