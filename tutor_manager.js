@@ -605,6 +605,87 @@ window.addEventListener("load", () => {
         listContainer.appendChild(li);
       });
     }
+    // Add Tutor functionality
+    const addTutorButton = document.getElementById("addTutorBtn");
+    const addTutorForm = document.getElementById("newTutorForm");
+    const addTutorContainer = document.getElementById("add-tutor-form");
+    const tutorListContainer = document.getElementById("tutor-list");
+    const cancelAddTutorBtn = document.getElementById("cancelAddTutor");
+
+    addTutorButton.addEventListener("click", () => {
+      tutorListContainer.classList.add("hidden");
+      addTutorContainer.classList.remove("hidden");
+      addTutorButton.style.display = "none";
+    });
+
+    cancelAddTutorBtn.addEventListener("click", () => {
+      addTutorContainer.classList.add("hidden");        
+      tutorListContainer.classList.remove("hidden");
+      addTutorButton.style.display = "block";
+    });    
+
+    addTutorForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("tutorNameAdd").value;
+      const contact = document.getElementById("tutorContactAdd").value;
+      const rate = parseFloat(document.getElementById("tutorRateAdd").value);
+      const notes = document.getElementById("tutorNotesAdd").value;
+
+      if(!name || !contact || isNaN(rate) || !notes) {
+        alert("Please fill in all of the requirements in the form");
+        return;
+      }
+
+      if(rate <= 0) {
+        alert("Hourly rate must be greater than 0");
+        return;
+      }
+
+      // Increment counter before using it for the new tutor
+      idCounter++;
+      const tutor = {
+        id: idCounter,
+        name,
+        contact,
+        rate,
+        notes
+      };
+      tutors.push(tutor);
+      console.log("You added " + name);
+
+      renderTutorList();
+      updateDropDown();
+
+      //reset and hide form
+      addTutorForm.reset();     
+      addTutorContainer.classList.add("hidden");
+      tutorListContainer.classList.remove("hidden");
+      addTutorButton.style.display = "block";
+    });
+
+    function updateDropDown() {
+      // Update both student and tutor dropdowns
+      const studentSelection = document.getElementById("student-selection");
+      const tutorSelection = document.getElementById("tutor-selection");
+      
+      // Update student dropdown
+      studentSelection.innerHTML = `<option value="">Select Student</option>`;
+      students.forEach((s) => {
+        const option = document.createElement("option");
+        option.setAttribute("value", s.name);
+        option.textContent = s.name;
+        studentSelection.appendChild(option);
+      });
+
+      // Update tutor dropdown
+      tutorSelection.innerHTML = `<option value="">Select Tutor</option>`;
+      tutors.forEach((t) => {
+        const option = document.createElement("option");
+        option.setAttribute("value", t.name);
+        option.textContent = t.name;
+        tutorSelection.appendChild(option);
+      });
+    }
 
     function deleteTutor(tutorId) {
       tutors = tutors.filter((t) => t.id !== tutorId);
@@ -619,6 +700,8 @@ window.addEventListener("load", () => {
 
       tutorListContainer.classList.add("hidden");
       editTutorContainer.classList.remove("hidden");
+      addTutorButton.style.display = "none";
+
 
       // Pre-fill the form with tutor details
       const name = document.getElementById("tutorNameEdit");
@@ -811,86 +894,6 @@ window.addEventListener("load", () => {
       });
     }
 
-    // Add Tutor functionality
-    const addTutorButton = document.getElementById("addTutorBtn");
-    const addTutorForm = document.getElementById("newTutorForm");
-    const addTutorContainer = document.getElementById("add-tutor-form");
-    const tutorListContainer = document.getElementById("tutor-list");
-    const cancelAddTutorBtn = document.getElementById("cancelAddTutor");
-
-    addTutorButton.addEventListener("click", () => {
-      tutorListContainer.classList.add("hidden");
-      addTutorContainer.classList.remove("hidden");
-      addTutorButton.style.display = "none";
-    });
-
-    cancelAddTutorBtn.addEventListener("click", () => {
-      addTutorContainer.classList.add("hidden");        
-      tutorListContainer.classList.remove("hidden");
-      addTutorButton.style.display = "block";
-    });    
-
-    addTutorForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("tutorNameAdd").value;
-      const contact = document.getElementById("tutorContactAdd").value;
-      const rate = parseFloat(document.getElementById("tutorRateAdd").value);
-      const notes = document.getElementById("tutorNotesAdd").value;
-
-      if(!name || !contact || isNaN(rate) || !notes) {
-        alert("Please fill in all of the requirements in the form");
-        return;
-      }
-
-      if(rate <= 0) {
-        alert("Hourly rate must be greater than 0");
-        return;
-      }
-
-      // Increment counter before using it for the new tutor
-      idCounter++;
-      const tutor = {
-        id: idCounter,
-        name,
-        contact,
-        rate,
-        notes
-      };
-      tutors.push(tutor);
-      console.log("You added " + name);
-
-      renderTutorList();
-      updateDropDown();
-
-      //reset and hide form
-      addTutorForm.reset();     
-      addTutorContainer.classList.add("hidden");
-      tutorListContainer.classList.remove("hidden");
-      addTutorButton.style.display = "block";
-    });
-
-    function updateDropDown() {
-      // Update both student and tutor dropdowns
-      const studentSelection = document.getElementById("student-selection");
-      const tutorSelection = document.getElementById("tutor-selection");
-      
-      // Update student dropdown
-      studentSelection.innerHTML = `<option value="">Select Student</option>`;
-      students.forEach((s) => {
-        const option = document.createElement("option");
-        option.setAttribute("value", s.name);
-        option.textContent = s.name;
-        studentSelection.appendChild(option);
-      });
-
-      // Update tutor dropdown
-      tutorSelection.innerHTML = `<option value="">Select Tutor</option>`;
-      tutors.forEach((t) => {
-        const option = document.createElement("option");
-        option.setAttribute("value", t.name);
-        option.textContent = t.name;
-        tutorSelection.appendChild(option);
-      });
-    }
+    
   });
   
