@@ -181,6 +181,21 @@
           (populated by renderTutorList())
           -->
         </ul>
+
+        <!-- Edit Tutor Form Section (hidden initially) -->
+        <div id="edit-tutor-form" class="sub-view hidden">
+          <h3>Edit Tutor</h3>
+          <form id="editTutorForm">
+            <input type="text" id="tutorNameEdit" placeholder="Tutor Name" required />
+            <input type="text" id="tutorContactEdit" placeholder="Contact Info" required />
+            <input type="number" id="tutorRateEdit" placeholder="Hourly Rate" required />
+            <textarea id="tutorNotesEdit" placeholder="Notes about tutor..."></textarea>
+            <div class="form-buttons">
+              <button type="submit">Update</button>
+              <button type="button" id="cancelEditTutor">Cancel</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <!-- DETAILS VIEW -->
