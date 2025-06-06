@@ -91,129 +91,63 @@ window.addEventListener("load", () => {
         duration,
         rate,
         total, 
-        paid: false
+        paid: false,
+        status: "hasn't occurred yet"
       };
       
       //storing session object created in temporary array 
       sessions.push(session);
 
       //update UI 
+      renderSession(session, document.getElementById("sessionTable"));
+      updateTotals();
 
-      const sessionsTable = document.getElementById("sessionTable") 
-      //creating new row
-      const newTableRow = document.createElement("tr");
-
-      // putting data column
-      const dateUI = document.createElement("td");
-      dateUI.textContent = session.date;
-      newTableRow.appendChild(dateUI)
-
-      // adding student column
-      const studentUI = document.createElement("td");
-      studentUI.textContent = session.student;
-      newTableRow.appendChild(studentUI)
-
-      //adding tutor column
-      const tutorUI = document.createElement("td");
-      tutorUI.textContent = session.tutor;
-      newTableRow.appendChild(tutorUI)
-
-      //adding duration column
-      const durationUI = document.createElement("td");
-      durationUI.textContent = session.duration;
-      newTableRow.appendChild(durationUI)
-
-      //adding paid column text and checkbox
-      const paidUI = document.createElement("td");
-
-      // paid text
-      const paidText = document.createElement("span");
-      paidText.textContent = session.paid ? "Received" : "Not Received";
-      paidText.style.margin = "10px"; 
-
-      //paid checkbox
-      paidUI.appendChild(paidText);
-      const paidCheckbox = document.createElement("input");
-      paidCheckbox.type = "checkbox";
-      paidCheckbox.classList.add("sessionTable");
-
-      //setting checkbox state based on session object (false by default)
-      paidCheckbox.checked = session.paid;
-      paidCheckbox.setAttribute("data-id",session.id);
-      paidUI.appendChild(paidCheckbox);
-      newTableRow.appendChild(paidUI);
-
-      //making total column (money made in that specific session)
-      const totalUI = document.createElement("td");
-      totalUI.textContent = session.total;
-      newTableRow.appendChild(totalUI);
-      sessionsTable.appendChild(newTableRow);
-
-      // update total Amount and Hours
-
-      const totalAmountEl = document.getElementById("totalAmount");
-      const currentAmount = parseFloat(totalAmountEl.textContent);
-      totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
-      const totalHours = document.getElementById("totalHours");
-      const currentHours = parseFloat(totalHours.textContent);
-      totalHours.textContent = (currentHours + session.duration);
-
-      // update total received
-
-      const totalReceivedEl = document.getElementById("totalReceived");
-      const receivedcurrentAmount = parseFloat(totalReceivedEl.textContent);
-      if(session.paid === true) {
-        totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
-      }
-
-      // update total not received
-
-      const totalNotReceivedEl = document.getElementById("totalNotReceived");
-      const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
-      if(session.paid === false) {
-        totalNotReceivedEl.textContent = (notReceivedCurrentAmount + session.total).toFixed(2); 
-      }
-
+      // Clear form
+      form.reset();
     });
 
     document.getElementById("sessionTable").addEventListener("change", (e) => {
-      e.preventDefault();
       if (e.target.type === "checkbox") {
         const sessionId = parseInt(e.target.getAttribute("data-id"));
         const sessionToUpdate = sessions.find((s) => s.id === sessionId);
-        sessionToUpdate.paid = e.target.checked;
-        const paidText2 = e.target.parentElement.querySelector("span");
-        paidText2.textContent = e.target.checked ? "Received" : "Not Received";
-
-        updateTotals();
+        if (sessionToUpdate.status === "occurred") {
+          sessionToUpdate.paid = e.target.checked;
+          const paidText = e.target.parentElement.querySelector("span");
+          paidText.textContent = e.target.checked ? "Received" : "Not Received";
+          updateTotals();
+        }
       }
     });
     
     function updateTotals() {
-      // define current values
       let total = 0;
       let totalReceived = 0;
       let totalNotReceived = 0;
+      let totalHours = 0;
 
       //loop through array for summing totals 
-      for(i=0; i<sessions.length; i++) {
-        total += sessions[i].total;
-        if(sessions[i].paid === true) {
-          totalReceived += sessions[i].total;
-        } else {
-          totalNotReceived += sessions[i].total;
+      for(let session of sessions) {
+        if (session.status === "occurred") {
+          total += session.total;
+          totalHours += session.duration;
+          if(session.paid === true) {
+            totalReceived += session.total;
+          } else {
+            totalNotReceived += session.total;
+          }
         }
-
-        //update in the DOM
-        const totalAmountEl = document.getElementById("totalAmount");
-        const totalReceivedEl = document.getElementById("totalReceived");
-        const totalNotReceivedEl = document.getElementById("totalNotReceived");
-
-        totalAmountEl.textContent = (total).toFixed(2);
-        totalReceivedEl.textContent = (totalReceived).toFixed(2); 
-        totalNotReceivedEl.textContent = (totalNotReceived).toFixed(2); 
-
       }
+
+      //update in the DOM
+      const totalAmountEl = document.getElementById("totalAmount");
+      const totalReceivedEl = document.getElementById("totalReceived");
+      const totalNotReceivedEl = document.getElementById("totalNotReceived");
+      const totalHoursEl = document.getElementById("totalHours");
+
+      totalAmountEl.textContent = total.toFixed(2);
+      totalReceivedEl.textContent = totalReceived.toFixed(2); 
+      totalNotReceivedEl.textContent = totalNotReceived.toFixed(2);
+      totalHoursEl.textContent = totalHours;
     }
 
     document.getElementById("nav-home").addEventListener("click", () => showView("home-view"))
@@ -483,86 +417,14 @@ window.addEventListener("load", () => {
       });
     }
       function renderStudentSessions(studentName) {
+        const tableElement = document.getElementById(`sessionTable${studentName}`);
+        tableElement.innerHTML = ''; // Clear existing content
+        
         sessions.forEach((session) => {
           if(session.student === studentName) {
-      
-            const sessionsTable = document.getElementById(`sessionTable${studentName}`) 
-            //creating new row
-            const newTableRow = document.createElement("tr");
-
-            // putting data column
-            const dateUI = document.createElement("td");
-            dateUI.textContent = session.date;
-            newTableRow.appendChild(dateUI)
-
-            // adding student column
-            const studentUI = document.createElement("td");
-            studentUI.textContent = session.student;
-            newTableRow.appendChild(studentUI)
-
-            //adding tutor column
-            const tutorUI = document.createElement("td");
-            tutorUI.textContent = session.tutor;
-            newTableRow.appendChild(tutorUI)
-
-            //adding duration column
-            const durationUI = document.createElement("td");
-            durationUI.textContent = session.duration;
-            newTableRow.appendChild(durationUI)
-
-            //adding paid column text and checkbox
-            const paidUI = document.createElement("td");
-
-            // paid text
-            const paidText = document.createElement("span");
-            paidText.textContent = session.paid ? "Received" : "Not Received";
-            paidText.style.margin = "10px"; 
-
-            //paid checkbox
-            paidUI.appendChild(paidText);
-            const paidCheckbox = document.createElement("input");
-            paidCheckbox.type = "checkbox";
-
-            //setting checkbox state based on session object (false by default)
-            paidCheckbox.checked = session.paid;
-            paidCheckbox.classList.add("copiedSessionTable")
-            paidCheckbox.setAttribute("data-id",session.id);
-            paidCheckbox.disabled = true;
-            paidUI.appendChild(paidCheckbox);
-            newTableRow.appendChild(paidUI);
-
-            //making total column (money made in that specific session)
-            const totalUI = document.createElement("td");
-            totalUI.textContent = session.total;
-            newTableRow.appendChild(totalUI);
-            sessionsTable.appendChild(newTableRow);
-
-            // update total Amount and Hours
-
-            const totalAmountEl = document.getElementById(`totalAmount${studentName}`);
-            const currentAmount = parseFloat(totalAmountEl.textContent);
-            totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
-            const totalHours = document.getElementById(`totalHours${studentName}`);
-            const currentHours = parseFloat(totalHours.textContent);
-            totalHours.textContent = (currentHours + session.duration);
-
-            // update total received
-
-            const totalReceivedEl = document.getElementById(`totalReceived${studentName}`);
-            const receivedcurrentAmount = parseFloat(totalReceivedEl.textContent);
-            if(session.paid === true) {
-              totalReceivedEl.textContent = (receivedcurrentAmount + session.total).toFixed(2); 
-            }
-
-            // update total not received
-
-            const totalNotReceivedEl = document.getElementById("totalNotReceived");
-            const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
-            if(session.paid === false) {
-              totalNotReceivedEl.textContent = (notReceivedCurrentAmount + session.total).toFixed(2); 
-            }
+            renderSession(session, tableElement);
           }
-          })
+        });
       }
 
     function renderTutorList() {
@@ -824,76 +686,123 @@ window.addEventListener("load", () => {
     }
 
     function renderTutorSessions(tutorName) {
+      const tableElement = document.getElementById(`sessionTable${tutorName}`);
+      tableElement.innerHTML = ''; // Clear existing content
+      
       sessions.forEach((session) => {
         if(session.tutor === tutorName) {
-          const sessionsTable = document.getElementById(`sessionTable${tutorName}`);
-          //creating new row
-          const newTableRow = document.createElement("tr");
-
-          // putting data column
-          const dateUI = document.createElement("td");
-          dateUI.textContent = session.date;
-          newTableRow.appendChild(dateUI);
-
-          // adding student column
-          const studentUI = document.createElement("td");
-          studentUI.textContent = session.student;
-          newTableRow.appendChild(studentUI);
-
-          //adding duration column
-          const durationUI = document.createElement("td");
-          durationUI.textContent = session.duration;
-          newTableRow.appendChild(durationUI);
-
-          //adding paid column text and checkbox
-          const paidUI = document.createElement("td");
-
-          // paid text
-          const paidText = document.createElement("span");
-          paidText.textContent = session.paid ? "Received" : "Not Received";
-          paidText.style.margin = "10px"; 
-
-          //paid checkbox
-          paidUI.appendChild(paidText);
-          const paidCheckbox = document.createElement("input");
-          paidCheckbox.type = "checkbox";
-          paidCheckbox.classList.add("copiedSessionTable");
-          paidCheckbox.checked = session.paid;
-          paidCheckbox.setAttribute("data-id", session.id);
-          paidCheckbox.disabled = true;
-          paidUI.appendChild(paidCheckbox);
-          newTableRow.appendChild(paidUI);
-
-          //making total column (money made in that specific session)
-          const totalUI = document.createElement("td");
-          totalUI.textContent = session.total;
-          newTableRow.appendChild(totalUI);
-          sessionsTable.appendChild(newTableRow);
-
-          // update total Amount and Hours
-          const totalAmountEl = document.getElementById(`totalAmount${tutorName}`);
-          const currentAmount = parseFloat(totalAmountEl.textContent);
-          totalAmountEl.textContent = (currentAmount + session.total).toFixed(2); 
-          
-          const totalHours = document.getElementById(`totalHours${tutorName}`);
-          const currentHours = parseFloat(totalHours.textContent);
-          totalHours.textContent = (currentHours + session.duration);
-
-          // update total received
-          const totalReceivedEl = document.getElementById(`totalReceived${tutorName}`);
-          const receivedCurrentAmount = parseFloat(totalReceivedEl.textContent);
-          if(session.paid === true) {
-            totalReceivedEl.textContent = (receivedCurrentAmount + session.total).toFixed(2); 
-          }
-
-          // update total not received
-          const totalNotReceivedEl = document.getElementById(`totalNotReceived${tutorName}`);
-          const notReceivedCurrentAmount = parseFloat(totalNotReceivedEl.textContent);
-          if(session.paid === false) {
-            totalNotReceivedEl.textContent = (notReceivedCurrentAmount + session.total).toFixed(2); 
-          }
+          renderSession(session, tableElement);
         }
       });
+    }
+
+    function createStatusSelect(session, totalCell, paidText, paidCheckbox) {
+      const statusCell = document.createElement("td");
+      const statusSelect = document.createElement("select");
+      statusSelect.classList.add("status-select");
+      
+      const options = ["hasn't occurred yet", "occurred", "cancelled"];
+      options.forEach(option => {
+        const optionElement = document.createElement("option");
+        optionElement.value = option;
+        optionElement.textContent = option;
+        if (session.status === option) {
+          optionElement.selected = true;
+        }
+        statusSelect.appendChild(optionElement);
+      });
+
+      statusSelect.addEventListener("change", (e) => {
+        session.status = e.target.value;
+        if (session.status === "cancelled") {
+          session.paid = false;
+          session.originalTotal = session.total; // Store original total
+          session.total = 0;
+          totalCell.textContent = "0";
+          paidText.textContent = "Not Charged";
+          paidCheckbox.checked = false;
+          paidCheckbox.disabled = true;
+        } else if (session.status === "hasn't occurred yet") {
+          if (session.hasOwnProperty('originalTotal')) {
+            session.total = session.originalTotal; // Restore original total
+            totalCell.textContent = session.total;
+            delete session.originalTotal;
+          }
+          session.paid = false;
+          paidText.textContent = "Pending";
+          paidCheckbox.checked = false;
+          paidCheckbox.disabled = true;
+        } else { // occurred
+          if (session.hasOwnProperty('originalTotal')) {
+            session.total = session.originalTotal; // Restore original total
+            totalCell.textContent = session.total;
+            delete session.originalTotal;
+          }
+          paidText.textContent = session.paid ? "Received" : "Not Received";
+          paidCheckbox.disabled = false;
+        }
+        updateTotals();
+      });
+
+      statusCell.appendChild(statusSelect);
+      return statusCell;
+    }
+
+    function renderSession(session, tableElement) {
+      //creating new row
+      const newTableRow = document.createElement("tr");
+
+      // putting data column
+      const dateUI = document.createElement("td");
+      dateUI.textContent = session.date;
+      newTableRow.appendChild(dateUI);
+
+      // adding student column
+      const studentUI = document.createElement("td");
+      studentUI.textContent = session.student;
+      newTableRow.appendChild(studentUI);
+
+      //adding tutor column
+      const tutorUI = document.createElement("td");
+      tutorUI.textContent = session.tutor;
+      newTableRow.appendChild(tutorUI);
+
+      //adding duration column
+      const durationUI = document.createElement("td");
+      durationUI.textContent = session.duration;
+      newTableRow.appendChild(durationUI);
+
+      //making total column (money made in that specific session)
+      const totalUI = document.createElement("td");
+      totalUI.textContent = session.total;
+
+      // Create status select
+      const statusCell = createStatusSelect(session, totalUI, paidText, paidCheckbox);
+      newTableRow.appendChild(statusCell);
+
+      //adding paid column text and checkbox
+      const paidUI = document.createElement("td");
+
+      // paid text
+      const paidText = document.createElement("span");
+      paidText.textContent = session.status === "cancelled" ? "Not Charged" : 
+                            session.status === "hasn't occurred yet" ? "Pending" :
+                            (session.paid ? "Received" : "Not Received");
+      paidText.style.margin = "10px"; 
+
+      //paid checkbox
+      paidUI.appendChild(paidText);
+      const paidCheckbox = document.createElement("input");
+      paidCheckbox.type = "checkbox";
+      paidCheckbox.classList.add("sessionTable");
+      paidCheckbox.checked = session.paid;
+      paidCheckbox.disabled = session.status !== "occurred";
+      paidCheckbox.setAttribute("data-id", session.id);
+      paidUI.appendChild(paidCheckbox);
+      newTableRow.appendChild(paidUI);
+
+      newTableRow.appendChild(totalUI);
+      tableElement.appendChild(newTableRow);
     }
 
     
