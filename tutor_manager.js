@@ -741,6 +741,7 @@ window.addEventListener("load", () => {
       editTutorForm.reset();     
       editTutorContainer.classList.add("hidden");
       tutorListContainer.classList.remove("hidden");
+      addTutorButton.style.display = "block";
     }
 
     document.getElementById("cancelEditTutor").addEventListener("click", () => {
@@ -748,6 +749,7 @@ window.addEventListener("load", () => {
       const tutorListContainer = document.getElementById("tutor-list");
       editTutorContainer.classList.add("hidden");        
       tutorListContainer.classList.remove("hidden");
+      addTutorButton.style.display = "block";
     });
 
     function showTutorDetails(tutorId) {
