@@ -348,84 +348,111 @@ window.addEventListener("load", () => {
     });
     }
     function showStudentDetails(idStudent) {
-      const view = document.getElementById("student-details")
-      view.innerHTML = " "
-      const studnetToViewDetails = students.find((s) => s.id === idStudent);
-      if (!(sessions.find((session) => session.student === studnetToViewDetails.name))) {
+      const view = document.getElementById("student-details");
+      view.innerHTML = " ";
+      const studentToViewDetails = students.find((s) => s.id === idStudent);
+      if (!(sessions.find((session) => session.student === studentToViewDetails.name))) {
         view.innerHTML = `
-          <h3>${studnetToViewDetails.name}'s Details</h3>
+          <h3>${studentToViewDetails.name}'s Details</h3>
           <br></br>
-          <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
-          <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
-          <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
+          <p><strong>Parent:</strong> ${studentToViewDetails.parent}</p>
+          <p><strong>Contact:</strong> ${studentToViewDetails.contact}</p>
+          <p><strong>Notes:</strong> ${studentToViewDetails.notes}</p>
           <br></br>
           <button id="back-to-students">Back to Students List</button>
           <br></br>
 
           <div class="section">
-            <h3>${studnetToViewDetails.name}´s sessions</h3>
+            <h3>${studentToViewDetails.name}´s sessions</h3>
             <br></br>
             <p>No sessions found!</p>
           </div>
-      `
+        `;
       } else {
         view.innerHTML = `
-          <h3>${studnetToViewDetails.name}'s Details</h3>
+          <h3>${studentToViewDetails.name}'s Details</h3>
           <br></br>
-          <p><strong>Parent:</strong>   ${studnetToViewDetails.parent}</p>
-          <p><strong>Contact:</strong>   ${studnetToViewDetails.contact}</p>
-          <p><strong>Notes:</strong>   ${studnetToViewDetails.notes}</p>
+          <p><strong>Parent:</strong> ${studentToViewDetails.parent}</p>
+          <p><strong>Contact:</strong> ${studentToViewDetails.contact}</p>
+          <p><strong>Notes:</strong> ${studentToViewDetails.notes}</p>
           <button id="back-to-students">Back to Students List</button>
           <br></br>
 
           <div class="section">
-          <h3>${studnetToViewDetails.name}´s sessions</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Student</th>
-                <th>Tutor</th>
-                <th>Duration (hours)</th>
-                <th>Payment Status</th>
-                <th>Total ($)</th>
-              </tr>
-            </thead>
-            <tbody id="sessionTable${studnetToViewDetails.name}">
-              <!-- JS will populate rows here -->
-            </tbody>
-          </table>
+            <h3>${studentToViewDetails.name}´s sessions</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Tutor</th>
+                  <th>Duration (hours)</th>
+                  <th>Status</th>
+                  <th>Payment Status</th>
+                  <th>Total ($)</th>
+                </tr>
+              </thead>
+              <tbody id="sessionTable${studentToViewDetails.name}">
+                <!-- JS will populate rows here -->
+              </tbody>
+            </table>
 
-          <div class="summary">
-            <p><strong>Total Hours:</strong> <span id="totalHours${studnetToViewDetails.name}">0</span></p>
-            <div id="totals">
-              <p><strong>Total Amount:</strong> $<span id="totalAmount${studnetToViewDetails.name}">0.00</span></p>
-              <p><strong>Received Amount:</strong> $<span id="totalReceived${studnetToViewDetails.name}">0.00</span></p>
-              <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived${studnetToViewDetails.name}">0.00</span></p>
+            <div class="summary">
+              <p><strong>Total Hours:</strong> <span id="totalHours${studentToViewDetails.name}">0</span></p>
+              <div id="totals">
+                <p><strong>Total Amount:</strong> $<span id="totalAmount${studentToViewDetails.name}">0.00</span></p>
+                <p><strong>Received Amount:</strong> $<span id="totalReceived${studentToViewDetails.name}">0.00</span></p>
+                <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived${studentToViewDetails.name}">0.00</span></p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      `
-      studentName = studnetToViewDetails.name;
-      renderStudentSessions(studentName);
+        `;
+
+        // Initialize totals for this student
+        let studentTotal = 0;
+        let studentReceived = 0;
+        let studentNotReceived = 0;
+        let studentHours = 0;
+
+        // Render each session and calculate totals
+        const tableElement = document.getElementById(`sessionTable${studentToViewDetails.name}`);
+        sessions.forEach((session) => {
+          if (session.student === studentToViewDetails.name) {
+            if (session.status === "occurred") {
+              studentTotal += session.total;
+              studentHours += session.duration;
+              if (session.paid) {
+                studentReceived += session.total;
+              } else {
+                studentNotReceived += session.total;
+              }
+            }
+            renderSession(session, tableElement);
+          }
+        });
+
+        // Update student's summary totals
+        document.getElementById(`totalHours${studentToViewDetails.name}`).textContent = studentHours;
+        document.getElementById(`totalAmount${studentToViewDetails.name}`).textContent = studentTotal.toFixed(2);
+        document.getElementById(`totalReceived${studentToViewDetails.name}`).textContent = studentReceived.toFixed(2);
+        document.getElementById(`totalNotReceived${studentToViewDetails.name}`).textContent = studentNotReceived.toFixed(2);
       }
 
-      showView("student-details")
+      showView("student-details");
       document.getElementById("back-to-students").addEventListener("click", () => {
         showView("students-view");
       });
     }
-      function renderStudentSessions(studentName) {
-        const tableElement = document.getElementById(`sessionTable${studentName}`);
-        tableElement.innerHTML = ''; // Clear existing content
-        
-        sessions.forEach((session) => {
-          if(session.student === studentName) {
-            renderSession(session, tableElement);
-          }
-        });
-      }
+
+    function renderStudentSessions(studentName) {
+      const tableElement = document.getElementById(`sessionTable${studentName}`);
+      tableElement.innerHTML = ''; // Clear existing content
+      
+      sessions.forEach((session) => {
+        if(session.student === studentName) {
+          renderSession(session, tableElement);
+        }
+      });
+    }
 
     function renderTutorList() {
       const listContainer = document.getElementById("tutor-list");
@@ -657,6 +684,7 @@ window.addEventListener("load", () => {
                   <th>Date</th>
                   <th>Student</th>
                   <th>Duration (hours)</th>
+                  <th>Status</th>
                   <th>Payment Status</th>
                   <th>Total ($)</th>
                 </tr>
@@ -676,7 +704,33 @@ window.addEventListener("load", () => {
             </div>
           </div>
         `;
-        renderTutorSessions(tutorToViewDetails.name);
+
+        // Initialize totals for this tutor
+        let tutorTotal = 0;
+        let tutorReceived = 0;
+        let tutorNotReceived = 0;
+        let tutorHours = 0;
+
+        // Render each session and calculate totals
+        const tableElement = document.getElementById(`sessionTable${tutorToViewDetails.name}`);
+        tutorSessions.forEach((session) => {
+          if (session.status === "occurred") {
+            tutorTotal += session.total;
+            tutorHours += session.duration;
+            if (session.paid) {
+              tutorReceived += session.total;
+            } else {
+              tutorNotReceived += session.total;
+            }
+          }
+          renderSession(session, tableElement);
+        });
+
+        // Update tutor's summary totals
+        document.getElementById(`totalHours${tutorToViewDetails.name}`).textContent = tutorHours;
+        document.getElementById(`totalAmount${tutorToViewDetails.name}`).textContent = tutorTotal.toFixed(2);
+        document.getElementById(`totalReceived${tutorToViewDetails.name}`).textContent = tutorReceived.toFixed(2);
+        document.getElementById(`totalNotReceived${tutorToViewDetails.name}`).textContent = tutorNotReceived.toFixed(2);
       }
 
       showView("tutor-details");
