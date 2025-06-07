@@ -864,10 +864,11 @@ window.addEventListener("load", () => {
       /*          <th>Date</th>
                   <th>Student</th>
                   <th>Tutor</th>
+                  <th>Subject</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
+                  <th>Status</th>
                   <th>Total ($)</th>
-                  <th>Status</th
       */
       //creating new row
       const newTableRow = document.createElement("tr");
@@ -887,6 +888,11 @@ window.addEventListener("load", () => {
       const tutorUI = document.createElement("td");
       tutorUI.textContent = session.tutor;
       newTableRow.appendChild(tutorUI);
+
+      // adding subject column
+      const subjectUI = document.createElement("td");
+      subjectUI.textContent = session.subject;
+      newTableRow.appendChild(subjectUI);
 
       //adding duration column
       const durationUI = document.createElement("td");
