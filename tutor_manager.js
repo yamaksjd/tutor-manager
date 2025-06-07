@@ -388,8 +388,8 @@ window.addEventListener("load", () => {
                   <th>Tutor</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
-                  <th>Status</th>
                   <th>Total ($)</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody id="sessionTable${studentToViewDetails.name}">
@@ -687,8 +687,8 @@ window.addEventListener("load", () => {
                   <th>Tutor</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
-                  <th>Status</th>
                   <th>Total ($)</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody id="sessionTable${tutorToViewDetails.name}">
@@ -758,10 +758,11 @@ window.addEventListener("load", () => {
 
       /*          <th>Date</th>
                   <th>Student</th>
+                  <th>Tutor</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
-                  <th>Status</th>
                   <th>Total ($)</th>
+                  <th>Status</th
       */
       //creating new row
       const newTableRow = document.createElement("tr");
@@ -811,6 +812,11 @@ window.addEventListener("load", () => {
       //making total column (money made in that specific session)
       const totalUI = document.createElement("td");
       totalUI.textContent = session.total;
+
+      // Create status select
+      const statusCell = createStatusSelect(session, totalUI, paidText, paidCheckbox);
+      newTableRow.appendChild(statusCell);
+
 
       newTableRow.appendChild(totalUI);
       tableElement.appendChild(newTableRow);
