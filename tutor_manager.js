@@ -11,21 +11,24 @@ window.addEventListener("load", () => {
       name: "Maria",
       contact: "maria.james@example.com",
       notes: "prefers to teach math",
-      rate: 20
+      rate: 20,
+      subjects: ["math", "science", "english"]
     },
     {
       id: 2,
       name: "John",
       contact: "john.watson@example.com",
       notes: "prefers to teach physics",
-      rate: 25
+      rate: 25,
+      subjects: ["physics", "chemistry", "biology"]
     },
     {
       id: 3,
       name: "Lina",
       contact: "lina.james@example.com",
       notes: "prefers to teach biology",
-      rate: 18
+      rate: 18,
+      subjects: ["portuguese", "english", "history"]
     }
   ]
     let students = [
@@ -54,8 +57,10 @@ window.addEventListener("load", () => {
 
     renderStudentList()
     renderTutorList()
+    renderSubjectSelection()
     // Define tutor rates - change later 
   
+    
     form.addEventListener("submit", (e) => {
       e.preventDefault();
   
@@ -64,15 +69,17 @@ window.addEventListener("load", () => {
       const date = document.getElementById("date").value;
       const durationRaw = document.getElementById("duration").value
       const duration = parseFloat(durationRaw);
+      const subject = document.getElementById("subject-selection").value;
       
       console.log("student:", student);
       console.log("tutor:", tutor);
+      console.log("subject:", subject);
       console.log("date:", date);
       console.log("durationRaw (before parse):", durationRaw);
       console.log("duration (after parse):", duration);
       console.log("isNaN(duration)?", isNaN(duration));
 
-      if (!student || !tutor || !date || isNaN(duration) || duration<=0) {
+      if (!student || !tutor || !date || isNaN(duration) || duration<=0 || !subject) {
         alert("Please fill out all of the requirements in the form");
         return;
       }
@@ -92,7 +99,8 @@ window.addEventListener("load", () => {
         rate,
         total, 
         paid: false,
-        status: "hasn't occurred yet"
+        status: "hasn't occurred yet",
+        subject,
       };
       
       //storing session object created in temporary array 
@@ -386,6 +394,7 @@ window.addEventListener("load", () => {
                   <th>Date</th>
                   <th>Student</th>
                   <th>Tutor</th>
+                  <th>Subject</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
                   <th>Status</th>
@@ -592,7 +601,6 @@ window.addEventListener("load", () => {
       editTutorContainer.classList.remove("hidden");
       addTutorButton.style.display = "none";
 
-
       // Pre-fill the form with tutor details
       const name = document.getElementById("tutorNameEdit");
       const contact = document.getElementById("tutorContactEdit");
@@ -621,6 +629,7 @@ window.addEventListener("load", () => {
       tutorToEdit.contact = contact;
       tutorToEdit.rate = rate;
       tutorToEdit.notes = notes;
+      tutorToEdit.subjects = selectedSubjects;
 
       const editTutorForm = document.getElementById("editTutorForm");
       const editTutorContainer = document.getElementById("edit-tutor-form");
@@ -657,6 +666,18 @@ window.addEventListener("load", () => {
           <p><strong>Contact:</strong> ${tutorToViewDetails.contact}</p>
           <p><strong>Rate:</strong> $${tutorToViewDetails.rate}/hr</p>
           <p><strong>Notes:</strong> ${tutorToViewDetails.notes}</p>
+          <div class="subjects-section">
+            <h4>Subjects</h4>
+            <ul id="subjects-list-${tutorToViewDetails.id}" class="subjects-list">
+              ${tutorToViewDetails.subjects ? tutorToViewDetails.subjects.map(subject => 
+                `<li>${subject} <ion-icon name="close-outline" class="delete-subject" data-subject="${subject}"></ion-icon></li>`
+              ).join('') : ''}
+            </ul>
+            <div class="add-subject-form">
+              <input type="text" id="new-subject-${tutorToViewDetails.id}" placeholder="Add new subject">
+              <button id="add-subject-btn-${tutorToViewDetails.id}">Add Subject</button>
+            </div>
+          </div>
           <br></br>
           <button id="back-to-tutors">Back to Tutors List</button>
           <br></br>
@@ -674,6 +695,18 @@ window.addEventListener("load", () => {
           <p><strong>Contact:</strong> ${tutorToViewDetails.contact}</p>
           <p><strong>Rate:</strong> $${tutorToViewDetails.rate}/hr</p>
           <p><strong>Notes:</strong> ${tutorToViewDetails.notes}</p>
+          <div class="subjects-section">
+            <h4>Subjects</h4>
+            <ul id="subjects-list-${tutorToViewDetails.id}" class="subjects-list">
+              ${tutorToViewDetails.subjects ? tutorToViewDetails.subjects.map(subject => 
+                `<li>${subject} <ion-icon name="close-outline" class="delete-subject" data-subject="${subject}"></ion-icon></li>`
+              ).join('') : ''}
+            </ul>
+            <div class="add-subject-form">
+              <input type="text" id="new-subject-${tutorToViewDetails.id}" placeholder="Add new subject">
+              <button id="add-subject-btn-${tutorToViewDetails.id}">Add Subject</button>
+            </div>
+          </div>
           <button id="back-to-tutors">Back to Tutors List</button>
           <br></br>
 
@@ -685,6 +718,7 @@ window.addEventListener("load", () => {
                   <th>Date</th>
                   <th>Student</th>
                   <th>Tutor</th>
+                  <th>Subject</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
                   <th>Status</th>
@@ -735,6 +769,40 @@ window.addEventListener("load", () => {
         document.getElementById(`totalNotReceived${tutorToViewDetails.name}`).textContent = tutorNotReceived.toFixed(2);
       }
 
+      // Add event listeners for subject management
+      const addSubjectBtn = document.getElementById(`add-subject-btn-${tutorToViewDetails.id}`);
+      const newSubjectInput = document.getElementById(`new-subject-${tutorToViewDetails.id}`);
+      
+      addSubjectBtn.addEventListener("click", () => {
+        const newSubject = newSubjectInput.value.trim().toLowerCase();
+        if (!newSubject) {
+          alert("Please enter a subject name");
+          return;
+        }
+        
+        if (!tutorToViewDetails.subjects) {
+          tutorToViewDetails.subjects = [];
+        }
+        
+        if (tutorToViewDetails.subjects.includes(newSubject)) {
+          alert("This subject is already in the list");
+          return;
+        }
+        
+        tutorToViewDetails.subjects.push(newSubject);
+        newSubjectInput.value = "";
+        showTutorDetails(tutorId); // Refresh the view
+      });
+
+      // Add event listeners for subject deletion
+      document.querySelectorAll('.delete-subject').forEach(deleteBtn => {
+        deleteBtn.addEventListener("click", (e) => {
+          const subjectToDelete = e.target.getAttribute('data-subject');
+          tutorToViewDetails.subjects = tutorToViewDetails.subjects.filter(s => s !== subjectToDelete);
+          showTutorDetails(tutorId); // Refresh the view
+        });
+      });
+
       showView("tutor-details");
       document.getElementById("back-to-tutors").addEventListener("click", () => {
         showView("tutors-view");
@@ -752,7 +820,44 @@ window.addEventListener("load", () => {
       });
     }
 
+    function renderSubjectSelection() {
+      const tutorSelect = document.getElementById("tutor-selection");
+      const subjectSelect = document.getElementById("subject-selection");
 
+      // Initial state - clear and disable subject selection
+      subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+      subjectSelect.disabled = true;
+
+      // Add event listener to tutor selection
+      tutorSelect.addEventListener("change", () => {
+        const selectedTutor = tutorSelect.value;
+        
+        if (!selectedTutor) {
+          // If no tutor is selected, clear and disable subject selection
+          subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+          subjectSelect.disabled = true;
+          return;
+        }
+
+        // Find the selected tutor's subjects
+        const tutor = tutors.find(t => t.name === selectedTutor);
+        if (!tutor || !tutor.subjects || tutor.subjects.length === 0) {
+          subjectSelect.innerHTML = '<option value="">No subjects available</option>';
+          subjectSelect.disabled = true;
+          return;
+        }
+
+        // Enable subject selection and populate with tutor's subjects
+        subjectSelect.disabled = false;
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        tutor.subjects.forEach(subject => {
+          const option = document.createElement("option");
+          option.value = subject;
+          option.textContent = subject.charAt(0).toUpperCase() + subject.slice(1); // Capitalize first letter
+          subjectSelect.appendChild(option);
+        });
+      });
+    }
 
     function renderSession(session, tableElement) {
 

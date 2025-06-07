@@ -42,6 +42,11 @@
               <option value="Lina">Lina</option>
             </select>
 
+            <select name="subject" id="subject-selection" required>
+              <option value="">Select Subject</option>
+              <!--dynamically populated by the renderSubjectSelection() function-->
+            </select>
+
             <input type="date" name="date" id="date" required />
             <input type="number" name="duration" id="duration" step="0.25" placeholder="Duration (hours)" required />
             <button type="submit">Save Session</button>
@@ -56,6 +61,7 @@
                 <th>Date</th>
                 <th>Student</th>
                 <th>Tutor</th>
+                <th>Subject</th>
                 <th>Duration (hours)</th>
                 <th>Payment Status</th>
                 <th>Status</th>
