@@ -384,10 +384,11 @@ window.addEventListener("load", () => {
               <thead>
                 <tr>
                   <th>Date</th>
+                  <th>Student</th>
                   <th>Tutor</th>
                   <th>Duration (hours)</th>
-                  <th>Status</th>
                   <th>Payment Status</th>
+                  <th>Status</th>
                   <th>Total ($)</th>
                 </tr>
               </thead>
@@ -683,9 +684,10 @@ window.addEventListener("load", () => {
                 <tr>
                   <th>Date</th>
                   <th>Student</th>
+                  <th>Tutor</th>
                   <th>Duration (hours)</th>
-                  <th>Status</th>
                   <th>Payment Status</th>
+                  <th>Status</th>
                   <th>Total ($)</th>
                 </tr>
               </thead>
@@ -750,10 +752,21 @@ window.addEventListener("load", () => {
       });
     }
 
+
+
     function renderSession(session, tableElement) {
+
+      /*          <th>Date</th>
+                  <th>Student</th>
+                  <th>Duration (hours)</th>
+                  <th>Payment Status</th>
+                  <th>Status</th>
+                  <th>Total ($)</th>
+      */
       //creating new row
       const newTableRow = document.createElement("tr");
 
+      
       // putting data column
       const dateUI = document.createElement("td");
       dateUI.textContent = session.date;
@@ -764,7 +777,7 @@ window.addEventListener("load", () => {
       studentUI.textContent = session.student;
       newTableRow.appendChild(studentUI);
 
-      //adding tutor column
+      // adding tutor column
       const tutorUI = document.createElement("td");
       tutorUI.textContent = session.tutor;
       newTableRow.appendChild(tutorUI);
@@ -798,10 +811,6 @@ window.addEventListener("load", () => {
       //making total column (money made in that specific session)
       const totalUI = document.createElement("td");
       totalUI.textContent = session.total;
-
-      // Create status select
-      const statusCell = createStatusSelect(session, totalUI, paidText, paidCheckbox);
-      newTableRow.appendChild(statusCell);
 
       newTableRow.appendChild(totalUI);
       tableElement.appendChild(newTableRow);
