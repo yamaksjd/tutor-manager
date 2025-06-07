@@ -388,8 +388,8 @@ window.addEventListener("load", () => {
                   <th>Tutor</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
-                  <th>Total ($)</th>
                   <th>Status</th>
+                  <th>Total ($)</th>
                 </tr>
               </thead>
               <tbody id="sessionTable${studentToViewDetails.name}">
@@ -687,8 +687,8 @@ window.addEventListener("load", () => {
                   <th>Tutor</th>
                   <th>Duration (hours)</th>
                   <th>Payment Status</th>
-                  <th>Total ($)</th>
                   <th>Status</th>
+                  <th>Total ($)</th>
                 </tr>
               </thead>
               <tbody id="sessionTable${tutorToViewDetails.name}">
