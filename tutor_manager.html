@@ -26,59 +26,69 @@
       <!-- HOME VIEW -->
       <div id="home-view" class="view">
         <div class="section">
-          <h3>Add New Session</h3>
-          <form id="sessionForm">
-            <select name="student" id="student-selection" required>
-              <option value="">Select Student</option>
-              <option value="Alice">Alice</option>
-              <option value="Bob">Bob</option>
-              <option value="Charlie">Charlie</option>
-            </select>
+          <div class="section-header">
+            <h3>Add New Session</h3>
+            <ion-icon name="chevron-down-outline" class="toggle-icon"></ion-icon>
+          </div>
+          <div class="section-content hidden">
+            <form id="sessionForm">
+              <select name="student" id="student-selection" required>
+                <option value="">Select Student</option>
+                <option value="Alice">Alice</option>
+                <option value="Bob">Bob</option>
+                <option value="Charlie">Charlie</option>
+              </select>
 
-            <select name="tutor" id="tutor-selection" required>
-              <option value="">Select Tutor</option>
-              <option value="Maria">Maria</option>
-              <option value="John">John</option>
-              <option value="Lina">Lina</option>
-            </select>
+              <select name="tutor" id="tutor-selection" required>
+                <option value="">Select Tutor</option>
+                <option value="Maria">Maria</option>
+                <option value="John">John</option>
+                <option value="Lina">Lina</option>
+              </select>
 
-            <select name="subject" id="subject-selection" required>
-              <option value="">Select Subject</option>
-              <!--dynamically populated by the renderSubjectSelection() function-->
-            </select>
+              <select name="subject" id="subject-selection" required>
+                <option value="">Select Subject</option>
+                <!--dynamically populated by the renderSubjectSelection() function-->
+              </select>
 
-            <input type="date" name="date" id="date" required />
-            <input type="number" name="duration" id="duration" step="0.25" placeholder="Duration (hours)" required />
-            <button type="submit">Save Session</button>
-          </form>
+              <input type="date" name="date" id="date" required />
+              <input type="number" name="duration" id="duration" step="0.25" placeholder="Duration (hours)" required />
+              <button type="submit">Save Session</button>
+            </form>
+          </div>
         </div>
 
         <div class="section">
-          <h3>Session History</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Student</th>
-                <th>Tutor</th>
-                <th>Subject</th>
-                <th>Duration (hours)</th>
-                <th>Payment Status</th>
-                <th>Status</th>
-                <th>Total ($)</th>
-              </tr>
-            </thead>
-            <tbody id="sessionTable">
-              <!-- JS will populate rows here -->
-            </tbody>
-          </table>
+          <div class="section-header">
+            <h3>Session History</h3>
+            <ion-icon name="chevron-down-outline" class="toggle-icon"></ion-icon>
+          </div>
+          <div class="section-content hidden">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Student</th>
+                  <th>Tutor</th>
+                  <th>Subject</th>
+                  <th>Duration (hours)</th>
+                  <th>Payment Status</th>
+                  <th>Status</th>
+                  <th>Total ($)</th>
+                </tr>
+              </thead>
+              <tbody id="sessionTable">
+                <!-- JS will populate rows here -->
+              </tbody>
+            </table>
 
-          <div class="summary">
-            <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
-            <div id="totals">
-              <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
-              <p><strong>Received Amount:</strong> $<span id="totalReceived">0.00</span></p>
-              <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived">0.00</span></p>
+            <div class="summary">
+              <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
+              <div id="totals">
+                <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
+                <p><strong>Received Amount:</strong> $<span id="totalReceived">0.00</span></p>
+                <p><strong>Not Received Amount:</strong> $<span id="totalNotReceived">0.00</span></p>
+              </div>
             </div>
           </div>
         </div>
