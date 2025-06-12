@@ -678,6 +678,13 @@ window.addEventListener("load", () => {
       // Check if tutor has any sessions
       const tutorSessions = sessions.filter((session) => session.tutor === tutorToViewDetails.name);
       
+      const subjectsListHTML = tutorToViewDetails.subjects ? tutorToViewDetails.subjects.map(subject => 
+        `<li>
+          ${subject}
+          <ion-icon name="close-outline" class="delete-subject" data-subject="${subject}"></ion-icon>
+        </li>`
+      ).join('') : '';
+
       if (tutorSessions.length === 0) {
         view.innerHTML = `
           <h3>${tutorToViewDetails.name}'s Details</h3>
@@ -688,9 +695,7 @@ window.addEventListener("load", () => {
           <div class="subjects-section">
             <h4>Subjects</h4>
             <ul id="subjects-list-${tutorToViewDetails.id}" class="subjects-list">
-              ${tutorToViewDetails.subjects ? tutorToViewDetails.subjects.map(subject => 
-                `<li>${subject} <ion-icon name="close-outline" class="delete-subject" data-subject="${subject}"></ion-icon></li>`
-              ).join('') : ''}
+              ${subjectsListHTML}
             </ul>
             <div class="add-subject-form">
               <input type="text" id="new-subject-${tutorToViewDetails.id}" placeholder="Add new subject">
@@ -717,9 +722,7 @@ window.addEventListener("load", () => {
           <div class="subjects-section">
             <h4>Subjects</h4>
             <ul id="subjects-list-${tutorToViewDetails.id}" class="subjects-list">
-              ${tutorToViewDetails.subjects ? tutorToViewDetails.subjects.map(subject => 
-                `<li>${subject} <ion-icon name="close-outline" class="delete-subject" data-subject="${subject}"></ion-icon></li>`
-              ).join('') : ''}
+              ${subjectsListHTML}
             </ul>
             <div class="add-subject-form">
               <input type="text" id="new-subject-${tutorToViewDetails.id}" placeholder="Add new subject">
