@@ -98,6 +98,7 @@ main {
   font-size: 1.4rem;
   color: #64748b;
   transition: transform 0.3s ease;
+  display: inline-block;
 }
 
 .section-header.active .toggle-icon {
@@ -108,15 +109,18 @@ main {
   padding: 1.5rem;
   border-top: 1px solid #e2e8f0;
   transition: all 0.3s ease;
-  max-height: 2000px; /* Adjust this value based on your content */
+  max-height: 1000px; /* Reduced from 2000px for smoother animation */
   opacity: 1;
+  overflow: hidden;
 }
 
 .section-content.hidden {
   max-height: 0;
   opacity: 0;
-  padding: 0 1.5rem;
-  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  border-top: none;
 }
 
 form input, form select, form button {

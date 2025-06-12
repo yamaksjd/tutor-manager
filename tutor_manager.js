@@ -1,8 +1,6 @@
 window.addEventListener("load", () => {
     const form = document.getElementById("sessionForm");
-    //creation of array to store sessions - change to localStorage() later
-    //id counter (change this later)
-
+    
     // Add toggle functionality for home view sections
     document.querySelectorAll('.section-header').forEach(header => {
       header.addEventListener('click', () => {
@@ -14,9 +12,16 @@ window.addEventListener("load", () => {
         
         // Toggle hidden class on content
         content.classList.toggle('hidden');
+        
+        // Toggle icon rotation
+        if (icon) {
+          icon.style.transform = header.classList.contains('active') ? 'rotate(-180deg)' : '';
+        }
       });
     });
 
+    //creation of array to store sessions - change to localStorage() later
+    //id counter (change this later)
     let idCounter = 3;
     let sessions = [];
     let tutors = [
@@ -68,20 +73,6 @@ window.addEventListener("load", () => {
         notes:"Has a short attention span",
       }
     ];
-
-    // Add toggle functionality for home view sections
-    document.querySelectorAll('.section-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
-        const icon = header.querySelector('.toggle-icon');
-        
-        // Toggle active class on header
-        header.classList.toggle('active');
-        
-        // Toggle hidden class on content
-        content.classList.toggle('hidden');
-      });
-    });
 
     renderStudentList()
     renderTutorList()
