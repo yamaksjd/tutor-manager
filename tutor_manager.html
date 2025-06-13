@@ -289,6 +289,29 @@
     </section>
   </main>
 
+  <!-- Session Details Modal -->
+  <div id="sessionModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Session Details</h3>
+        <ion-icon name="close-outline" class="close-modal"></ion-icon>
+      </div>
+      <div class="modal-body">
+        <div class="session-info">
+          <p><strong>Student:</strong> <span id="modalStudent"></span></p>
+          <p><strong>Tutor:</strong> <span id="modalTutor"></span></p>
+          <p><strong>Subject:</strong> <span id="modalSubject"></span></p>
+          <p><strong>Date:</strong> <span id="modalDate"></span></p>
+          <p><strong>Time:</strong> <span id="modalTime"></span></p>
+          <p><strong>Duration:</strong> <span id="modalDuration"></span> hours</p>
+          <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+          <p><strong>Payment Status:</strong> <span id="modalPayment"></span></p>
+          <p><strong>Total Amount:</strong> $<span id="modalAmount"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="tutor_manager.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

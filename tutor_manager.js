@@ -1,6 +1,70 @@
 window.addEventListener("load", () => {
     const form = document.getElementById("sessionForm");
     
+    // Initialize calendar
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: [], // Will be populated dynamically
+      eventClick: function(info) {
+        const sessionId = parseInt(info.event.id);
+        const session = sessions.find(s => s.id === sessionId);
+        if (session) {
+          showSessionDetails(session);
+        }
+      },
+      eventTimeFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }
+    });
+    calendar.render();
+    
+    // Make calendar available globally
+    window.calendar = calendar;
+
+    // Add modal close functionality
+    const modal = document.getElementById('sessionModal');
+    const closeBtn = document.querySelector('.close-modal');
+    
+    closeBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+
+    // Function to show session details in modal
+    function showSessionDetails(session) {
+      const modal = document.getElementById('sessionModal');
+      
+      // Update modal content
+      document.getElementById('modalStudent').textContent = session.student;
+      document.getElementById('modalTutor').textContent = session.tutor;
+      document.getElementById('modalSubject').textContent = session.subject;
+      document.getElementById('modalDate').textContent = session.date;
+      document.getElementById('modalTime').textContent = `${session.startTime} - ${session.endTime}`;
+      document.getElementById('modalDuration').textContent = session.duration;
+      document.getElementById('modalStatus').textContent = session.status;
+      document.getElementById('modalPayment').textContent = session.status === 'cancelled' ? 'Not Charged' : 
+                                                         session.status === 'hasn\'t occurred yet' ? 'Pending' :
+                                                         (session.paid ? 'Received' : 'Not Received');
+      document.getElementById('modalAmount').textContent = session.total.toFixed(2);
+
+      // Show modal
+      modal.classList.remove('hidden');
+    }
+
     // Add toggle functionality for home view sections
     document.querySelectorAll('.section-header').forEach(header => {
       header.addEventListener('click', () => {
@@ -1094,7 +1158,5 @@ window.addEventListener("load", () => {
         window.calendar.addEvent(newEvent);
       }
     }
-
-    
   });
   
