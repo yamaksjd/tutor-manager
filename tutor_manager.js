@@ -422,6 +422,8 @@ window.addEventListener("load", () => {
               <thead>
                 <tr>
                   <th>Date</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
                   <th>Student</th>
                   <th>Tutor</th>
                   <th>Subject</th>
@@ -749,6 +751,8 @@ window.addEventListener("load", () => {
               <thead>
                 <tr>
                   <th>Date</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
                   <th>Student</th>
                   <th>Tutor</th>
                   <th>Subject</th>
