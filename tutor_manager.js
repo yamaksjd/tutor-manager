@@ -133,6 +133,21 @@ window.addEventListener("load", () => {
         subject,
       };
       
+      // Add session to calendar
+      if (window.calendar) {
+        const event = {
+          id: session.id,
+          title: `${student} - ${subject} (${tutor})`,
+          start: `${date}T${startTime}`,
+          end: `${date}T${endTime}`,
+          backgroundColor: session.status === 'cancelled' ? '#ef4444' : 
+                         session.status === 'occurred' ? '#10b981' : '#3b82f6',
+          borderColor: session.status === 'cancelled' ? '#ef4444' : 
+                      session.status === 'occurred' ? '#10b981' : '#3b82f6'
+        };
+        window.calendar.addEvent(event);
+      }
+      
       //storing session object created in temporary array 
       sessions.push(session);
 
@@ -1052,10 +1067,32 @@ window.addEventListener("load", () => {
           paidCheckbox.disabled = false;
         }
         updateTotals();
+        updateCalendarEvent(session); // Update calendar when status changes
       });
 
       statusCell.appendChild(statusSelect);
       return statusCell;
+    }
+
+    // Add function to update calendar events when session status changes
+    function updateCalendarEvent(session) {
+      if (window.calendar) {
+        const event = window.calendar.getEventById(session.id);
+        if (event) {
+          event.remove();
+        }
+        const newEvent = {
+          id: session.id,
+          title: `${session.student} - ${session.subject} (${session.tutor})`,
+          start: `${session.date}T${session.startTime}`,
+          end: `${session.date}T${session.endTime}`,
+          backgroundColor: session.status === 'cancelled' ? '#ef4444' : 
+                         session.status === 'occurred' ? '#10b981' : '#3b82f6',
+          borderColor: session.status === 'cancelled' ? '#ef4444' : 
+                      session.status === 'occurred' ? '#10b981' : '#3b82f6'
+        };
+        window.calendar.addEvent(newEvent);
+      }
     }
 
     
