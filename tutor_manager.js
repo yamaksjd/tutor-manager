@@ -86,7 +86,8 @@ window.addEventListener("load", () => {
       const student = document.getElementById("student-selection").value;
       const tutor = document.getElementById("tutor-selection").value;
       const date = document.getElementById("date").value;
-      const durationRaw = document.getElementById("duration").value
+      const startTime = document.getElementById("startTime").value;
+      const durationRaw = document.getElementById("duration").value;
       const duration = parseFloat(durationRaw);
       const subject = document.getElementById("subject-selection").value;
       
@@ -94,11 +95,12 @@ window.addEventListener("load", () => {
       console.log("tutor:", tutor);
       console.log("subject:", subject);
       console.log("date:", date);
+      console.log("startTime:", startTime);
       console.log("durationRaw (before parse):", durationRaw);
       console.log("duration (after parse):", duration);
       console.log("isNaN(duration)?", isNaN(duration));
 
-      if (!student || !tutor || !date || isNaN(duration) || duration<=0 || !subject) {
+      if (!student || !tutor || !date || !startTime || isNaN(duration) || duration<=0 || !subject) {
         alert("Please fill out all of the requirements in the form");
         return;
       }
@@ -108,12 +110,21 @@ window.addEventListener("load", () => {
       // Get rate from selected tutor
       const rate = tutorObj.rate;
       const total = duration * rate;
+
+      // Calculate end time
+      const [startHours, startMinutes] = startTime.split(':').map(Number);
+      const totalMinutes = startHours * 60 + startMinutes + Math.round(duration * 60);
+      const endHours = Math.floor(totalMinutes / 60);
+      const endMinutes = totalMinutes % 60;
+      const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
   
       const session = {
         id: Date.now(),
         student,
         tutor,
         date,
+        startTime,
+        endTime,
         duration,
         rate,
         total, 
@@ -882,24 +893,60 @@ window.addEventListener("load", () => {
     }
 
     function renderSession(session, tableElement) {
-
-      /*          <th>Date</th>
-                  <th>Student</th>
-                  <th>Tutor</th>
-                  <th>Subject</th>
-                  <th>Duration (hours)</th>
-                  <th>Payment Status</th>
-                  <th>Status</th>
-                  <th>Total ($)</th>
-      */
       //creating new row
       const newTableRow = document.createElement("tr");
-
       
       // putting data column
       const dateUI = document.createElement("td");
       dateUI.textContent = session.date;
       newTableRow.appendChild(dateUI);
+
+      // adding start time column with double-click functionality
+      const startTimeUI = document.createElement("td");
+      startTimeUI.textContent = session.startTime;
+      startTimeUI.classList.add("editable-time");
+      startTimeUI.addEventListener("dblclick", () => {
+        const input = document.createElement("input");
+        input.type = "time";
+        input.value = session.startTime;
+        input.classList.add("time-edit-input");
+        
+        input.addEventListener("blur", () => {
+          const newStartTime = input.value;
+          if (newStartTime && newStartTime !== session.startTime) {
+            session.startTime = newStartTime;
+            
+            // Recalculate end time
+            const [startHours, startMinutes] = newStartTime.split(':').map(Number);
+            const totalMinutes = startHours * 60 + startMinutes + Math.round(session.duration * 60);
+            const endHours = Math.floor(totalMinutes / 60);
+            const endMinutes = totalMinutes % 60;
+            session.endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+            
+            // Update the display
+            startTimeUI.textContent = session.startTime;
+            endTimeUI.textContent = session.endTime;
+          } else {
+            startTimeUI.textContent = session.startTime;
+          }
+        });
+        
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            input.blur();
+          }
+        });
+        
+        startTimeUI.textContent = "";
+        startTimeUI.appendChild(input);
+        input.focus();
+      });
+      newTableRow.appendChild(startTimeUI);
+
+      // adding end time column
+      const endTimeUI = document.createElement("td");
+      endTimeUI.textContent = session.endTime;
+      newTableRow.appendChild(endTimeUI);
 
       // adding student column
       const studentUI = document.createElement("td");

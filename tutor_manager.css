@@ -619,3 +619,27 @@ input[type="checkbox"] .copiedSessionTable{
 .add-subject-form button:hover {
   background-color: #2563eb;
 }
+
+/* Editable time styles */
+.editable-time {
+  cursor: pointer;
+  position: relative;
+}
+
+.editable-time:hover {
+  background-color: #f3f4f6;
+}
+
+.time-edit-input {
+  width: 100%;
+  padding: 0.25rem;
+  border: 1px solid #3b82f6;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.time-edit-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
