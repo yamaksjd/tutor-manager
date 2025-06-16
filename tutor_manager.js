@@ -1068,6 +1068,18 @@ window.addEventListener("load", () => {
             // Update the display
             startTimeUI.textContent = session.startTime;
             endTimeUI.textContent = session.endTime;
+
+            // Update calendar event
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setStart(`${session.date}T${session.startTime}`);
+                event.setEnd(`${session.date}T${session.endTime}`);
+              }
+            }
+
+            // Update totals
+            updateTotals();
           } else {
             startTimeUI.textContent = session.startTime;
           }
@@ -1108,6 +1120,55 @@ window.addEventListener("load", () => {
       //adding duration column
       const durationUI = document.createElement("td");
       durationUI.textContent = session.duration;
+      durationUI.classList.add("editable-time");
+      durationUI.addEventListener("dblclick", () => {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.step = "0.25";
+        input.value = session.duration;
+        input.classList.add("time-edit-input");
+        
+        input.addEventListener("blur", () => {
+          const newDuration = parseFloat(input.value);
+          if (!isNaN(newDuration) && newDuration > 0 && newDuration !== session.duration) {
+            session.duration = newDuration;
+            
+            // Recalculate end time
+            const [startHours, startMinutes] = session.startTime.split(':').map(Number);
+            const totalMinutes = startHours * 60 + startMinutes + Math.round(session.duration * 60);
+            const endHours = Math.floor(totalMinutes / 60);
+            const endMinutes = totalMinutes % 60;
+            session.endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+            
+            // Update the display
+            durationUI.textContent = session.duration;
+            endTimeUI.textContent = session.endTime;
+
+            // Update calendar event
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setEnd(`${session.date}T${session.endTime}`);
+              }
+            }
+
+            // Update totals
+            updateTotals();
+          } else {
+            durationUI.textContent = session.duration;
+          }
+        });
+        
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            input.blur();
+          }
+        });
+        
+        durationUI.textContent = "";
+        durationUI.appendChild(input);
+        input.focus();
+      });
       newTableRow.appendChild(durationUI);
 
       //adding paid column text and checkbox
@@ -1138,7 +1199,6 @@ window.addEventListener("load", () => {
       // Create status select
       const statusCell = createStatusSelect(session, totalUI, paidText, paidCheckbox);
       newTableRow.appendChild(statusCell);
-
 
       newTableRow.appendChild(totalUI);
       tableElement.appendChild(newTableRow);
