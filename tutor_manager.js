@@ -11,6 +11,65 @@ window.addEventListener("load", () => {
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       events: [], // Will be populated dynamically
+      editable: true, // Enable drag-and-drop
+      eventDrop: function(info) {
+        const sessionId = parseInt(info.event.id);
+        const session = sessions.find(s => s.id === sessionId);
+        if (session) {
+          // Update session date and time
+          const newDate = info.event.start.toISOString().split('T')[0];
+          const newStartTime = info.event.start.toTimeString().slice(0, 5);
+          
+          // Calculate new end time based on duration
+          const [startHours, startMinutes] = newStartTime.split(':').map(Number);
+          const totalMinutes = startHours * 60 + startMinutes + Math.round(session.duration * 60);
+          const endHours = Math.floor(totalMinutes / 60);
+          const endMinutes = totalMinutes % 60;
+          const newEndTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+
+          // Update session object
+          session.date = newDate;
+          session.startTime = newStartTime;
+          session.endTime = newEndTime;
+
+          // Update the event in the calendar
+          info.event.setEnd(`${newDate}T${newEndTime}`);
+
+          // Update the session table
+          const tableElement = document.getElementById("sessionTable");
+          if (tableElement) {
+            tableElement.innerHTML = ''; // Clear existing rows
+            sessions.forEach(s => renderSession(s, tableElement));
+          }
+
+          // Update student and tutor detail views if they're open
+          const studentDetails = document.getElementById("student-details");
+          const tutorDetails = document.getElementById("tutor-details");
+          
+          if (!studentDetails.classList.contains('hidden')) {
+            const studentName = studentDetails.querySelector('h3').textContent.split("'")[0];
+            const studentTable = document.getElementById(`sessionTable${studentName}`);
+            if (studentTable) {
+              studentTable.innerHTML = '';
+              sessions.filter(s => s.student === studentName)
+                     .forEach(s => renderSession(s, studentTable));
+            }
+          }
+
+          if (!tutorDetails.classList.contains('hidden')) {
+            const tutorName = tutorDetails.querySelector('h3').textContent.split("'")[0];
+            const tutorTable = document.getElementById(`sessionTable${tutorName}`);
+            if (tutorTable) {
+              tutorTable.innerHTML = '';
+              sessions.filter(s => s.tutor === tutorName)
+                     .forEach(s => renderSession(s, tutorTable));
+            }
+          }
+
+          // Update totals
+          updateTotals();
+        }
+      },
       eventClick: function(info) {
         const sessionId = parseInt(info.event.id);
         const session = sessions.find(s => s.id === sessionId);
