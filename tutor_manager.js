@@ -1038,9 +1038,45 @@ window.addEventListener("load", () => {
       //creating new row
       const newTableRow = document.createElement("tr");
       
-      // putting data column
+      // putting data column with double-click functionality
       const dateUI = document.createElement("td");
       dateUI.textContent = session.date;
+      dateUI.classList.add("editable-time");
+      dateUI.addEventListener("dblclick", () => {
+        const input = document.createElement("input");
+        input.type = "date";
+        input.value = session.date;
+        input.classList.add("time-edit-input");
+        
+        input.addEventListener("blur", () => {
+          const newDate = input.value;
+          if (newDate && newDate !== session.date) {
+            session.date = newDate;
+            dateUI.textContent = session.date;
+
+            // Update calendar event
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setStart(`${session.date}T${session.startTime}`);
+                event.setEnd(`${session.date}T${session.endTime}`);
+              }
+            }
+          } else {
+            dateUI.textContent = session.date;
+          }
+        });
+        
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            input.blur();
+          }
+        });
+        
+        dateUI.textContent = "";
+        dateUI.appendChild(input);
+        input.focus();
+      });
       newTableRow.appendChild(dateUI);
 
       // adding start time column with double-click functionality
@@ -1102,19 +1138,172 @@ window.addEventListener("load", () => {
       endTimeUI.textContent = session.endTime;
       newTableRow.appendChild(endTimeUI);
 
-      // adding student column
+      // adding student column with double-click functionality
       const studentUI = document.createElement("td");
       studentUI.textContent = session.student;
+      studentUI.classList.add("editable-time");
+      studentUI.addEventListener("dblclick", () => {
+        const select = document.createElement("select");
+        select.classList.add("time-edit-input");
+        
+        // Add all students as options
+        students.forEach(student => {
+          const option = document.createElement("option");
+          option.value = student.name;
+          option.textContent = student.name;
+          if (student.name === session.student) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+        
+        select.addEventListener("blur", () => {
+          const newStudent = select.value;
+          if (newStudent && newStudent !== session.student) {
+            session.student = newStudent;
+            studentUI.textContent = session.student;
+
+            // Update calendar event title
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
+              }
+            }
+          } else {
+            studentUI.textContent = session.student;
+          }
+        });
+        
+        select.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            select.blur();
+          }
+        });
+        
+        studentUI.textContent = "";
+        studentUI.appendChild(select);
+        select.focus();
+      });
       newTableRow.appendChild(studentUI);
 
-      // adding tutor column
+      // adding tutor column with double-click functionality
       const tutorUI = document.createElement("td");
       tutorUI.textContent = session.tutor;
+      tutorUI.classList.add("editable-time");
+      tutorUI.addEventListener("dblclick", () => {
+        const select = document.createElement("select");
+        select.classList.add("time-edit-input");
+        
+        // Add all tutors as options
+        tutors.forEach(tutor => {
+          const option = document.createElement("option");
+          option.value = tutor.name;
+          option.textContent = tutor.name;
+          if (tutor.name === session.tutor) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+        
+        select.addEventListener("blur", () => {
+          const newTutor = select.value;
+          if (newTutor && newTutor !== session.tutor) {
+            const oldTutor = session.tutor;
+            session.tutor = newTutor;
+            tutorUI.textContent = session.tutor;
+
+            // Update rate and total
+            const tutorObj = tutors.find(t => t.name === newTutor);
+            if (tutorObj) {
+              session.rate = tutorObj.rate;
+              session.total = session.duration * tutorObj.rate;
+              totalUI.textContent = session.total.toFixed(2);
+            }
+
+            // Update calendar event title
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
+              }
+            }
+
+            // Update subject if needed
+            const tutorSubjects = tutorObj.subjects || [];
+            if (!tutorSubjects.includes(session.subject)) {
+              session.subject = tutorSubjects[0] || '';
+              subjectUI.textContent = session.subject;
+            }
+
+            updateTotals();
+          } else {
+            tutorUI.textContent = session.tutor;
+          }
+        });
+        
+        select.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            select.blur();
+          }
+        });
+        
+        tutorUI.textContent = "";
+        tutorUI.appendChild(select);
+        select.focus();
+      });
       newTableRow.appendChild(tutorUI);
 
-      // adding subject column
+      // adding subject column with double-click functionality
       const subjectUI = document.createElement("td");
       subjectUI.textContent = session.subject;
+      subjectUI.classList.add("editable-time");
+      subjectUI.addEventListener("dblclick", () => {
+        const select = document.createElement("select");
+        select.classList.add("time-edit-input");
+        
+        // Get current tutor's subjects
+        const tutorObj = tutors.find(t => t.name === session.tutor);
+        if (tutorObj && tutorObj.subjects) {
+          tutorObj.subjects.forEach(subject => {
+            const option = document.createElement("option");
+            option.value = subject;
+            option.textContent = subject;
+            if (subject === session.subject) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+        }
+        
+        select.addEventListener("blur", () => {
+          const newSubject = select.value;
+          if (newSubject && newSubject !== session.subject) {
+            session.subject = newSubject;
+            subjectUI.textContent = session.subject;
+
+            // Update calendar event title
+            if (window.calendar) {
+              const event = window.calendar.getEventById(session.id);
+              if (event) {
+                event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
+              }
+            }
+          } else {
+            subjectUI.textContent = session.subject;
+          }
+        });
+        
+        select.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            select.blur();
+          }
+        });
+        
+        subjectUI.textContent = "";
+        subjectUI.appendChild(select);
+        select.focus();
+      });
       newTableRow.appendChild(subjectUI);
 
       //adding duration column
@@ -1278,4 +1467,5 @@ window.addEventListener("load", () => {
       }
     }
   });
+  
   
