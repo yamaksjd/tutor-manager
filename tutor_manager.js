@@ -1,4 +1,31 @@
+/*
+const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
+
+*/
+
+
 window.addEventListener("load", () => {
+ 
+  // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPtQ7FqHQqnHpK0ydjfrGtuan20V4j0ns",
+    authDomain: "tutormanager-fc87b.firebaseapp.com",
+    projectId: "tutormanager-fc87b",
+    storageBucket: "tutormanager-fc87b.firebasestorage.app",
+    messagingSenderId: "139262478947",
+    appId: "1:139262478947:web:a5c3700e8f7be04f634656",
+    measurementId: "G-P0KLDLWM2Y"
+  };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     const form = document.getElementById("sessionForm");
     
     // Initialize calendar
