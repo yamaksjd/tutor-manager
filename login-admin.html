@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Tutoring Center Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .logo {
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group input::placeholder {
+      color: #999;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 20px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e1e5e9;
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    .social-login {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .social-btn:hover {
+      border-color: #667eea;
+      background-color: #f8f9ff;
+    }
+
+    .forgot-password {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password:hover {
+      color: #764ba2;
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c53030;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #fed7d7;
+      display: none;
+    }
+
+    .success-message {
+      background: #f0fff4;
+      color: #38a169;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #c6f6d5;
+      display: none;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+      
+      .social-login {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <h1>Tutoring Center Manager</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Enter your email"
+          required
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button type="submit" id="loginBtn" class="login-btn">
+        <span id="loginBtnText">Sign In</span>
+        <span id="loginBtnSpinner" class="loading" style="display: none;"></span>
+      </button>
+    </form>
+
+    <a href="#" class="forgot-password" id="forgotPassword">Forgot your password?</a>
+
+    <div class="divider">
+      <span>or continue with</span>
+    </div>
+
+    <div class="social-login">
+      <button type="button" class="social-btn" id="googleLogin">
+        Google
+      </button>
+      <button type="button" class="social-btn" id="githubLogin">
+        GitHub
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // DOM elements
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtnText = document.getElementById('loginBtnText');
+    const loginBtnSpinner = document.getElementById('loginBtnSpinner');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const forgotPassword = document.getElementById('forgotPassword');
+    const googleLogin = document.getElementById('googleLogin');
+    const githubLogin = document.getElementById('githubLogin');
+
+    // Utility functions
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+      successMessage.style.display = 'none';
+    }
+
+    function showSuccess(message) {
+      successMessage.textContent = message;
+      successMessage.style.display = 'block';
+      errorMessage.style.display = 'none';
+    }
+
+    function hideMessages() {
+      errorMessage.style.display = 'none';
+      successMessage.style.display = 'none';
+    }
+
+    function setLoading(isLoading) {
+      if (isLoading) {
+        loginBtn.disabled = true;
+        loginBtnText.style.display = 'none';
+        loginBtnSpinner.style.display = 'inline-block';
+      } else {
+        loginBtn.disabled = false;
+        loginBtnText.style.display = 'inline';
+        loginBtnSpinner.style.display = 'none';
+      }
+    }
+
+    // Form submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideMessages();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      // Basic validation
+      if (!email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      if (!email.includes('@')) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        // TODO: Replace with Firebase Auth
+        // For now, simulate authentication
+        await simulateAuth(email, password);
+        
+        showSuccess('Login successful! Redirecting...');
+        
+        // Redirect to main application after successful login
+        setTimeout(() => {
+          window.location.href = 'tutor_manager.html';
+        }, 1500);
+
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Simulate authentication (replace with Firebase Auth)
+    async function simulateAuth(email, password) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simple demo validation
+          if (email === 'admin@example.com' && password === 'password') {
+            resolve({ user: { email, uid: 'demo-user-id' } });
+          } else {
+            reject(new Error('Invalid email or password'));
+          }
+        }, 1000);
+      });
+    }
+
+    // Social login handlers
+    googleLogin.addEventListener('click', async () => {
+      hideMessages();
+      setLoading(true);
+      
+      try {
+        // TODO: Implement Google OAuth with Firebase
+        showError('Google login not implemented yet');
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    githubLogin.addEventListener('click', async () => {
+      hideMessages();
+      setLoading(true);
+      
+      try {
+        // TODO: Implement GitHub OAuth with Firebase
+        showError('GitHub login not implemented yet');
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Forgot password handler
+    forgotPassword.addEventListener('click', async (e) => {
+      e.preventDefault();
+      hideMessages();
+      
+      const email = emailInput.value.trim();
+      
+      if (!email || !email.includes('@')) {
+        showError('Please enter a valid email address first');
+        return;
+      }
+
+      try {
+        // TODO: Implement password reset with Firebase
+        showSuccess('Password reset email sent! Check your inbox.');
+      } catch (error) {
+        showError(error.message);
+      }
+    });
+
+    // Input validation on blur
+    emailInput.addEventListener('blur', () => {
+      const email = emailInput.value.trim();
+      if (email && !email.includes('@')) {
+        showError('Please enter a valid email address');
+      } else {
+        hideMessages();
+      }
+    });
+
+    passwordInput.addEventListener('blur', () => {
+      hideMessages();
+    });
+
+    // Enter key navigation
+    emailInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        passwordInput.focus();
+      }
+    });
+
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    // Focus first input on page load
+    window.addEventListener('load', () => {
+      emailInput.focus();
+    });
+  </script>
+</body>
+</html>

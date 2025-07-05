@@ -14,6 +14,7 @@ const firebaseConfig = {
 window.addEventListener("load", () => {
  
   // Initialize Firebase
+  /*
   const firebaseConfig = {
     apiKey: "AIzaSyCPtQ7FqHQqnHpK0ydjfrGtuan20V4j0ns",
     authDomain: "tutormanager-fc87b.firebaseapp.com",
@@ -27,7 +28,7 @@ window.addEventListener("load", () => {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const form = document.getElementById("sessionForm");
-    
+  */
     // Initialize calendar
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
