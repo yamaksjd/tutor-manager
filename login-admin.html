@@ -213,6 +213,7 @@
       }
     }
   </style>
+  <script type="module" src="firebaseconfig.js"></script>
 </head>
 <body>
   <div class="login-container">
@@ -273,6 +274,9 @@
 
   <script>
     // DOM elements
+
+    import { app, auth, db } from './firebaseconfig.js';
+
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
@@ -285,170 +289,20 @@
     const googleLogin = document.getElementById('googleLogin');
     const githubLogin = document.getElementById('githubLogin');
 
-    // Utility functions
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.style.display = 'block';
-      successMessage.style.display = 'none';
-    }
-
-    function showSuccess(message) {
-      successMessage.textContent = message;
-      successMessage.style.display = 'block';
-      errorMessage.style.display = 'none';
-    }
-
-    function hideMessages() {
-      errorMessage.style.display = 'none';
-      successMessage.style.display = 'none';
-    }
-
-    function setLoading(isLoading) {
-      if (isLoading) {
-        loginBtn.disabled = true;
-        loginBtnText.style.display = 'none';
-        loginBtnSpinner.style.display = 'inline-block';
-      } else {
-        loginBtn.disabled = false;
-        loginBtnText.style.display = 'inline';
-        loginBtnSpinner.style.display = 'none';
-      }
-    }
-
-    // Form submission
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      hideMessages();
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-
-      // Basic validation
-      if (!email || !password) {
-        showError('Please fill in all fields');
-        return;
-      }
-
-      if (!email.includes('@')) {
-        showError('Please enter a valid email address');
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        // TODO: Replace with Firebase Auth
-        // For now, simulate authentication
-        await simulateAuth(email, password);
-        
-        showSuccess('Login successful! Redirecting...');
-        
-        // Redirect to main application after successful login
-        setTimeout(() => {
-          window.location.href = 'tutor_manager.html';
-        }, 1500);
-
-      } catch (error) {
-        showError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    // Simulate authentication (replace with Firebase Auth)
-    async function simulateAuth(email, password) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simple demo validation
-          if (email === 'admin@example.com' && password === 'password') {
-            resolve({ user: { email, uid: 'demo-user-id' } });
-          } else {
-            reject(new Error('Invalid email or password'));
-          }
-        }, 1000);
-      });
-    }
-
-    // Social login handlers
-    googleLogin.addEventListener('click', async () => {
-      hideMessages();
-      setLoading(true);
-      
-      try {
-        // TODO: Implement Google OAuth with Firebase
-        showError('Google login not implemented yet');
-      } catch (error) {
-        showError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    githubLogin.addEventListener('click', async () => {
-      hideMessages();
-      setLoading(true);
-      
-      try {
-        // TODO: Implement GitHub OAuth with Firebase
-        showError('GitHub login not implemented yet');
-      } catch (error) {
-        showError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    // Forgot password handler
-    forgotPassword.addEventListener('click', async (e) => {
-      e.preventDefault();
-      hideMessages();
-      
-      const email = emailInput.value.trim();
-      
-      if (!email || !email.includes('@')) {
-        showError('Please enter a valid email address first');
-        return;
-      }
-
-      try {
-        // TODO: Implement password reset with Firebase
-        showSuccess('Password reset email sent! Check your inbox.');
-      } catch (error) {
-        showError(error.message);
-      }
-    });
-
-    // Input validation on blur
-    emailInput.addEventListener('blur', () => {
-      const email = emailInput.value.trim();
-      if (email && !email.includes('@')) {
-        showError('Please enter a valid email address');
-      } else {
-        hideMessages();
-      }
-    });
-
-    passwordInput.addEventListener('blur', () => {
-      hideMessages();
-    });
-
-    // Enter key navigation
-    emailInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        passwordInput.focus();
-      }
-    });
-
-    passwordInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        loginForm.dispatchEvent(new Event('submit'));
-      }
-    });
-
-    // Focus first input on page load
-    window.addEventListener('load', () => {
-      emailInput.focus();
-    });
+    loginBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        console.log(userCredential);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+})
   </script>
+<!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
 </body>
 </html>
