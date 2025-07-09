@@ -291,9 +291,12 @@
 
     loginBtn.addEventListener('click', (e) => {
     e.preventDefault();
+    email = emailInput.value;
+    password = passwordInput.value;
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         console.log(userCredential);
+        window.location.href = 'tutor_manager.html';
     })
     .catch((error) => {
         console.log(error);
