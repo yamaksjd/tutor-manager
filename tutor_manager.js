@@ -12,13 +12,9 @@ const firebaseConfig = {
 
 
 window.addEventListener("load", () => {
+  const form = document.getElementById("sessionForm");
  
-  /*
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const form = document.getElementById("sessionForm");
-  */
+  
     // Initialize calendar
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
