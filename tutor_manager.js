@@ -243,12 +243,18 @@ window.addEventListener("load", async () => {
       }
     ];
     */
-    renderStudentList()
-    renderTutorList()
-    renderSubjectSelection()
-    // Define tutor rates - change later 
-  
-    
+    // Load all data from Firestore and update UI
+    await loadAllStudents();
+    await loadAllTutors();
+    await loadAllSessions();
+    renderStudentList();
+    renderTutorList();
+    renderSubjectSelection();
+    // Render all sessions in the session table
+    const sessionTable = document.getElementById("sessionTable");
+    sessionTable.innerHTML = '';
+    sessions.forEach(session => renderSession(session, sessionTable));
+    updateTotals();
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
   
