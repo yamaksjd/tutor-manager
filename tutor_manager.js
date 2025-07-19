@@ -9,9 +9,40 @@ const firebaseConfig = {
 };
 
 */
+import { 
+  students, tutors, sessions,
+  loadAllStudents, loadAllTutors, loadAllSessions,
+  addStudent, updateStudent, deleteStudent,
+  addTutor, updateTutor, deleteTutor,
+  addSession, updateSession, deleteSession
+} from './firestore_sync.js';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+window.addEventListener("load", async () => {
+  
+  // Remove duplicate Firestore CRUD logic and local array management
+  // Remove local loadStudents, loadTutors, loadSessions
+  // Remove any local push/filter logic for students, tutors, sessions
+  // Only keep UI and rendering logic, and ensure all add/update/delete operations use the imported Firestore sync functions
 
-window.addEventListener("load", () => {
+  // Remove these duplicate functions:
+  // const loadStudents = async () => { ... }
+  // const loadTutors = async () => { ... }
+  // const loadSessions = async () => { ... }
+  // loadStudents();
+  // loadTutors();
+  // loadSessions();
+  // Remove any local array push/filter for students, tutors, sessions
+
+  // All add/update/delete logic for students, tutors, sessions should use the imported Firestore sync functions only
+
   const form = document.getElementById("sessionForm");
  
   
@@ -159,6 +190,7 @@ window.addEventListener("load", () => {
 
     //creation of array to store sessions - change to localStorage() later
     //id counter (change this later)
+    /*
     let idCounter = 3;
     let sessions = [];
     let tutors = [
@@ -210,14 +242,14 @@ window.addEventListener("load", () => {
         notes:"Has a short attention span",
       }
     ];
-
+    */
     renderStudentList()
     renderTutorList()
     renderSubjectSelection()
     // Define tutor rates - change later 
   
     
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
   
       const student = document.getElementById("student-selection").value;
@@ -256,7 +288,6 @@ window.addEventListener("load", () => {
       const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
   
       const session = {
-        id: Date.now(),
         student,
         tutor,
         date,
@@ -425,7 +456,7 @@ window.addEventListener("load", () => {
     }
 
     function deleteStudent(idStudent) {
-      students = students.filter((s) => s.id !== idStudent);
+      deleteStudent(idStudent);
       renderStudentList();
       updateDropDown();   
     }
@@ -447,7 +478,7 @@ window.addEventListener("load", () => {
       addStudentButton.style.display = "block";
     })    
 
-    addStudentContainer.addEventListener("submit", (e) => {
+    addStudentContainer.addEventListener("submit", async (e) => {
       e.preventDefault()
       const name = document.getElementById("nameAdd").value;
       const parent = document.getElementById("parentAdd").value;
@@ -459,9 +490,8 @@ window.addEventListener("load", () => {
         return
       }
       //change Id generation later
-      const id = ++idCounter
-      const student = {id, name, parent, contact, notes};
-      students.push(student);
+      const student = { name, parent, contact, notes };
+      await addStudent(student);
       console.log("You added "+ name);
 
       renderStudentList();
@@ -507,12 +537,8 @@ window.addEventListener("load", () => {
       const parent = document.getElementById("parentEdit").value;
       const contact = document.getElementById("contactEdit").value;
       const notes = document.getElementById("notesEdit").value;
-
-      studentToEdit.name = name;
-      studentToEdit.parent = parent;
-      studentToEdit.conatact = contact;
-      studentToEdit.notes = notes;
-
+      const updated = { name, parent, contact, notes };
+      updateStudent(studentToEdit.id, updated);
       updateDropDown();
       renderStudentList();
       editStudentForm.reset();     
@@ -707,7 +733,7 @@ window.addEventListener("load", () => {
       addTutorButton.style.display = "block";
     });    
 
-    addTutorForm.addEventListener("submit", (e) => {
+    addTutorForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = document.getElementById("tutorNameAdd").value;
       const contact = document.getElementById("tutorContactAdd").value;
@@ -726,14 +752,8 @@ window.addEventListener("load", () => {
 
       // Increment counter before using it for the new tutor
       idCounter++;
-      const tutor = {
-        id: idCounter,
-        name,
-        contact,
-        rate,
-        notes
-      };
-      tutors.push(tutor);
+      const tutor = { name, contact, rate, notes };
+      await addTutor(tutor);
       console.log("You added " + name);
 
       renderTutorList();
@@ -771,7 +791,7 @@ window.addEventListener("load", () => {
     }
 
     function deleteTutor(tutorId) {
-      tutors = tutors.filter((t) => t.id !== tutorId);
+      deleteTutor(tutorId);
       renderTutorList();
       updateDropDown();   
     }
@@ -808,17 +828,8 @@ window.addEventListener("load", () => {
       const contact = document.getElementById("tutorContactEdit").value;
       const rate = parseFloat(document.getElementById("tutorRateEdit").value);
       const notes = document.getElementById("tutorNotesEdit").value;
-
-      tutorToEdit.name = name;
-      tutorToEdit.contact = contact;
-      tutorToEdit.rate = rate;
-      tutorToEdit.notes = notes;
-      tutorToEdit.subjects = selectedSubjects;
-
-      const editTutorForm = document.getElementById("editTutorForm");
-      const editTutorContainer = document.getElementById("edit-tutor-form");
-      const tutorListContainer = document.getElementById("tutor-list");
-
+      const updated = { name, contact, rate, notes };
+      updateTutor(tutorToEdit.id, updated);
       renderTutorList();
       updateDropDown();
       editTutorForm.reset();     
