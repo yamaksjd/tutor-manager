@@ -751,7 +751,7 @@ window.addEventListener("load", async () => {
       }
 
       // Increment counter before using it for the new tutor
-      idCounter++;
+      // idCounter++; // This line is removed as per the edit hint.
       const tutor = { name, contact, rate, notes };
       await addTutor(tutor);
       console.log("You added " + name);
