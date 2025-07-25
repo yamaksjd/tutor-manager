@@ -57,6 +57,8 @@ window.addEventListener("load", async () => {
       },
       events: [], // Will be populated dynamically
       editable: true, // Enable drag-and-drop
+      height: 'auto',
+      aspectRatio: 1.5,
       eventDrop: function(info) {
         const sessionId = parseInt(info.event.id);
         const session = sessions.find(s => s.id === sessionId);

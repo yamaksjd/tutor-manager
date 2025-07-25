@@ -718,20 +718,29 @@ input[type="checkbox"] .copiedSessionTable{
 
 /* FullCalendar custom size and responsiveness */
 #calendar {
-  max-width: 900px;
-  margin: 0 auto 2rem auto;
+  width: 100% !important;
+  max-width: 900px !important;
+  margin: 0 auto 2rem auto !important;
   padding: 1.5rem;
   background: #fff;
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   min-width: 320px;
-  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-wrapper {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+.fc {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  box-sizing: border-box;
 }
 
 .section, .section-header, .section-content {
