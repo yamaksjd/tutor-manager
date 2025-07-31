@@ -9,11 +9,15 @@ const firebaseConfig = {
 };
 
 */
-import { 
+import {
   students, tutors, sessions,
   loadAllStudents, loadAllTutors, loadAllSessions,
-  addStudent, updateStudent, deleteStudent,
-  addTutor, updateTutor, deleteTutor,
+  addStudent,
+  updateStudent as updateStudentFirestore,
+  deleteStudent as deleteStudentFirestore,
+  addTutor,
+  updateTutor as updateTutorFirestore,
+  deleteTutor as deleteTutorFirestore,
   addSession, updateSession, deleteSession
 } from './firestore_sync.js';
 import {
@@ -439,7 +443,7 @@ window.addEventListener("load", async () => {
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
           const idStudent = student.id;
-          deleteStudent(idStudent);
+          removeStudent(idStudent);
           e.stopPropagation();
           console.log("You deleted "+ student.name);
         })
@@ -461,10 +465,10 @@ window.addEventListener("load", async () => {
       });
     }
 
-    function deleteStudent(idStudent) {
-      deleteStudent(idStudent);
+    async function removeStudent(idStudent) {
+      await deleteStudentFirestore(idStudent);
       renderStudentList();
-      updateDropDown();   
+      updateDropDown();
     }
     const addStudentButton = document.getElementById("addStudentBtn");
     const addStudentForm = document.getElementById("newStudentForm");
@@ -533,21 +537,21 @@ window.addEventListener("load", async () => {
       notes.value = studentToEdit.notes;
 
       editStudentForm.addEventListener("submit", (e) => {
-        updateStudent(studentToEdit)
+        saveStudentUpdate(studentToEdit)
         e.preventDefault();
       })
     }
 
-    function updateStudent(studentToEdit) {
+    async function saveStudentUpdate(studentToEdit) {
       const name = document.getElementById("nameEdit").value;
       const parent = document.getElementById("parentEdit").value;
       const contact = document.getElementById("contactEdit").value;
       const notes = document.getElementById("notesEdit").value;
       const updated = { name, parent, contact, notes };
-      updateStudent(studentToEdit.id, updated);
+      await updateStudentFirestore(studentToEdit.id, updated);
       updateDropDown();
       renderStudentList();
-      editStudentForm.reset();     
+      editStudentForm.reset();
       editStudentContainer.classList.add("hidden");
       studentListContainer.classList.remove("hidden");
       addStudentButton.style.display = "block";
@@ -697,7 +701,7 @@ window.addEventListener("load", async () => {
         
         deleteIcon.addEventListener("click", (e) => {
           const tutorId = tutor.id;
-          deleteTutor(tutorId);
+          removeTutor(tutorId);
           e.stopPropagation();
           console.log("You deleted "+ tutor.name);
         });
@@ -796,10 +800,10 @@ window.addEventListener("load", async () => {
       });
     }
 
-    function deleteTutor(tutorId) {
-      deleteTutor(tutorId);
+    async function removeTutor(tutorId) {
+      await deleteTutorFirestore(tutorId);
       renderTutorList();
-      updateDropDown();   
+      updateDropDown();
     }
 
     function editTutor(tutorId) {
@@ -824,21 +828,21 @@ window.addEventListener("load", async () => {
 
       const editTutorForm = document.getElementById("editTutorForm");
       editTutorForm.addEventListener("submit", (e) => {
-        updateTutor(tutorToEdit);
+        saveTutorUpdate(tutorToEdit);
         e.preventDefault();
       });
     }
 
-    function updateTutor(tutorToEdit) {
+    async function saveTutorUpdate(tutorToEdit) {
       const name = document.getElementById("tutorNameEdit").value;
       const contact = document.getElementById("tutorContactEdit").value;
       const rate = parseFloat(document.getElementById("tutorRateEdit").value);
       const notes = document.getElementById("tutorNotesEdit").value;
       const updated = { name, contact, rate, notes };
-      updateTutor(tutorToEdit.id, updated);
+      await updateTutorFirestore(tutorToEdit.id, updated);
       renderTutorList();
       updateDropDown();
-      editTutorForm.reset();     
+      editTutorForm.reset();
       editTutorContainer.classList.add("hidden");
       tutorListContainer.classList.remove("hidden");
       addTutorButton.style.display = "block";
