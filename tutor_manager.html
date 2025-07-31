@@ -34,6 +34,20 @@
         
         // Make calendar available globally
         window.calendar = calendar;
+
+        // Calendar toggle logic
+        const calendarToggle = document.getElementById('calendar-toggle');
+        const calendarSectionContent = document.getElementById('calendar-section-content');
+        const calendarToggleIcon = calendarToggle.querySelector('.toggle-icon');
+
+        calendarToggle.addEventListener('click', function() {
+          calendarToggle.classList.toggle('active');
+          calendarSectionContent.classList.toggle('hidden');
+          // Optionally, you can re-render or resize the calendar if needed:
+          // if (!calendarSectionContent.classList.contains('hidden')) {
+          //   window.calendar.updateSize();
+          // }
+        });
       });
 
     </script>
@@ -57,7 +71,17 @@
 
       <!-- HOME VIEW -->
       <div id="home-view" class="view">
-        <div class="calendar-wrapper"><div id="calendar"></div></div>
+        <div class="section">
+          <div class="section-header active" id="calendar-toggle">
+            <h3>Calendar</h3>
+            <ion-icon name="chevron-down-outline" class="toggle-icon"></ion-icon>
+          </div>
+          <div class="section-content" id="calendar-section-content">
+            <div class="calendar-wrapper">
+              <div id="calendar"></div>
+            </div>
+          </div>
+        </div>
         <br></br>
         <div class="section">
           <div class="section-header">
