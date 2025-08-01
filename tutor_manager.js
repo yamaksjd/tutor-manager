@@ -62,7 +62,7 @@ window.addEventListener("load", async () => {
       events: [], // Will be populated dynamically
       editable: true, // Enable drag-and-drop
       eventDrop: function(info) {
-        const sessionId = parseInt(info.event.id);
+        const sessionId = info.event.id;
         const session = sessions.find(s => s.id === sessionId);
         if (session) {
           // Update session date and time
@@ -120,7 +120,7 @@ window.addEventListener("load", async () => {
         }
       },
       eventClick: function(info) {
-        const sessionId = parseInt(info.event.id);
+        const sessionId = info.event.id;
         const session = sessions.find(s => s.id === sessionId);
         if (session) {
           showSessionDetails(session);
@@ -339,7 +339,7 @@ window.addEventListener("load", async () => {
 
     document.getElementById("sessionTable").addEventListener("change", (e) => {
       if (e.target.type === "checkbox") {
-        const sessionId = parseInt(e.target.getAttribute("data-id"));
+        const sessionId = e.target.getAttribute("data-id");
         const sessionToUpdate = sessions.find((s) => s.id === sessionId);
         if (sessionToUpdate.status === "occurred") {
           sessionToUpdate.paid = e.target.checked;
