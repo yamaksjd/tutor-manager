@@ -298,11 +298,12 @@
     .then((userCredential) => {
       console.log("Logged in with:");
       console.log("Email:", email);
-      console.log("Password:", password); // Remove this in production!
       window.location.href = 'tutor_manager.html';
     })
     .catch((error) => {
       console.log(error);
+      errorMessage.textContent = error.message;
+      errorMessage.style.display = 'block';
     })
   });
   </script>
