@@ -9,11 +9,15 @@ const firebaseConfig = {
 };
 
 */
-import { 
+import {
   students, tutors, sessions,
   loadAllStudents, loadAllTutors, loadAllSessions,
-  addStudent, updateStudent, deleteStudent,
-  addTutor, updateTutor, deleteTutor,
+  addStudent,
+  updateStudent as updateStudentFirestore,
+  deleteStudent as deleteStudentFirestore,
+  addTutor,
+  updateTutor as updateTutorFirestore,
+  deleteTutor as deleteTutorFirestore,
   addSession, updateSession, deleteSession
 } from './firestore_sync.js';
 import {
@@ -57,7 +61,7 @@ window.addEventListener("load", async () => {
       },
       events: [], // Will be populated dynamically
       editable: true, // Enable drag-and-drop
-      eventDrop: function(info) {
+      eventDrop: async function(info) {
         const sessionId = parseInt(info.event.id);
         const session = sessions.find(s => s.id === sessionId);
         if (session) {
@@ -76,6 +80,12 @@ window.addEventListener("load", async () => {
           session.date = newDate;
           session.startTime = newStartTime;
           session.endTime = newEndTime;
+
+          await updateSession(session.id, {
+            date: session.date,
+            startTime: session.startTime,
+            endTime: session.endTime
+          });
 
           // Update the event in the calendar
           info.event.setEnd(`${newDate}T${newEndTime}`);
@@ -301,12 +311,21 @@ window.addEventListener("load", async () => {
         endTime,
         duration,
         rate,
-        total, 
+        total,
         paid: false,
         status: "hasn't occurred yet",
         subject,
       };
-      
+
+      // Persist session and retrieve ID
+      const newId = await addSession(session);
+      session.id = newId;
+
+      // Push to local array if not already present
+      if (!sessions.find(s => s.id === newId)) {
+        sessions.push(session);
+      }
+
       // Add session to calendar
       if (window.calendar) {
         const event = {
@@ -314,16 +333,14 @@ window.addEventListener("load", async () => {
           title: `${student} - ${subject} (${tutor})`,
           start: `${date}T${startTime}`,
           end: `${date}T${endTime}`,
-          backgroundColor: session.status === 'cancelled' ? '#ef4444' : 
+          backgroundColor: session.status === 'cancelled' ? '#ef4444' :
                          session.status === 'occurred' ? '#10b981' : '#3b82f6',
-          borderColor: session.status === 'cancelled' ? '#ef4444' : 
+          borderColor: session.status === 'cancelled' ? '#ef4444' :
                       session.status === 'occurred' ? '#10b981' : '#3b82f6'
         };
         window.calendar.addEvent(event);
       }
-      
-      //storing session object created in temporary array 
-      sessions.push(session);
+
 
       //update UI 
       renderSession(session, document.getElementById("sessionTable"));
@@ -333,7 +350,7 @@ window.addEventListener("load", async () => {
       form.reset();
     });
 
-    document.getElementById("sessionTable").addEventListener("change", (e) => {
+    document.getElementById("sessionTable").addEventListener("change", async (e) => {
       if (e.target.type === "checkbox") {
         const sessionId = parseInt(e.target.getAttribute("data-id"));
         const sessionToUpdate = sessions.find((s) => s.id === sessionId);
@@ -341,6 +358,7 @@ window.addEventListener("load", async () => {
           sessionToUpdate.paid = e.target.checked;
           const paidText = e.target.parentElement.querySelector("span");
           paidText.textContent = e.target.checked ? "Received" : "Not Received";
+          await updateSession(sessionId, { paid: sessionToUpdate.paid });
           updateTotals();
         }
       }
@@ -439,7 +457,7 @@ window.addEventListener("load", async () => {
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
           const idStudent = student.id;
-          deleteStudent(idStudent);
+          removeStudent(idStudent);
           e.stopPropagation();
           console.log("You deleted "+ student.name);
         })
@@ -461,10 +479,10 @@ window.addEventListener("load", async () => {
       });
     }
 
-    function deleteStudent(idStudent) {
-      deleteStudent(idStudent);
+    async function removeStudent(idStudent) {
+      await deleteStudentFirestore(idStudent);
       renderStudentList();
-      updateDropDown();   
+      updateDropDown();
     }
     const addStudentButton = document.getElementById("addStudentBtn");
     const addStudentForm = document.getElementById("newStudentForm");
@@ -532,22 +550,29 @@ window.addEventListener("load", async () => {
       contact.value = studentToEdit.contact;
       notes.value = studentToEdit.notes;
 
-      editStudentForm.addEventListener("submit", (e) => {
-        updateStudent(studentToEdit)
+      const submitHandler = (e) => {
+        saveStudentUpdate(studentToEdit);
         e.preventDefault();
-      })
+      };
+
+      if (editStudentForm._submitHandler) {
+        editStudentForm.removeEventListener("submit", editStudentForm._submitHandler);
+      }
+
+      editStudentForm._submitHandler = submitHandler;
+      editStudentForm.addEventListener("submit", submitHandler, { once: true });
     }
 
-    function updateStudent(studentToEdit) {
+    async function saveStudentUpdate(studentToEdit) {
       const name = document.getElementById("nameEdit").value;
       const parent = document.getElementById("parentEdit").value;
       const contact = document.getElementById("contactEdit").value;
       const notes = document.getElementById("notesEdit").value;
       const updated = { name, parent, contact, notes };
-      updateStudent(studentToEdit.id, updated);
+      await updateStudentFirestore(studentToEdit.id, updated);
       updateDropDown();
       renderStudentList();
-      editStudentForm.reset();     
+      editStudentForm.reset();
       editStudentContainer.classList.add("hidden");
       studentListContainer.classList.remove("hidden");
       addStudentButton.style.display = "block";
@@ -697,7 +722,7 @@ window.addEventListener("load", async () => {
         
         deleteIcon.addEventListener("click", (e) => {
           const tutorId = tutor.id;
-          deleteTutor(tutorId);
+          removeTutor(tutorId);
           e.stopPropagation();
           console.log("You deleted "+ tutor.name);
         });
@@ -796,10 +821,10 @@ window.addEventListener("load", async () => {
       });
     }
 
-    function deleteTutor(tutorId) {
-      deleteTutor(tutorId);
+    async function removeTutor(tutorId) {
+      await deleteTutorFirestore(tutorId);
       renderTutorList();
-      updateDropDown();   
+      updateDropDown();
     }
 
     function editTutor(tutorId) {
@@ -823,22 +848,29 @@ window.addEventListener("load", async () => {
       notes.value = tutorToEdit.notes;
 
       const editTutorForm = document.getElementById("editTutorForm");
-      editTutorForm.addEventListener("submit", (e) => {
-        updateTutor(tutorToEdit);
+      const submitHandler = (e) => {
+        saveTutorUpdate(tutorToEdit);
         e.preventDefault();
-      });
+      };
+
+      if (editTutorForm._submitHandler) {
+        editTutorForm.removeEventListener("submit", editTutorForm._submitHandler);
+      }
+
+      editTutorForm._submitHandler = submitHandler;
+      editTutorForm.addEventListener("submit", submitHandler, { once: true });
     }
 
-    function updateTutor(tutorToEdit) {
+    async function saveTutorUpdate(tutorToEdit) {
       const name = document.getElementById("tutorNameEdit").value;
       const contact = document.getElementById("tutorContactEdit").value;
       const rate = parseFloat(document.getElementById("tutorRateEdit").value);
       const notes = document.getElementById("tutorNotesEdit").value;
       const updated = { name, contact, rate, notes };
-      updateTutor(tutorToEdit.id, updated);
+      await updateTutorFirestore(tutorToEdit.id, updated);
       renderTutorList();
       updateDropDown();
-      editTutorForm.reset();     
+      editTutorForm.reset();
       editTutorContainer.classList.add("hidden");
       tutorListContainer.classList.remove("hidden");
       addTutorButton.style.display = "block";
@@ -1079,7 +1111,7 @@ window.addEventListener("load", async () => {
         input.value = session.date;
         input.classList.add("time-edit-input");
         
-        input.addEventListener("blur", () => {
+        input.addEventListener("blur", async () => {
           const newDate = input.value;
           if (newDate && newDate !== session.date) {
             session.date = newDate;
@@ -1093,6 +1125,8 @@ window.addEventListener("load", async () => {
                 event.setEnd(`${session.date}T${session.endTime}`);
               }
             }
+
+            await updateSession(session.id, { date: session.date, startTime: session.startTime, endTime: session.endTime });
           } else {
             dateUI.textContent = session.date;
           }
@@ -1120,7 +1154,7 @@ window.addEventListener("load", async () => {
         input.value = session.startTime;
         input.classList.add("time-edit-input");
         
-        input.addEventListener("blur", () => {
+        input.addEventListener("blur", async () => {
           const newStartTime = input.value;
           if (newStartTime && newStartTime !== session.startTime) {
             session.startTime = newStartTime;
@@ -1147,6 +1181,8 @@ window.addEventListener("load", async () => {
 
             // Update totals
             updateTotals();
+
+            await updateSession(session.id, { startTime: session.startTime, endTime: session.endTime });
           } else {
             startTimeUI.textContent = session.startTime;
           }
@@ -1188,7 +1224,7 @@ window.addEventListener("load", async () => {
           select.appendChild(option);
         });
         
-        select.addEventListener("blur", () => {
+        select.addEventListener("blur", async () => {
           const newStudent = select.value;
           if (newStudent && newStudent !== session.student) {
             session.student = newStudent;
@@ -1201,6 +1237,8 @@ window.addEventListener("load", async () => {
                 event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
               }
             }
+
+            await updateSession(session.id, { student: session.student });
           } else {
             studentUI.textContent = session.student;
           }
@@ -1237,7 +1275,7 @@ window.addEventListener("load", async () => {
           select.appendChild(option);
         });
         
-        select.addEventListener("blur", () => {
+        select.addEventListener("blur", async () => {
           const newTutor = select.value;
           if (newTutor && newTutor !== session.tutor) {
             const oldTutor = session.tutor;
@@ -1268,6 +1306,13 @@ window.addEventListener("load", async () => {
             }
 
             updateTotals();
+
+            await updateSession(session.id, {
+              tutor: session.tutor,
+              rate: session.rate,
+              total: session.total,
+              subject: session.subject
+            });
           } else {
             tutorUI.textContent = session.tutor;
           }
@@ -1307,7 +1352,7 @@ window.addEventListener("load", async () => {
           });
         }
         
-        select.addEventListener("blur", () => {
+        select.addEventListener("blur", async () => {
           const newSubject = select.value;
           if (newSubject && newSubject !== session.subject) {
             session.subject = newSubject;
@@ -1320,6 +1365,8 @@ window.addEventListener("load", async () => {
                 event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
               }
             }
+
+            await updateSession(session.id, { subject: session.subject });
           } else {
             subjectUI.textContent = session.subject;
           }
@@ -1348,7 +1395,7 @@ window.addEventListener("load", async () => {
         input.value = session.duration;
         input.classList.add("time-edit-input");
         
-        input.addEventListener("blur", () => {
+        input.addEventListener("blur", async () => {
           const newDuration = parseFloat(input.value);
           if (!isNaN(newDuration) && newDuration > 0 && newDuration !== session.duration) {
             session.duration = newDuration;
@@ -1374,6 +1421,8 @@ window.addEventListener("load", async () => {
 
             // Update totals
             updateTotals();
+
+            await updateSession(session.id, { duration: session.duration, endTime: session.endTime, total: session.total });
           } else {
             durationUI.textContent = session.duration;
           }
@@ -1440,7 +1489,7 @@ window.addEventListener("load", async () => {
         statusSelect.appendChild(optionElement);
       });
 
-      statusSelect.addEventListener("change", (e) => {
+      statusSelect.addEventListener("change", async (e) => {
         session.status = e.target.value;
         if (session.status === "cancelled") {
           session.paid = false;
@@ -1471,6 +1520,11 @@ window.addEventListener("load", async () => {
         }
         updateTotals();
         updateCalendarEvent(session); // Update calendar when status changes
+        await updateSession(session.id, {
+          status: session.status,
+          paid: session.paid,
+          total: session.total
+        });
       });
 
       statusCell.appendChild(statusSelect);
