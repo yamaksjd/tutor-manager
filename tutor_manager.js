@@ -536,10 +536,17 @@ window.addEventListener("load", async () => {
       contact.value = studentToEdit.contact;
       notes.value = studentToEdit.notes;
 
-      editStudentForm.addEventListener("submit", (e) => {
-        saveStudentUpdate(studentToEdit)
+      const submitHandler = (e) => {
+        saveStudentUpdate(studentToEdit);
         e.preventDefault();
-      })
+      };
+
+      if (editStudentForm._submitHandler) {
+        editStudentForm.removeEventListener("submit", editStudentForm._submitHandler);
+      }
+
+      editStudentForm._submitHandler = submitHandler;
+      editStudentForm.addEventListener("submit", submitHandler, { once: true });
     }
 
     async function saveStudentUpdate(studentToEdit) {
@@ -827,10 +834,17 @@ window.addEventListener("load", async () => {
       notes.value = tutorToEdit.notes;
 
       const editTutorForm = document.getElementById("editTutorForm");
-      editTutorForm.addEventListener("submit", (e) => {
+      const submitHandler = (e) => {
         saveTutorUpdate(tutorToEdit);
         e.preventDefault();
-      });
+      };
+
+      if (editTutorForm._submitHandler) {
+        editTutorForm.removeEventListener("submit", editTutorForm._submitHandler);
+      }
+
+      editTutorForm._submitHandler = submitHandler;
+      editTutorForm.addEventListener("submit", submitHandler, { once: true });
     }
 
     async function saveTutorUpdate(tutorToEdit) {
