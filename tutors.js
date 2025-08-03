@@ -1,3 +1,6 @@
+
+
+
 function renderTutorList() {
       const listContainer = document.getElementById("tutor-list");
       listContainer.innerHTML = " ";
@@ -270,6 +273,7 @@ function renderTutorList() {
                 document.getElementById(`totalReceived${tutorToViewDetails.name}`).textContent = tutorReceived.toFixed(2);
                 document.getElementById(`totalNotReceived${tutorToViewDetails.name}`).textContent = tutorNotReceived.toFixed(2);
               }
+            }
 
               // Add event listeners for subject management
       const addSubjectBtn = document.getElementById(`add-subject-btn-${tutorToViewDetails.id}`);
@@ -304,3 +308,120 @@ function renderTutorList() {
           showTutorDetails(tutorId); // Refresh the view
         });
       });
+
+      function renderTutorSessions(tutorName) {
+      const tableElement = document.getElementById(`sessionTable${tutorName}`);
+      tableElement.innerHTML = ''; // Clear existing content
+      
+      sessions.forEach((session) => {
+        if(session.tutor === tutorName) {
+          renderSession(session, tableElement);
+        }
+      });
+    }
+
+    function renderSubjectSelection() {
+      const tutorSelect = document.getElementById("tutor-selection");
+      const subjectSelect = document.getElementById("subject-selection");
+
+      // Initial state - clear and disable subject selection
+      subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+      subjectSelect.disabled = true;
+
+      // Add event listener to tutor selection
+      tutorSelect.addEventListener("change", () => {
+        const selectedTutor = tutorSelect.value;
+        
+        if (!selectedTutor) {
+          // If no tutor is selected, clear and disable subject selection
+          subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+          subjectSelect.disabled = true;
+          return;
+        }
+
+        // Find the selected tutor's subjects
+        const tutor = tutors.find(t => t.name === selectedTutor);
+        if (!tutor || !tutor.subjects || tutor.subjects.length === 0) {
+          subjectSelect.innerHTML = '<option value="">No subjects available</option>';
+          subjectSelect.disabled = true;
+          return;
+        }
+
+        // Enable subject selection and populate with tutor's subjects
+        subjectSelect.disabled = false;
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        tutor.subjects.forEach(subject => {
+          const option = document.createElement("option");
+          option.value = subject;
+          option.textContent = subject.charAt(0).toUpperCase() + subject.slice(1); // Capitalize first letter
+          subjectSelect.appendChild(option);
+        });
+      });
+    }
+
+    // adding tutor column with double-click functionality
+          const tutorUI = document.createElement("td");
+          tutorUI.textContent = session.tutor;
+          tutorUI.classList.add("editable-time");
+          tutorUI.addEventListener("dblclick", () => {
+            const select = document.createElement("select");
+            select.classList.add("time-edit-input");
+            
+            // Add all tutors as options
+            tutors.forEach(tutor => {
+              const option = document.createElement("option");
+              option.value = tutor.name;
+              option.textContent = tutor.name;
+              if (tutor.name === session.tutor) {
+                option.selected = true;
+              }
+              select.appendChild(option);
+            });
+            
+            select.addEventListener("blur", () => {
+              const newTutor = select.value;
+              if (newTutor && newTutor !== session.tutor) {
+                const oldTutor = session.tutor;
+                session.tutor = newTutor;
+                tutorUI.textContent = session.tutor;
+    
+                // Update rate and total
+                const tutorObj = tutors.find(t => t.name === newTutor);
+                if (tutorObj) {
+                  session.rate = tutorObj.rate;
+                  session.total = session.duration * tutorObj.rate;
+                  totalUI.textContent = session.total.toFixed(2);
+                }
+    
+                // Update calendar event title
+                if (window.calendar) {
+                  const event = window.calendar.getEventById(session.id);
+                  if (event) {
+                    event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
+                  }
+                }
+    
+                // Update subject if needed
+                const tutorSubjects = tutorObj.subjects || [];
+                if (!tutorSubjects.includes(session.subject)) {
+                  session.subject = tutorSubjects[0] || '';
+                  subjectUI.textContent = session.subject;
+                }
+    
+                updateTotals();
+              } else {
+                tutorUI.textContent = session.tutor;
+              }
+            });
+            
+            select.addEventListener("keypress", (e) => {
+              if (e.key === "Enter") {
+                select.blur();
+              }
+            });
+            
+            tutorUI.textContent = "";
+            tutorUI.appendChild(select);
+            select.focus();
+          });
+          newTableRow.appendChild(tutorUI);
