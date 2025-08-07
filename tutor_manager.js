@@ -1,19 +1,8 @@
 
-import { 
-  students, tutors, sessions,
-  loadAllStudents, loadAllTutors, loadAllSessions,
-  addStudent, updateStudent, deleteStudent,
-  addTutor, updateTutor, deleteTutor,
-  addSession, updateSession, deleteSession
-} from './firestore_sync.js';
-import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  updateDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { renderStudentList } from './student.js';
+import { renderTutorList, renderSubjectSelection } from './tutor.js';
+import { renderSession, showSessionDetails, updateTotals } from './session.js';
+import { sessions} from './firestore_sync.js';
 
 window.addEventListener("load", async () => {
  

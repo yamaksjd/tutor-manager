@@ -1,4 +1,7 @@
-
+import { tutors, sessions } from './firestore_sync.js';
+import { addTutor, updateTutor, deleteTutor } from './firestore_sync.js';
+import { createIcon, updateDropDown } from './utils.js';
+import { renderSession } from './session.js';
 
 
 function renderTutorList() {
@@ -18,7 +21,7 @@ function renderTutorList() {
         
         deleteIcon.addEventListener("click", (e) => {
           const tutorId = tutor.id;
-          deleteTutor(tutorId);
+          deleteTutorFrontend(tutorId);
           e.stopPropagation();
           console.log("You deleted "+ tutor.name);
         });
@@ -26,7 +29,7 @@ function renderTutorList() {
         editIcon.addEventListener("click", (e) => {
           const tutorId = tutor.id;
           e.stopPropagation();
-          editTutor(tutorId);
+          editTutorFrontend(tutorId);
           console.log("You edited "+ tutor.name);
         });
         
@@ -95,53 +98,53 @@ function renderTutorList() {
           addTutorButton.style.display = "block";
         });
 
-        function deleteTutor(tutorId) {
+        function deleteTutorFrontend(tutorId) {
               deleteTutor(tutorId);
               renderTutorList();
               updateDropDown();   
             }
         
-            function editTutor(tutorId) {
-              const tutorToEdit = tutors.find((t) => t.id === tutorId);
-              const tutorListContainer = document.getElementById("tutor-list");
-              const editTutorContainer = document.getElementById("edit-tutor-form");
-        
-              tutorListContainer.classList.add("hidden");
-              editTutorContainer.classList.remove("hidden");
-              addTutorButton.style.display = "none";
-        
-              // Pre-fill the form with tutor details
-              const name = document.getElementById("tutorNameEdit");
-              const contact = document.getElementById("tutorContactEdit");
-              const rate = document.getElementById("tutorRateEdit");
-              const notes = document.getElementById("tutorNotesEdit");
-        
-              name.value = tutorToEdit.name;
-              contact.value = tutorToEdit.contact;
-              rate.value = tutorToEdit.rate;
-              notes.value = tutorToEdit.notes;
-        
-              const editTutorForm = document.getElementById("editTutorForm");
-              editTutorForm.addEventListener("submit", (e) => {
-                updateTutor(tutorToEdit);
-                e.preventDefault();
-              });
-            }
-        
-            function updateTutor(tutorToEdit) {
-              const name = document.getElementById("tutorNameEdit").value;
-              const contact = document.getElementById("tutorContactEdit").value;
-              const rate = parseFloat(document.getElementById("tutorRateEdit").value);
-              const notes = document.getElementById("tutorNotesEdit").value;
-              const updated = { name, contact, rate, notes };
-              updateTutor(tutorToEdit.id, updated);
-              renderTutorList();
-              updateDropDown();
-              editTutorForm.reset();     
-              editTutorContainer.classList.add("hidden");
-              tutorListContainer.classList.remove("hidden");
-              addTutorButton.style.display = "block";
-            }
+        function editTutorFrontend(tutorId) {
+            const tutorToEdit = tutors.find((t) => t.id === tutorId);
+            const tutorListContainer = document.getElementById("tutor-list");
+            const editTutorContainer = document.getElementById("edit-tutor-form");
+    
+            tutorListContainer.classList.add("hidden");
+            editTutorContainer.classList.remove("hidden");
+            addTutorButton.style.display = "none";
+    
+            // Pre-fill the form with tutor details
+            const name = document.getElementById("tutorNameEdit");
+            const contact = document.getElementById("tutorContactEdit");
+            const rate = document.getElementById("tutorRateEdit");
+            const notes = document.getElementById("tutorNotesEdit");
+    
+            name.value = tutorToEdit.name;
+            contact.value = tutorToEdit.contact;
+            rate.value = tutorToEdit.rate;
+            notes.value = tutorToEdit.notes;
+    
+            const editTutorForm = document.getElementById("editTutorForm");
+            editTutorForm.addEventListener("submit", (e) => {
+            updateTutorFrontend(tutorToEdit);
+            e.preventDefault();
+            });
+        }
+    
+        function updateTutorFrontend(tutorToEdit) {
+            const name = document.getElementById("tutorNameEdit").value;
+            const contact = document.getElementById("tutorContactEdit").value;
+            const rate = parseFloat(document.getElementById("tutorRateEdit").value);
+            const notes = document.getElementById("tutorNotesEdit").value;
+            const updated = { name, contact, rate, notes };
+            updateTutor(tutorToEdit.id, updated);
+            renderTutorList();
+            updateDropDown();
+            editTutorForm.reset();     
+            editTutorContainer.classList.add("hidden");
+            tutorListContainer.classList.remove("hidden");
+            addTutorButton.style.display = "block";
+        }
         
             document.getElementById("cancelEditTutor").addEventListener("click", () => {
               const editTutorContainer = document.getElementById("edit-tutor-form");        
@@ -425,3 +428,5 @@ function renderTutorList() {
             select.focus();
           });
           newTableRow.appendChild(tutorUI);
+
+          export {renderTutorList, showTutorDetails, renderSubjectSelection, renderTutorSessions};

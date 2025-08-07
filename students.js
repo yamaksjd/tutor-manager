@@ -1,3 +1,8 @@
+import {students, sessions} from 'firestore_sync.js';
+import{addStudent, updateStudent, deleteStudent } from 'firestore_sync.js';
+import {updateDropDown, createIcon} from 'utils.js';
+import {renderSession} from 'sessions.js';
+
 function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
       const listContainer = document.getElementById("student-list");
@@ -15,7 +20,7 @@ function renderStudentList() {
         const editIcon = createIcon("create-outline", "editIcon");
         deleteIcon.addEventListener("click", (e) => {
           const idStudent = student.id;
-          deleteStudent(idStudent);
+          deleteStudentFrontend(idStudent);
           e.stopPropagation();
           console.log("You deleted "+ student.name);
         })
@@ -37,7 +42,7 @@ function renderStudentList() {
       });
     }
 
-    function deleteStudent(idStudent) {
+    function deleteStudentFrontend(idStudent) {
       deleteStudent(idStudent);
       renderStudentList();
       updateDropDown();   
@@ -109,12 +114,12 @@ function renderStudentList() {
       notes.value = studentToEdit.notes;
 
       editStudentForm.addEventListener("submit", (e) => {
-        updateStudent(studentToEdit)
+        updateStudentFrontend(studentToEdit)
         e.preventDefault();
       })
     }
 
-    function updateStudent(studentToEdit) {
+    function updateStudentFrontend(studentToEdit) {
       const name = document.getElementById("nameEdit").value;
       const parent = document.getElementById("parentEdit").value;
       const contact = document.getElementById("contactEdit").value;
@@ -245,3 +250,5 @@ function renderStudentList() {
                 }
               });
             }
+
+    export { renderStudentList, deleteStudentFrontend, editStudent, showStudentDetails, renderStudentSessions };

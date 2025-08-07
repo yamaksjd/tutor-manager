@@ -1,3 +1,6 @@
+import { students, tutors } from "./firestore_sync.js";
+
+
 function createIcon(name, className) {
       const icon = document.createElement("ion-icon");
       icon.classList.add(className);
@@ -28,3 +31,5 @@ function updateDropDown() {
         tutorSelection.appendChild(option);
       });
     }
+
+export { createIcon, updateDropDown };
