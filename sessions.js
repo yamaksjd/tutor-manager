@@ -1,4 +1,4 @@
-  import { sessions, students, tutors} from 'firestore.sync.js';
+  import { sessions, students, tutors} from './firestore.sync.js';
   const form = document.getElementById("sessionForm");
 // Add modal close functionality
     const modal = document.getElementById('sessionModal');

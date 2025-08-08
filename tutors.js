@@ -1,7 +1,7 @@
 import { tutors, sessions } from './firestore_sync.js';
 import { addTutor, updateTutor, deleteTutor } from './firestore_sync.js';
 import { createIcon, updateDropDown } from './utils.js';
-import { renderSession } from './session.js';
+import { renderSession } from './sessions.js';
 
 
 function renderTutorList() {

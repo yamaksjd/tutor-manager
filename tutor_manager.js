@@ -1,7 +1,7 @@
 
-import { renderStudentList } from './student.js';
-import { renderTutorList, renderSubjectSelection } from './tutor.js';
-import { renderSession, showSessionDetails, updateTotals } from './session.js';
+import { renderStudentList } from './students.js';
+import { renderTutorList, renderSubjectSelection } from './tutors.js';
+import { renderSession, showSessionDetails, updateTotals } from './sessions.js';
 import { sessions} from './firestore_sync.js';
 
 window.addEventListener("load", async () => {
@@ -118,61 +118,6 @@ window.addEventListener("load", async () => {
       });
     });
 
-    //creation of array to store sessions - change to localStorage() later
-    //id counter (change this later)
-    /*
-    let idCounter = 3;
-    let sessions = [];
-    let tutors = [
-      {
-      id: 1,
-      name: "Maria",
-      contact: "maria.james@example.com",
-      notes: "prefers to teach math",
-      rate: 20,
-      subjects: ["math", "science", "english"]
-    },
-    {
-      id: 2,
-      name: "John",
-      contact: "john.watson@example.com",
-      notes: "prefers to teach physics",
-      rate: 25,
-      subjects: ["physics", "chemistry", "biology"]
-    },
-    {
-      id: 3,
-      name: "Lina",
-      contact: "lina.james@example.com",
-      notes: "prefers to teach biology",
-      rate: 18,
-      subjects: ["portuguese", "english", "history"]
-    }
-  ]
-    let students = [
-      {
-        id: 1,
-        name:"Alice",
-        parent:"Jane Smith",
-        contact: "jane.smith@example.com",
-        notes:"prefers morning sessions",
-      },
-      {
-        id: 2,
-        name:"Bob",
-        parent:"Mark Johnson",
-        contact: "mark.j@example.com",
-        notes:"Needs help with algebra",
-      },
-      {
-        id: 3,
-        name:"Charlie",
-        parent:"Laura Miller",
-        contact: "laura.m@example.com",
-        notes:"Has a short attention span",
-      }
-    ];
-    */
     renderStudentList()
     renderTutorList()
     renderSubjectSelection()

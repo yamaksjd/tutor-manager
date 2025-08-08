@@ -1,7 +1,7 @@
-import {students, sessions} from 'firestore_sync.js';
-import{addStudent, updateStudent, deleteStudent } from 'firestore_sync.js';
-import {updateDropDown, createIcon} from 'utils.js';
-import {renderSession} from 'sessions.js';
+import {students, sessions} from './firestore_sync.js';
+import{addStudent, updateStudent, deleteStudent } from './firestore_sync.js';
+import {updateDropDown, createIcon} from './utils.js';
+import {renderSession} from './sessions.js';
 
 function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
