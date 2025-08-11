@@ -1,4 +1,4 @@
-  import { sessions, students, tutors} from './firestore_sync.js';
+import { sessions, students, tutors} from 'firestore.sync.js';
   const form = document.getElementById("sessionForm");
 // Add modal close functionality
     const modal = document.getElementById('sessionModal');
@@ -28,91 +28,90 @@
       document.getElementById('modalDuration').textContent = session.duration;
       document.getElementById('modalStatus').textContent = session.status;
       document.getElementById('modalPayment').textContent = session.status === 'cancelled' ? 'Not Charged' : 
-                                                         session.status === 'hasn\'t occurred yet' ? 'Pending' :
-                                                         (session.paid ? 'Received' : 'Not Received');
+     session.status === 'hasn\'t occurred yet' ? 'Pending' : (session.paid ? 'Received' : 'Not Received');
       document.getElementById('modalAmount').textContent = session.total.toFixed(2);
 
       // Show modal
       modal.classList.remove('hidden');
     }
-          // Add session to calendar + render it + 
-          form.addEventListener("submit", async (e) => {
-                e.preventDefault();
-            
-                const student = document.getElementById("student-selection").value;
-                const tutor = document.getElementById("tutor-selection").value;
-                const date = document.getElementById("date").value;
-                const startTime = document.getElementById("startTime").value;
-                const durationRaw = document.getElementById("duration").value;
-                const duration = parseFloat(durationRaw);
-                const subject = document.getElementById("subject-selection").value;
-                
-                console.log("student:", student);
-                console.log("tutor:", tutor);
-                console.log("subject:", subject);
-                console.log("date:", date);
-                console.log("startTime:", startTime);
-                console.log("durationRaw (before parse):", durationRaw);
-                console.log("duration (after parse):", duration);
-                console.log("isNaN(duration)?", isNaN(duration));
-          
-                if (!student || !tutor || !date || !startTime || isNaN(duration) || duration<=0 || !subject) {
-                  alert("Please fill out all of the requirements in the form");
-                  return;
-                }
-          
-                const tutorObj = tutors.find((t) => t.name === tutor); 
-                
-                // Get rate from selected tutor
-                const rate = tutorObj.rate;
-                const total = duration * rate;
-          
-                // Calculate end time
-                const [startHours, startMinutes] = startTime.split(':').map(Number);
-                const totalMinutes = startHours * 60 + startMinutes + Math.round(duration * 60);
-                const endHours = Math.floor(totalMinutes / 60);
-                const endMinutes = totalMinutes % 60;
-                const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
-            
-                const session = {
-                  student,
-                  tutor,
-                  date,
-                  startTime,
-                  endTime,
-                  duration,
-                  rate,
-                  total, 
-                  paid: false,
-                  status: "hasn't occurred yet",
-                  subject,
-                };
-                
-                // Add session to calendar
-                if (window.calendar) {
-                  const event = {
-                    id: session.id,
-                    title: `${student} - ${subject} (${tutor})`,
-                    start: `${date}T${startTime}`,
-                    end: `${date}T${endTime}`,
-                    backgroundColor: session.status === 'cancelled' ? '#ef4444' : 
-                                   session.status === 'occurred' ? '#10b981' : '#3b82f6',
-                    borderColor: session.status === 'cancelled' ? '#ef4444' : 
-                                session.status === 'occurred' ? '#10b981' : '#3b82f6'
-                  };
-                  window.calendar.addEvent(event);
-                }
-                
-                //storing session object created in temporary array 
-                sessions.push(session);
-          
-                //update UI 
-                renderSession(session, document.getElementById("sessionTable"));
-                updateTotals();
-          
-                // Clear form
-                form.reset();
-              });
+    // Add session to calendar + render it + 
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+    
+        const student = document.getElementById("student-selection").value;
+        const tutor = document.getElementById("tutor-selection").value;
+        const date = document.getElementById("date").value;
+        const startTime = document.getElementById("startTime").value;
+        const durationRaw = document.getElementById("duration").value;
+        const duration = parseFloat(durationRaw);
+        const subject = document.getElementById("subject-selection").value;
+        
+        console.log("student:", student);
+        console.log("tutor:", tutor);
+        console.log("subject:", subject);
+        console.log("date:", date);
+        console.log("startTime:", startTime);
+        console.log("durationRaw (before parse):", durationRaw);
+        console.log("duration (after parse):", duration);
+        console.log("isNaN(duration)?", isNaN(duration));
+    
+        if (!student || !tutor || !date || !startTime || isNaN(duration) || duration<=0 || !subject) {
+            alert("Please fill out all of the requirements in the form");
+            return;
+        }
+    
+        const tutorObj = tutors.find((t) => t.name === tutor); 
+        
+        // Get rate from selected tutor
+        const rate = tutorObj.rate;
+        const total = duration * rate;
+    
+        // Calculate end time
+        const [startHours, startMinutes] = startTime.split(':').map(Number);
+        const totalMinutes = startHours * 60 + startMinutes + Math.round(duration * 60);
+        const endHours = Math.floor(totalMinutes / 60);
+        const endMinutes = totalMinutes % 60;
+        const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+    
+        const session = {
+            student,
+            tutor,
+            date,
+            startTime,
+            endTime,
+            duration,
+            rate,
+            total, 
+            paid: false,
+            status: "hasn't occurred yet",
+            subject,
+        };
+        
+        // Add session to calendar
+        if (window.calendar) {
+            const event = {
+            id: session.id,
+            title: `${student} - ${subject} (${tutor})`,
+            start: `${date}T${startTime}`,
+            end: `${date}T${endTime}`,
+            backgroundColor: session.status === 'cancelled' ? '#ef4444' : 
+                            session.status === 'occurred' ? '#10b981' : '#3b82f6',
+            borderColor: session.status === 'cancelled' ? '#ef4444' : 
+                        session.status === 'occurred' ? '#10b981' : '#3b82f6'
+            };
+            window.calendar.addEvent(event);
+        }
+        
+        //storing session object created in temporary array 
+        sessions.push(session);
+    
+        //update UI 
+        renderSession(session, document.getElementById("sessionTable"));
+        updateTotals();
+    
+        // Clear form
+        form.reset();
+        });
 
     
     // checkbox functionality
@@ -454,7 +453,7 @@
           tableElement.appendChild(newTableRow);
         };
 
-         function createStatusSelect(session, totalCell, paidText, paidCheckbox) {
+    function createStatusSelect(session, totalCell, paidText, paidCheckbox) {
       const statusCell = document.createElement("td");
       const statusSelect = document.createElement("select");
       statusSelect.classList.add("status-select");
@@ -507,5 +506,323 @@
       return statusCell;
     }
 
-    export { renderSession, showSessionDetails, updateTotals};
+    // 1. Create utility functions for common operations
+const sessionUtils = {
+    createTableCell(content, className = '') {
+        const cell = document.createElement("td");
+        cell.textContent = content;
+        if (className) cell.classList.add(className);
+        return cell;
+    },
+
+    handleEnterKey(e, input) {
+        if (e.key === "Enter") input.blur();
+    },
+
+    updateCalendarEvent(session, eventType, newValue) {
+        if (!window.calendar) return;
+        const event = window.calendar.getEventById(session.id);
+        if (!event) return;
+
+        switch (eventType) {
+            case 'date':
+                event.setStart(`${session.date}T${session.startTime}`);
+                event.setEnd(`${session.date}T${session.endTime}`);
+                break;
+            case 'title':
+                event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
+                break;
+            // Add other cases as needed
+        }
+    },
+
+    calculateEndTime(startTime, duration) {
+        const [hours, minutes] = startTime.split(':').map(Number);
+        const totalMinutes = hours * 60 + minutes + Math.round(duration * 60);
+        const endHours = Math.floor(totalMinutes / 60);
+        const endMinutes = totalMinutes % 60;
+        return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+    }
+};
+
+// 2. Create separate components for each editable field
+const sessionComponents = {
+    createDateCell(session) {
+        const dateCell = sessionUtils.createTableCell(session.date, 'editable-time');
+        
+        dateCell.addEventListener("dblclick", () => {
+            const input = document.createElement("input");
+            input.type = "date";
+            input.value = session.date;
+            input.classList.add("time-edit-input");
+            
+            input.addEventListener("blur", () => {
+                if (input.value && input.value !== session.date) {
+                    session.date = input.value;
+                    dateCell.textContent = session.date;
+                    sessionUtils.updateCalendarEvent(session, 'date');
+                } else {
+                    dateCell.textContent = session.date;
+                }
+            });
+            
+            input.addEventListener("keypress", e => sessionUtils.handleEnterKey(e, input));
+            dateCell.textContent = "";
+            dateCell.appendChild(input);
+            input.focus();
+        });
+        
+        return dateCell;
+    },
+
+    createTimeCell(session, isStartTime = true) {
+        const timeValue = isStartTime ? session.startTime : session.endTime;
+        const timeCell = sessionUtils.createTableCell(timeValue, 'editable-time');
+        
+        if (!isStartTime) return timeCell; // End time is not editable
+
+        timeCell.addEventListener("dblclick", () => {
+            const input = document.createElement("input");
+            input.type = "time";
+            input.value = timeValue;
+            input.classList.add("time-edit-input");
+            
+            input.addEventListener("blur", () => {
+                if (input.value && input.value !== timeValue) {
+                    session.startTime = input.value;
+                    session.endTime = sessionUtils.calculateEndTime(input.value, session.duration);
+                    timeCell.textContent = session.startTime;
+                    sessionUtils.updateCalendarEvent(session, 'time');
+                    updateTotals();
+                } else {
+                    timeCell.textContent = timeValue;
+                }
+            });
+            
+            input.addEventListener("keypress", e => sessionUtils.handleEnterKey(e, input));
+            timeCell.textContent = "";
+            timeCell.appendChild(input);
+            input.focus();
+        });
+        
+        return timeCell;
+    },
+
+    createStudentCell(session) {
+        const studentCell = sessionUtils.createTableCell(session.student, 'editable-time');
+        
+        studentCell.addEventListener("dblclick", () => {
+            const select = document.createElement("select");
+            select.classList.add("time-edit-input");
+            
+            // Add all students as options
+            students.forEach(student => {
+                const option = document.createElement("option");
+                option.value = student.name;
+                option.textContent = student.name;
+                option.selected = student.name === session.student;
+                select.appendChild(option);
+            });
+            
+            select.addEventListener("blur", () => {
+                const newStudent = select.value;
+                if (newStudent && newStudent !== session.student) {
+                    session.student = newStudent;
+                    studentCell.textContent = session.student;
+                    sessionUtils.updateCalendarEvent(session, 'title');
+                } else {
+                    studentCell.textContent = session.student;
+                }
+            });
+            
+            select.addEventListener("keypress", e => sessionUtils.handleEnterKey(e, select));
+            studentCell.textContent = "";
+            studentCell.appendChild(select);
+            select.focus();
+        });
+        
+        return studentCell;
+    },
+
+    createSubjectCell(session) {
+        const subjectCell = sessionUtils.createTableCell(session.subject, 'editable-time');
+        
+        subjectCell.addEventListener("dblclick", () => {
+            const select = document.createElement("select");
+            select.classList.add("time-edit-input");
+            
+            const tutorObj = tutors.find(t => t.name === session.tutor);
+            if (tutorObj?.subjects) {
+                tutorObj.subjects.forEach(subject => {
+                    const option = document.createElement("option");
+                    option.value = subject;
+                    option.textContent = subject;
+                    option.selected = subject === session.subject;
+                    select.appendChild(option);
+                });
+            }
+            
+            select.addEventListener("blur", () => {
+                const newSubject = select.value;
+                if (newSubject && newSubject !== session.subject) {
+                    session.subject = newSubject;
+                    subjectCell.textContent = session.subject;
+                    sessionUtils.updateCalendarEvent(session, 'title');
+                } else {
+                    subjectCell.textContent = session.subject;
+                }
+            });
+            
+            select.addEventListener("keypress", e => sessionUtils.handleEnterKey(e, select));
+            subjectCell.textContent = "";
+            subjectCell.appendChild(select);
+            select.focus();
+        });
+        
+        return subjectCell;
+    },
+
+    createDurationCell(session, endTimeCell) {
+        const durationCell = sessionUtils.createTableCell(session.duration, 'editable-time');
+        
+        durationCell.addEventListener("dblclick", () => {
+            const input = document.createElement("input");
+            input.type = "number";
+            input.step = "0.25";
+            input.value = session.duration;
+            input.classList.add("time-edit-input");
+            
+            input.addEventListener("blur", () => {
+                const newDuration = parseFloat(input.value);
+                if (!isNaN(newDuration) && newDuration > 0 && newDuration !== session.duration) {
+                    session.duration = newDuration;
+                    session.endTime = sessionUtils.calculateEndTime(session.startTime, newDuration);
+                    
+                    durationCell.textContent = session.duration;
+                    if (endTimeCell) endTimeCell.textContent = session.endTime;
+                    
+                    sessionUtils.updateCalendarEvent(session, 'time');
+                    updateTotals();
+                } else {
+                    durationCell.textContent = session.duration;
+                }
+            });
+            
+            input.addEventListener("keypress", e => sessionUtils.handleEnterKey(e, input));
+            durationCell.textContent = "";
+            durationCell.appendChild(input);
+            input.focus();
+        });
+        
+        return durationCell;
+    },
+
+    createPaymentCell(session) {
+        const paymentCell = document.createElement("td");
+        
+        // Create payment status text
+        const paymentText = document.createElement("span");
+        paymentText.textContent = session.status === "cancelled" ? "Not Charged" : 
+                                session.status === "hasn't occurred yet" ? "Pending" :
+                                (session.paid ? "Received" : "Not Received");
+        paymentText.style.margin = "10px";
+        
+        // Create payment checkbox
+        const paymentCheckbox = document.createElement("input");
+        paymentCheckbox.type = "checkbox";
+        paymentCheckbox.classList.add("sessionTable");
+        paymentCheckbox.checked = session.paid;
+        paymentCheckbox.disabled = session.status !== "occurred";
+        paymentCheckbox.setAttribute("data-id", session.id);
+        
+        paymentCell.appendChild(paymentText);
+        paymentCell.appendChild(paymentCheckbox);
+        
+        return paymentCell;
+    },
+
+    createStatusCell(session, totalCell, paymentText, paymentCheckbox) {
+        const statusCell = document.createElement("td");
+        const statusSelect = document.createElement("select");
+        statusSelect.classList.add("status-select");
+        
+        const options = ["hasn't occurred yet", "occurred", "cancelled"];
+        options.forEach(option => {
+            const optionElement = document.createElement("option");
+            optionElement.value = option;
+            optionElement.textContent = option;
+            optionElement.selected = session.status === option;
+            statusSelect.appendChild(optionElement);
+        });
+        
+        statusSelect.addEventListener("change", (e) => {
+            session.status = e.target.value;
+            this.handleStatusChange(session, totalCell, paymentText, paymentCheckbox);
+            updateTotals();
+            sessionUtils.updateCalendarEvent(session, 'status');
+        });
+        
+        statusCell.appendChild(statusSelect);
+        return statusCell;
+    },
+
+    handleStatusChange(session, totalCell, paymentText, paymentCheckbox) {
+        switch (session.status) {
+            case "cancelled":
+                session.paid = false;
+                session.originalTotal = session.total;
+                session.total = 0;
+                totalCell.textContent = "0";
+                paymentText.textContent = "Not Charged";
+                paymentCheckbox.checked = false;
+                paymentCheckbox.disabled = true;
+                break;
+            case "hasn't occurred yet":
+                if (session.hasOwnProperty('originalTotal')) {
+                    session.total = session.originalTotal;
+                    totalCell.textContent = session.total;
+                    delete session.originalTotal;
+                }
+                session.paid = false;
+                paymentText.textContent = "Pending";
+                paymentCheckbox.checked = false;
+                paymentCheckbox.disabled = true;
+                break;
+            case "occurred":
+                if (session.hasOwnProperty('originalTotal')) {
+                    session.total = session.originalTotal;
+                    totalCell.textContent = session.total;
+                    delete session.originalTotal;
+                }
+                paymentText.textContent = session.paid ? "Received" : "Not Received";
+                paymentCheckbox.disabled = false;
+                break;
+        }
+    }
+};
+
+function renderSession(session, tableElement) {
+    const row = document.createElement("tr");
     
+    // Add cells using components
+    row.appendChild(sessionComponents.createDateCell(session));
+    row.appendChild(sessionComponents.createTimeCell(session, true)); // start time
+    row.appendChild(sessionComponents.createTimeCell(session, false)); // end time
+    row.appendChild(sessionComponents.createStudentCell(session));
+    row.appendChild(sessionComponents.createSubjectCell(session));
+    row.appendChild(sessionComponents.createDurationCell(session));
+    row.appendChild(sessionComponents.createPaymentCell(session));
+    row.appendChild(sessionComponents.createStatusCell(session));
+    
+    tableElement.appendChild(row);
+}
+
+// 4. Export what's needed
+export { 
+    renderSession, 
+    sessionUtils, 
+    sessionComponents,
+    showSessionDetails,
+    updateTotals
+};
+

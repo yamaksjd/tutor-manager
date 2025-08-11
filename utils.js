@@ -32,4 +32,13 @@ function updateDropDown() {
       });
     }
 
-export { createIcon, updateDropDown };
+// Helper function to handle form visibility
+function toggleFormVisibility(show, hide, button, action = 'hide') {
+    show.classList.remove('hidden');
+    hide.classList.add('hidden');
+    button.style.display = action === 'hide' ? 'none' : 'block';
+}
+
+
+
+export { createIcon, updateDropDown, toggleFormVisibility };

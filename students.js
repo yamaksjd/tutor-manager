@@ -1,7 +1,7 @@
 import {students, sessions} from './firestore_sync.js';
 import{addStudent, updateStudent, deleteStudent } from './firestore_sync.js';
 import {updateDropDown, createIcon} from './utils.js';
-import {renderSession} from './sessions.js';
+import {renderSession, sessionUtils, sessionComponents} from './sessions.js';
 
 function renderStudentList() {
       // defining function that puts all of the studnets from the students array in the UI
@@ -240,15 +240,4 @@ function renderStudentList() {
           });
         }
 
-        function renderStudentSessions(studentName) {
-              const tableElement = document.getElementById(`sessionTable${studentName}`);
-              tableElement.innerHTML = ''; // Clear existing content
-              
-              sessions.forEach((session) => {
-                if(session.student === studentName) {
-                  renderSession(session, tableElement);
-                }
-              });
-            }
-
-    export { renderStudentList, deleteStudentFrontend, editStudent, showStudentDetails, renderStudentSessions };
+    export { renderStudentList, deleteStudentFrontend, editStudent, showStudentDetails};

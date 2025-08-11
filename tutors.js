@@ -46,57 +46,7 @@ function renderTutorList() {
     }
 
     // Add Tutor functionality
-        const addTutorButton = document.getElementById("addTutorBtn");
-        const addTutorForm = document.getElementById("newTutorForm");
-        const addTutorContainer = document.getElementById("add-tutor-form");
-        const tutorListContainer = document.getElementById("tutor-list");
-        const cancelAddTutorBtn = document.getElementById("cancelAddTutor");
-    
-        addTutorButton.addEventListener("click", () => {
-          tutorListContainer.classList.add("hidden");
-          addTutorContainer.classList.remove("hidden");
-          addTutorButton.style.display = "none";
-        });
-    
-        cancelAddTutorBtn.addEventListener("click", () => {
-          addTutorContainer.classList.add("hidden");        
-          tutorListContainer.classList.remove("hidden");
-          addTutorButton.style.display = "block";
-        });    
-    
-        addTutorForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const name = document.getElementById("tutorNameAdd").value;
-          const contact = document.getElementById("tutorContactAdd").value;
-          const rate = parseFloat(document.getElementById("tutorRateAdd").value);
-          const notes = document.getElementById("tutorNotesAdd").value;
-    
-          if(!name || !contact || isNaN(rate) || !notes) {
-            alert("Please fill in all of the requirements in the form");
-            return;
-          }
-    
-          if(rate <= 0) {
-            alert("Hourly rate must be greater than 0");
-            return;
-          }
-    
-          // Increment counter before using it for the new tutor
-          idCounter++; // what is this for?
-          // Create a new tutor object
-          const tutor = { name, contact, rate, notes };
-          await addTutor(tutor);
-          console.log("You added " + name);
-    
-          renderTutorList();
-          updateDropDown();
-    
-          //reset and hide form
-          addTutorForm.reset();     
-          addTutorContainer.classList.add("hidden");
-          tutorListContainer.classList.remove("hidden");
-          addTutorButton.style.display = "block";
-        });
+
 
         function deleteTutorFrontend(tutorId) {
               deleteTutor(tutorId);
@@ -108,6 +58,7 @@ function renderTutorList() {
             const tutorToEdit = tutors.find((t) => t.id === tutorId);
             const tutorListContainer = document.getElementById("tutor-list");
             const editTutorContainer = document.getElementById("edit-tutor-form");
+            const cancelEditTutorBtn = document.getElementById("cancelEditStudent")
     
             tutorListContainer.classList.add("hidden");
             editTutorContainer.classList.remove("hidden");
@@ -125,10 +76,24 @@ function renderTutorList() {
             notes.value = tutorToEdit.notes;
     
             const editTutorForm = document.getElementById("editTutorForm");
-            editTutorForm.addEventListener("submit", (e) => {
+            editTutorForm.onsubmit = (e) => {
             updateTutorFrontend(tutorToEdit);
             e.preventDefault();
-            });
+            };
+
+            cancelEditTutorBtn.onclick = () => {
+                handleCancelEditTutor
+            }
+            
+            function handleCancelEditTutor() {
+            addTutorButton = document.getElementById("add-tutor-button");
+              const editTutorContainer = document.getElementById("edit-tutor-form");
+              const tutorListContainer = document.getElementById("tutor-list");
+              editTutorContainer.classList.add("hidden");        
+              tutorListContainer.classList.remove("hidden");
+              addTutorButton.style.display = "block";
+            };
+        
         }
     
         function updateTutorFrontend(tutorToEdit) {
@@ -145,16 +110,9 @@ function renderTutorList() {
             tutorListContainer.classList.remove("hidden");
             addTutorButton.style.display = "block";
         }
+
         
-            document.getElementById("cancelEditTutor").addEventListener("click", () => {
-              const editTutorContainer = document.getElementById("edit-tutor-form");        
-              const tutorListContainer = document.getElementById("tutor-list");
-              editTutorContainer.classList.add("hidden");        
-              tutorListContainer.classList.remove("hidden");
-              addTutorButton.style.display = "block";
-            });
-        
-            function showTutorDetails(tutorId) {
+        function showTutorDetails(tutorId) {
               const view = document.getElementById("tutor-details");
               view.innerHTML = "";
               const tutorToViewDetails = tutors.find((t) => t.id === tutorId);
@@ -279,10 +237,11 @@ function renderTutorList() {
             }
 
               // Add event listeners for subject management
-      const addSubjectBtn = document.getElementById(`add-subject-btn-${tutorToViewDetails.id}`);
-      const newSubjectInput = document.getElementById(`new-subject-${tutorToViewDetails.id}`);
       
+    const addSubjectBtn = document.getElementById(`add-subject-btn-${tutorToViewDetails.id}`);
       addSubjectBtn.addEventListener("click", () => {
+        const newSubjectInput = document.getElementById(`new-subject-${tutorToViewDetails.id}`);
+
         const newSubject = newSubjectInput.value.trim().toLowerCase();
         if (!newSubject) {
           alert("Please enter a subject name");
@@ -311,18 +270,8 @@ function renderTutorList() {
           showTutorDetails(tutorId); // Refresh the view
         });
       });
-
-      function renderTutorSessions(tutorName) {
-      const tableElement = document.getElementById(`sessionTable${tutorName}`);
-      tableElement.innerHTML = ''; // Clear existing content
-      
-      sessions.forEach((session) => {
-        if(session.tutor === tutorName) {
-          renderSession(session, tableElement);
-        }
-      });
-    }
-
+    
+    
     function renderSubjectSelection() {
       const tutorSelect = document.getElementById("tutor-selection");
       const subjectSelect = document.getElementById("subject-selection");
@@ -362,71 +311,4 @@ function renderTutorList() {
       });
     }
 
-    // adding tutor column with double-click functionality
-          const tutorUI = document.createElement("td");
-          tutorUI.textContent = session.tutor;
-          tutorUI.classList.add("editable-time");
-          tutorUI.addEventListener("dblclick", () => {
-            const select = document.createElement("select");
-            select.classList.add("time-edit-input");
-            
-            // Add all tutors as options
-            tutors.forEach(tutor => {
-              const option = document.createElement("option");
-              option.value = tutor.name;
-              option.textContent = tutor.name;
-              if (tutor.name === session.tutor) {
-                option.selected = true;
-              }
-              select.appendChild(option);
-            });
-            
-            select.addEventListener("blur", () => {
-              const newTutor = select.value;
-              if (newTutor && newTutor !== session.tutor) {
-                const oldTutor = session.tutor;
-                session.tutor = newTutor;
-                tutorUI.textContent = session.tutor;
-    
-                // Update rate and total
-                const tutorObj = tutors.find(t => t.name === newTutor);
-                if (tutorObj) {
-                  session.rate = tutorObj.rate;
-                  session.total = session.duration * tutorObj.rate;
-                  totalUI.textContent = session.total.toFixed(2);
-                }
-    
-                // Update calendar event title
-                if (window.calendar) {
-                  const event = window.calendar.getEventById(session.id);
-                  if (event) {
-                    event.setProp('title', `${session.student} - ${session.subject} (${session.tutor})`);
-                  }
-                }
-    
-                // Update subject if needed
-                const tutorSubjects = tutorObj.subjects || [];
-                if (!tutorSubjects.includes(session.subject)) {
-                  session.subject = tutorSubjects[0] || '';
-                  subjectUI.textContent = session.subject;
-                }
-    
-                updateTotals();
-              } else {
-                tutorUI.textContent = session.tutor;
-              }
-            });
-            
-            select.addEventListener("keypress", (e) => {
-              if (e.key === "Enter") {
-                select.blur();
-              }
-            });
-            
-            tutorUI.textContent = "";
-            tutorUI.appendChild(select);
-            select.focus();
-          });
-          newTableRow.appendChild(tutorUI);
-
-          export {renderTutorList, showTutorDetails, renderSubjectSelection, renderTutorSessions};
+          export {renderTutorList, showTutorDetails, renderSubjectSelection, handleCancelEditTutor};

@@ -1,6 +1,6 @@
 
 import { renderStudentList } from './students.js';
-import { renderTutorList, renderSubjectSelection } from './tutors.js';
+import { renderTutorList, renderSubjectSelection,editTutorFrontend, deleteTutorFrontend } from './tutors.js';
 import { renderSession, showSessionDetails, updateTotals } from './sessions.js';
 import { sessions} from './firestore_sync.js';
 
@@ -121,6 +121,7 @@ window.addEventListener("load", async () => {
     renderStudentList()
     renderTutorList()
     renderSubjectSelection()
+    setupTutorEventListenersTutors();
     // Define tutor rates - change later 
   
     
@@ -187,6 +188,30 @@ window.addEventListener("load", async () => {
         };
         window.calendar.addEvent(newEvent);
       }
+      
     }
-  
+    function setupTutorEventListenersTutors() {
+    // Add tutor button
+    document.getElementById("add-tutor-button").onclick = () => {
+        document.getElementById("tutor-list").classList.add("hidden");
+        document.getElementById("add-tutor-container").classList.remove("hidden");
+        this.style.display = "none";
+    };
+
+
+    // Delete and edit icons (use event delegation)
+    document.getElementById("tutor-list").onclick = (e) => {
+        const target = e.target;
+        if (target.classList.contains("deleteIcon")) {
+            const tutorId = target.closest("li").dataset.id;
+            deleteTutorFrontend(tutorId);
+            e.stopPropagation();
+        } else if (target.classList.contains("editIcon")) {
+            const tutorId = target.closest("li").dataset.id;
+            editTutorFrontend(tutorId);
+            e.stopPropagation();
+        }
+    };
+}
+
 })
