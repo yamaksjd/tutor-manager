@@ -13,7 +13,7 @@ import * as Tutors from './tutors_clean.js';
 
 window.addEventListener("load", start);
 
-start = async () => {
+async function start() {
     // Initialize students and tutors
     await Students.init();
     await Tutors.init();
