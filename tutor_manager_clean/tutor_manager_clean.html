@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutoring Center Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="tutor_manager.css">
-  <meta charset='utf-8' />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoring Center Manager (V2)</title>
+    <link rel="stylesheet" href="tutor_manager_clean.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="tutor_manager_clean.js" type="module"></script>
+    <meta charset='utf-8' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 </head>
+</head>
 <body>
-  <header>Tutoring Center Manager</header>
-
-  <main>
+    <header>Tutoring Center Manager</header>
+<main>
     <aside class="sidebar">
       <nav>
         <ul>
@@ -105,7 +106,7 @@
       <div id="students-view" class="view hidden">
         <h3>Students</h3>
         <ul id="student-list" class="sub-view">
-          <!--
+            <!-- Example student strcuture
           <li data-name="Alice">
               <span class="student-name">Alice</span>
               <div class="student-actions">
@@ -113,35 +114,14 @@
                 <ion-icon name="create-outline"></ion-icon>
             </div>
           </li>
-          <li data-name="Bob">
-            <div id=Bobarea>
-              <span class="student-name">Bob</span>
-              <div class="student-actions">
-                <ion-icon name="trash-outline"></ion-icon>
-                <ion-icon name="create-outline"></ion-icon>
-              </div>
-            </div>
-          </li>
-          <li data-name="Charlie">
-            <div id=Charliearea>
-              <span class="student-name">Charlie</span>
-              <div class="student-actions">
-                <ion-icon name="trash-outline"></ion-icon>
-                <ion-icon name="create-outline"></ion-icon>
-              </div>
-            </div>
-          </li>
-          (populated by the renderStudnetList())
           -->
         </ul>
-
         <div class="student-controls">
           <button id="addStudentBtn">
             <ion-icon name="add-circle-outline"></ion-icon>
             Add Student
           </button>
         </div>
-
         <!--Add Student Form Section (hidden initially)-->
 
         <div id="add-student-form" class="sub-view hidden">
@@ -187,25 +167,8 @@
                 <ion-icon name="trash-outline"></ion-icon>
                 <ion-icon name="create-outline"></ion-icon>
               </div>
-          </li>
-          <li data-name="John">
-              <span class="tutor-name">John</span>
-              <div class="tutor-actions">
-                <ion-icon name="trash-outline"></ion-icon>
-                <ion-icon name="create-outline"></ion-icon>
-              </div>
-          </li>
-          <li data-name="Lina">
-              <span class="tutor-name">Lina</span>
-              <div class="tutor-actions">
-                <ion-icon name="trash-outline"></ion-icon>
-                <ion-icon name="create-outline"></ion-icon>
-              </div>
-          </li>
-          (populated by renderTutorList())
-          -->
+            -->
         </ul>
-
         <div class="tutor-controls">
           <button id="addTutorBtn">
             <ion-icon name="add-circle-outline"></ion-icon>
@@ -283,9 +246,7 @@
       </div>
     </div>
   </div>
-
-  <script src="tutor_manager.js" type="module"></script>
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

@@ -2,7 +2,12 @@
 import { renderStudentList } from './students.js';
 import { renderTutorList, renderSubjectSelection,editTutorFrontend, deleteTutorFrontend } from './tutors.js';
 import { renderSession, showSessionDetails, updateTotals } from './sessions.js';
-import { sessions} from './firestore_sync.js';
+import { sessions, tutors, students, loadAllStudents, loadAllTutors, loadAllSessions} from './firestore_sync.js';
+import { updateDropDown } from './utils.js';
+
+await loadAllStudents();
+await loadAllTutors(); 
+await loadAllSessions();
 
 window.addEventListener("load", async () => {
  
@@ -23,7 +28,7 @@ window.addEventListener("load", async () => {
       Event drop handler: When a user drags and drops a calendar event (representing a tutoring session) to a new date or time, this function runs. It updates the session’s data and the UI to reflect the new schedule.
       */
       eventDrop: function(info) {
-        const sessionId = parseInt(info.event.id);
+        const sessionId = info.event.id;
         const session = sessions.find(s => s.id === sessionId);
         if (session) {
           // Update session date and time
@@ -81,7 +86,7 @@ window.addEventListener("load", async () => {
         }
       },
       eventClick: function(info) {
-        const sessionId = parseInt(info.event.id);
+        const sessionId = info.event.id;
         const session = sessions.find(s => s.id === sessionId);
         if (session) {
           showSessionDetails(session);
@@ -122,6 +127,7 @@ window.addEventListener("load", async () => {
     renderTutorList()
     renderSubjectSelection()
     setupTutorEventListenersTutors();
+    updateDropDown();
     // Define tutor rates - change later 
   
     
