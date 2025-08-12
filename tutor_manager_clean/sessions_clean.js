@@ -18,7 +18,7 @@ export async function init() {
       date: '2025-08-20',
       startTime: '15:00',
       endTime: '16:00',
-      duration: 60,
+      duration: 1, // in hours
       total: 20.00,
       status: "hasn't occurred yet",
       paid: false
@@ -32,23 +32,27 @@ export function rowsHTML(sessions) {
   return sessions.map(s => `
     <tr data-id="${s.id}">
       <td>${s.date}</td>
+      <td>${s.startTime}</td>
+      <td>${s.endTime}</td>
       <td>${s.studentName}</td>
       <td>${s.tutorName}</td>
       <td>${s.subject ?? '—'}</td>
-      <td>${s.startTime}–${s.endTime}</td>
+      <td>${s.duration} hours</td>
+      <td>${s.paid ? 'Received' : 'Not Received'}</td>
       <td>${fmtMoney(s.total)}</td>
       <td>${s.status}</td>
     </tr>
   `).join('');
 }
 
-export function computeEndTime(startTime, durationMinutes) {
-  // startTime = "HH:MM", durationMinutes = number
+export function computeEndTime(startTime, durationHours) {
+  // startTime = "HH:MM", durationHours = number (can be decimal like 1.5)
   const [h, m] = startTime.split(':').map(Number);
-  const start = h * 60 + m;
+  const start = h * 60 + m;  // convert start time to minutes
+  const durationMinutes = Math.round(durationHours * 60);  // convert hours to minutes
   const end = start + durationMinutes;
-  const eh = Math.floor(end / 60) % 24;  // v1: wrap after midnight; you can forbid crossing midnight later
-  const em = end % 60;
+  const eh = Math.floor(end / 60) % 24;  // get hours, wrap after midnight
+  const em = end % 60;  // get remaining minutes
   return `${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`;
 }
 
