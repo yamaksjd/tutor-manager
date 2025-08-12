@@ -39,8 +39,8 @@ export function rowsHTML(sessions) {
       <td>${s.subject ?? '—'}</td>
       <td>${s.duration} hours</td>
       <td>${s.paid ? 'Received' : 'Not Received'}</td>
-      <td>${fmtMoney(s.total)}</td>
       <td>${s.status}</td>
+      <td>${fmtMoney(s.total)}</td>
     </tr>
   `).join('');
 }
