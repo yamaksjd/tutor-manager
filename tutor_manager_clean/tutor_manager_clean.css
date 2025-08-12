@@ -48,6 +48,7 @@ main {
   padding: 1rem;
   border-radius: var(--radius-md);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  flex: 0 0 200px; /* Fixed width for sidebar */
 }
 
 .sidebar nav ul {
@@ -70,7 +71,8 @@ main {
 
 /* CONTENT AREA */
 .content {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0; /* Prevents content overflow */
   background: white;
   padding: 1rem 2rem;
   border-radius: var(--radius-md);
@@ -162,6 +164,7 @@ form button:hover {
 /* TABLE */
 table {
   width: 100%;
+  table-layout: fixed; /* Ensures columns are evenly spaced */
   border-collapse: collapse;
 }
 
@@ -169,6 +172,9 @@ table th, table td {
   padding: 0.75rem;
   border: 1px solid var(--gray-300);
   text-align: left;
+  overflow: hidden; /* Prevents text overflow */
+  text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
+  white-space: nowrap; /* Prevents text from wrapping */
 }
 
 table th {
@@ -462,6 +468,7 @@ input[type="checkbox"]:hover {
 }
 
 #calendar {
-  max-height: 520px;
+  max-height: 100%;
+  width: 100%;
   margin: 0 auto;
 }
