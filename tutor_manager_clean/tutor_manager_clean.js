@@ -11,6 +11,42 @@ import * as Sessions from './sessions_clean.js';
 import * as Students from './students_clean.js';
 import * as Tutors from './tutors_clean.js';
 
+// Which sections count as "views"
+const VIEWS = ['home-view', 'students-view', 'tutors-view', 'student-details', 'tutor-details'];
+
+function showView(id) {
+  // hide all, then show the requested one
+  VIEWS.forEach(v => DOM.hide(v));
+  DOM.show(id);
+
+  // update the active nav item
+  document.querySelectorAll('.sidebar nav li').forEach(li => {
+    const liViewId = `${li.dataset.view}-view`; // 'home' -> 'home-view'
+    li.classList.toggle('active', liViewId === id);
+  });
+}
+
+// Bind navigation events
+function bindNav() {
+  DOM.on('nav-home',     'click', () => showView('home-view'));
+  DOM.on('nav-students', 'click', () => showView('students-view'));
+  DOM.on('nav-tutors',   'click', () => showView('tutors-view'));
+}
+
+// Home view: expand/collapse sections (Add Session, Session History)
+function bindHomeToggles() {
+  document.querySelectorAll('#home-view .section-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.classList.toggle('active'); // rotates chevron if your CSS handles it
+      const content = header.nextElementSibling; // the .section-content div
+      if (content && content.classList.contains('section-content')) {
+        content.classList.toggle('hidden'); // show/hide the body
+      }
+    });
+  });
+}
+
+
 window.addEventListener("load", start);
 
 async function start() {
@@ -19,13 +55,9 @@ async function start() {
     await Tutors.init();
     await Sessions.init();
     
-    // Set up event listeners for the sidebar navigation
-    DOM.on("nav-home", "click", () => DOM.show("home-view"));
-    DOM.on("nav-students", "click", () => DOM.show("students-view"));
-    DOM.on("nav-tutors", "click", () => DOM.show("tutors-view"));
-
-    // Show the home view by default
-    DOM.show("home-view");
+    bindNav();            // set up the tabs
+    bindHomeToggles();    // set up the collapsible sections
+    showView('home-view'); // default
 
     // Populate selects
     DOM.fillSelect('student-selection', Students.state.list, s => s.id, s => s.name, 'Select Student');
@@ -41,7 +73,7 @@ async function start() {
     });
 
     // Render existing sessions table
-    DOM.html('sessionTableBody', Sessions.rowsHTML(Sessions.state.sessions));
+    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
 
     // Render lists of students and tutors
     DOM.html('student-list', Students.listHTML(Students.state.list));
