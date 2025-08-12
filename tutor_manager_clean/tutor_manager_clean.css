@@ -1,3 +1,12 @@
+/* TOKENS - color variables*/
+:root{
+  --blue-500:#3b82f6; --blue-600:#2563eb;
+  --green-500:#10b981; --green-600:#059669;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-600:#6b7280; --gray-700:#374151;
+  --radius-sm:.3rem; --radius-md:.5rem; --radius-lg:.8rem;
+  --transition-fast: .2s ease;
+}
+
 /* RESET */
 * {
   margin: 0;
@@ -30,14 +39,6 @@ main {
   gap: 2rem; /* Space between main content and sidebar */
 }
 
-/* TOKENS - color variables*/
-:root{
-  --blue-500:#3b82f6; --blue-600:#2563eb;
-  --green-500:#10b981; --green-600:#059669;
-  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-600:#6b7280; --gray-700:#374151;
-  --radius-sm:.3rem; --radius-md:.5rem; --radius-lg:.8rem;
-  --transition-fast: .2s ease;
-}
 
 
 /* SIDEBAR */
@@ -133,7 +134,7 @@ main {
   border-top: none;
 }
 
-form input, form select, form button {
+form input, form select, form textarea {
   display: block;
   width: 100%;
   padding: 0.5rem;
@@ -144,6 +145,7 @@ form input, form select, form button {
 }
 
 form button {
+  width: auto;
   background-color: var(--blue-500);
   color: white;
   border: none;
@@ -189,11 +191,6 @@ input[type="checkbox"]:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
-input[type="checkbox"] .copiedSessionTable{
-  width: 18px;
-  height: 18px;
-  accent-color: var(--blue-500);
-}
 /* STUDENT AND TUTOR LIST */
 #student-list,
 #tutor-list {
@@ -388,4 +385,81 @@ input[type="checkbox"] .copiedSessionTable{
 
 .view:not(.hidden) {
   display: block;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+}
+
+.close-modal {
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: #ef4444;
+}
+
+.modal-body {
+  color: #374151;
+}
+
+.session-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.session-info strong {
+  color: #4b5563;
+  margin-right: 0.5rem;
+}
+
+.session-info span {
+  color: #1f2937;
+}
+
+#calendar {
+  max-height: 520px;
+  margin: 0 auto;
 }
