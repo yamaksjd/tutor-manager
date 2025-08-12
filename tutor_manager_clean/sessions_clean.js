@@ -1,29 +1,14 @@
-/*
-Form vs table mismatch. The form asks for start time + duration, but the table shows Start Time + End Time. That’s fine—just compute endTime = startTime + duration in JS when saving. (Make sure rounding handles 0.25h steps cleanly.) 
 
+import {
+  loadAllSessions, sessions as store,
+  addSession, updateSession, deleteSession
+} from './firestore_sync_clean.js';
 
-*/
-
-// sessions_clean.js
 export const state = { sessions: [] };
 
 export async function init() {
-  // seed with 1 example session (will pull from Firestore later)
-  state.sessions = [
-    {
-      id: 'sess1',
-      studentId: 's1', studentName: 'Alice Santos',
-      tutorId: 't1',   tutorName:   'Carla Duarte',
-      subject: 'Math',
-      date: '2025-08-20',
-      startTime: '15:00',
-      endTime: '16:00',
-      duration: 1, // in hours
-      total: 20.00,
-      status: "hasn't occurred yet",
-      paid: false
-    }
-  ];
+ await loadAllSessions();
+  state.sessions = store;
   return state.sessions;
 }
 
@@ -60,3 +45,6 @@ function fmtMoney(n) {
   const v = Number(n ?? 0);
   return isFinite(v) ? v.toFixed(2) : '0.00';
 }
+
+export { addSession, updateSession, deleteSession };
+

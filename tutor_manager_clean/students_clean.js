@@ -1,12 +1,12 @@
+import { loadAllStudents, students as store, addStudent, updateStudent, deleteStudent } from './firestore_sync_clean.js';
+
 // students_clean.js
 export const state = { list: [] };
 
 // For now, seed some data. Later, swap to Firestore.
 export async function init() {
-  state.list = [
-    { id: 's1', name: 'Alice Santos', parent: 'Marta', contact: 'alice@example.com', notes: '' },
-    { id: 's2', name: 'Bruno Silva',  parent: 'Paulo', contact: 'bruno@example.com', notes: '' },
-  ];
+  await loadAllStudents();
+  state.list = store;           // live reference from data layer
   return state.list;
 }
 
@@ -16,6 +16,8 @@ export function listHTML(students) {
 }
 
 // (Later) Pure helpers you might use from the entry file:
+export { addStudent, updateStudent, deleteStudent };
+
 export function findById(id) {
   return state.list.find(s => s.id === id) || null;
 }

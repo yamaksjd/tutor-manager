@@ -1,4 +1,4 @@
-import { db } from './tutor_manager_clean/firebaseconfig.js';
+import { db } from './firebaseconfig.js';
 import {
   collection, getDocs, addDoc, updateDoc, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
