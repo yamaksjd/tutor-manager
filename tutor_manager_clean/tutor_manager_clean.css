@@ -151,6 +151,8 @@ form button {
   border: none;
   cursor: pointer;
   transition: background-color var(--transition-fast);
+  padding: 10px;
+  border-radius: 5px
 }
 
 form button:hover {
