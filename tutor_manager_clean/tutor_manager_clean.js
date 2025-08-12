@@ -20,13 +20,13 @@ async function start() {
     await Sessions.init();
     
     // Set up event listeners for the sidebar navigation
-    DOM.on("nav-home", "click", () => showView("home-view"));
-    DOM.on("nav-students", "click", () => showView("students-view"));
-    DOM.on("nav-tutors", "click", () => showView("tutors-view"));
-    
+    DOM.on("nav-home", "click", () => DOM.show("home-view"));
+    DOM.on("nav-students", "click", () => DOM.show("students-view"));
+    DOM.on("nav-tutors", "click", () => DOM.show("tutors-view"));
+
     // Show the home view by default
-    showView("home-view");
-    
+    DOM.show("home-view");
+
     // Populate selects
     DOM.fillSelect('student-selection', Students.state.list, s => s.id, s => s.name, 'Select Student');
     DOM.fillSelect('tutor-selection',   Tutors.state.list,   t => t.id, t => t.name, 'Select Tutor');
