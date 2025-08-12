@@ -7,8 +7,8 @@
 }
 
 body {
-  background-color: #f9fafb;
-  color: #333;
+  background-color:  var(--gray-50);
+  color: var(--gray-700);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -30,12 +30,22 @@ main {
   gap: 2rem; /* Space between main content and sidebar */
 }
 
+/* TOKENS - color variables*/
+:root{
+  --blue-500:#3b82f6; --blue-600:#2563eb;
+  --green-500:#10b981; --green-600:#059669;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-600:#6b7280; --gray-700:#374151;
+  --radius-sm:.3rem; --radius-md:.5rem; --radius-lg:.8rem;
+  --transition-fast: .2s ease;
+}
+
+
 /* SIDEBAR */
 .sidebar {
   width: 200px;
   background: white;
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
@@ -47,9 +57,9 @@ main {
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   cursor: pointer;
-  background-color: #f3f4f6;
-  border-radius: 0.3rem;
-  transition: background-color 0.2s;
+  background-color: var(--gray-100);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
 }
 
 .sidebar nav li:hover,
@@ -62,7 +72,7 @@ main {
   flex: 1;
   background: white;
   padding: 1rem 2rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
@@ -96,7 +106,7 @@ main {
 
 .toggle-icon {
   font-size: 1.4rem;
-  color: #64748b;
+  color: var(--gray-300);
   transition: transform 0.3s ease;
   display: inline-block;
 }
@@ -128,21 +138,21 @@ form input, form select, form button {
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.3rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
 }
 
 form button {
-  background-color: #3b82f6;
+  background-color: var(--blue-500);
   color: white;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transition-fast);
 }
 
 form button:hover {
-  background-color: #2563eb;
+  background-color: var(--blue-600);
 }
 
 /* TABLE */
@@ -153,25 +163,25 @@ table {
 
 table th, table td {
   padding: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--gray-300);
   text-align: left;
 }
 
 table th {
-  background-color: #f3f4f6;
+  background-color: var(--gray-100);
 }
 
 .summary {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: #f3f4f6;
+  background-color: var(--gray-100);
   border-radius: 0.5rem;
 }
 input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #3b82f6; 
+  accent-color: var(--blue-500);
   transform: scale(1.1);
 }
 
@@ -182,7 +192,7 @@ input[type="checkbox"]:hover {
 input[type="checkbox"] .copiedSessionTable{
   width: 18px;
   height: 18px;
-  accent-color: #3b82f6;
+  accent-color: var(--blue-500);
 }
 /* STUDENT AND TUTOR LIST */
 #student-list,
@@ -195,36 +205,171 @@ input[type="checkbox"] .copiedSessionTable{
 #tutor-list li {
   margin-bottom: 0.5rem;
   padding: 0.75rem;
+  background-color: var(--gray-100);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+/* Controls (Add/Delete bars) */
+:is(.student-controls, .tutor-controls){
+  display:flex; gap:1rem; margin-top:1rem;
+}
+:is(.student-controls button, .tutor-controls button){
+  display:flex; align-items:center; gap:.5rem;
+  padding:.6rem 1.2rem; font-size:1rem; font-weight:500;
+  border:0; border-radius:.4rem; cursor:pointer;
+  transition: background-color var(--transition-fast);
+}
+
+/* Add student form styling */
+
+#add-student-form {
+  margin-top: 1.5rem;
+  padding: 1rem;
   background-color: #f3f4f6;
+  border-radius: 0.5rem;
+}
+
+#add-student-form input,
+#add-student-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
+
+#add-student-form .form-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+#add-student-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
   border-radius: 0.3rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-/*Delete and Add buttons */
-.student-controls {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+#add-student-form button:hover {
+  background-color: #2563eb;
 }
 
-/* Styling for Add and Delete buttons */
-.student-controls button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
+/* edit student form */
+
+#edit-student-form {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+#edit-student-form h3 {
+  margin-bottom: 1rem;
+}
+
+#edit-student-form input,
+#edit-student-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
   font-size: 1rem;
-  font-weight: 500;
+}
+
+#edit-student-form .form-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+#edit-student-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.tutor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tutor-actions ion-icon {
+  font-size: 1.2rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tutor-actions ion-icon:hover {
+  color: #ef4444; /* red for delete */
+}
+
+.tutor-actions .editIcon:hover {
+  color: #3b82f6; /* blue for edit */
+}
+
+.tutor-name {
+  font-size: 1rem;
+  color: #374151;
+}
+
+#tutor-details button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
   border: none;
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+#tutor-details button:hover {
+  background-color: #2563eb;
+}
+
+#edit-tutor-form {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+}
+
+#edit-tutor-form input,
+#edit-tutor-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
+
+#edit-tutor-form .form-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+#edit-tutor-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.3rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-#student-list li:hover,
-#tutor-list li:hover {
-  background-color: #e5e7eb;
+#edit-tutor-form button:hover {
+  background-color: #2563eb;
 }
 
 
