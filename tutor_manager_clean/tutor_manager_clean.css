@@ -168,6 +168,7 @@ table {
   border-collapse: collapse;
 }
 
+/* default: no wrap (ellipsis) */
 table th, table td {
   padding: 0.75rem;
   border: 1px solid var(--gray-300);
@@ -176,6 +177,25 @@ table th, table td {
   text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
   white-space: nowrap; /* Prevents text from wrapping */
 }
+
+/* allow wrap for specific columns */
+#home-view table th:nth-child(4),
+#home-view table td:nth-child(4), /* Student */
+#home-view table th:nth-child(5),
+#home-view table td:nth-child(5), /* Tutor */
+#home-view table th:nth-child(6),
+#home-view table td:nth-child(6)  /* Subject */
+{
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+/* giving some extra width to wordy columns */
+
+#home-view table th:nth-child(4), #home-view table td:nth-child(4) { width: 16rem; } /* Student */
+#home-view table th:nth-child(5), #home-view table td:nth-child(5) { width: 16rem; } /* Tutor */
+#home-view table th:nth-child(6), #home-view table td:nth-child(6) { width: 12rem; } /* Subject */
+
 
 table th {
   background-color: var(--gray-100);
