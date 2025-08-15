@@ -492,3 +492,37 @@ input[type="checkbox"]:hover {
   width: 100%;
   margin: 0 auto;
 }
+
+/* ========== Truncated-cell tooltip ========== */
+.tooltip-bubble {
+  position: fixed;               /* sit on the page, not inside the table */
+  z-index: 9999;
+  pointer-events: none;          /* don't steal hover */
+  background: #0b1220;           /* near-black */
+  color: #fff;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
+  font-size: .875rem;
+  line-height: 1.2;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  transform: translateX(-50%);   /* center horizontally at left: X */
+  max-width: 320px;
+  white-space: normal;           /* allow wrapping inside tooltip */
+}
+
+.tooltip-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 10px; height: 10px;
+  background: #0b1220;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+  top: -6px;                     /* default: arrow on top edge of bubble */
+}
+
+/* When we have to place the bubble above the cell, flip the arrow */
+.tooltip-bubble.tooltip--above::after {
+  top: auto;
+  bottom: -6px;
+}

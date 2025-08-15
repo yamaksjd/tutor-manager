@@ -46,6 +46,91 @@ function bindHomeToggles() {
   });
 }
 
+// ---------- Truncation tooltip (for Session History table) ----------
+function bindTruncationTooltips() {
+  // We bind to the Session History table inside Home view
+  const table = document.querySelector('#home-view table');
+  if (!table) return;
+
+  let tipEl = null;       // the DOM element for the tooltip
+  let currentCell = null; // which cell we're showing
+
+  // Show tooltip only if the cell is single-line & actually clipped
+  const isTruncated = (el) => {
+    const cs = getComputedStyle(el);
+    const isNowrap = cs.whiteSpace === 'nowrap';
+    // scrollWidth > clientWidth means some text is hidden
+    return isNowrap && el.scrollWidth > el.clientWidth;
+  };
+
+  const showTip = (cell) => {
+    tipEl = document.createElement('div');
+    tipEl.className = 'tooltip-bubble';
+    tipEl.textContent = cell.textContent.trim();
+    document.body.appendChild(tipEl);
+    positionTip(cell);
+  };
+
+  const hideTip = () => {
+    if (tipEl) tipEl.remove();
+    tipEl = null;
+    currentCell = null;
+  };
+
+  const positionTip = (cell) => {
+    if (!tipEl) return;
+    const pad = 12; // distance from viewport edges
+    const rect = cell.getBoundingClientRect();
+
+    // Default: below the cell, horizontally centered
+    let x = rect.left + rect.width / 2;
+    let y = rect.bottom + 10;
+
+    // Place values first so we can read size
+    tipEl.style.left = x + 'px';
+    tipEl.style.top  = y + 'px';
+    tipEl.classList.remove('tooltip--above');
+
+    // If it would overflow the bottom, flip above
+    if (y + tipEl.offsetHeight + pad > window.innerHeight) {
+      y = rect.top - tipEl.offsetHeight - 10;
+      tipEl.style.top = y + 'px';
+      tipEl.classList.add('tooltip--above');
+    }
+
+    // Clamp horizontally inside the viewport
+    const half = tipEl.offsetWidth / 2;
+    const minX = pad + half;
+    const maxX = window.innerWidth - pad - half;
+    x = Math.max(minX, Math.min(maxX, x));
+    tipEl.style.left = x + 'px';
+  };
+
+  // Use capture so it also works for future rows (delegation style)
+  table.addEventListener('mouseenter', (e) => {
+    const cell = e.target.closest('td, th');
+    if (!cell) return;
+    if (isTruncated(cell)) {
+      currentCell = cell;
+      showTip(cell);
+    }
+  }, true);
+
+  table.addEventListener('mousemove', () => {
+    if (currentCell && tipEl) positionTip(currentCell);
+  }, true);
+
+  table.addEventListener('mouseleave', (e) => {
+    const leftCell = e.target.closest('td, th');
+    if (leftCell && leftCell === currentCell) hideTip();
+  }, true);
+
+  // If the window resizes/scrolls while a tip is open, reposition or hide
+  window.addEventListener('scroll', () => currentCell && tipEl && positionTip(currentCell), { passive: true });
+  window.addEventListener('resize', () => currentCell && tipEl && positionTip(currentCell));
+}
+// ---------- end tooltip ----------
+
 
 window.addEventListener("load", start);
 
@@ -74,6 +159,8 @@ async function start() {
 
     // Render existing sessions table
     DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+    bindTruncationTooltips();
+
 
     // Render lists of students and tutors
     DOM.html('student-list', Students.listHTML(Students.state.list));
