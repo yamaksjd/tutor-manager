@@ -3,6 +3,8 @@ import {
   loadAllSessions, sessions as store,
   addSession, updateSession, deleteSession
 } from './firestore_sync_clean.js';
+import * as Students from './students_clean.js';
+import * as Tutors from './tutors_clean.js';
 
 export const state = { sessions: [] };
 
