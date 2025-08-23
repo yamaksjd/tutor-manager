@@ -38,7 +38,7 @@ function normalize(raw) {
     subject: raw.subject ?? '—',
     date: start ? fmtDate(start) : '—',
     startTime: start ? fmtTime(start) : '—',
-    endTime: end ? fmtTime(end) : computeEndTime(start ? fmtTime(start) : '00:00', duration),
+    endTime: end ? fmtTime(end) : computeEndTimeFromDB(start ? fmtTime(start) : '00:00', duration),
     duration,
     paid: !!raw.paid,
     status: raw.status || "hasn't occurred yet",
@@ -68,7 +68,7 @@ function findName(list, id) {
   if (!id) return null;
   return list.find(x => x.id === id)?.name || null;
 }
-export function computeEndTime(startHHMM, durationHours) {
+export function computeEndTimeFromDB(startHHMM, durationHours) {
   const [h, m] = startHHMM.split(':').map(Number);
   const start = h * 60 + m;
   const end   = start + Math.round(durationHours * 60);
