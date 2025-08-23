@@ -8,9 +8,75 @@ export const state = { sessions: [] };
 
 export async function init() {
  await loadAllSessions();
-  state.sessions = store;
+  state.sessions = store.map(normalize);
   return state.sessions;
 }
+// ---- helpers ----
+function normalize(raw) {
+  // Handle Timestamp or Date or string date/time
+  const start = tsToDate(raw.startAt) || mergeDateTimeStrings(raw.date, raw.startTime);
+  const end   = tsToDate(raw.endAt)   || (raw.endTime ? mergeDateTimeStrings(raw.date, raw.endTime) : null);
+
+  // Accept ids or legacy names
+  const studentId = raw.studentId || null;
+  const tutorId   = raw.tutorId   || null;
+
+  // If you only have names in old docs, keep them as fallback
+  const studentName =
+    findName(Students.list, studentId) || (typeof raw.student === 'string' ? raw.student : '—');
+  const tutorName =
+    findName(Tutors.list, tutorId) || (typeof raw.tutor === 'string' ? raw.tutor : '—');
+
+  const duration = typeof raw.duration === 'number'
+    ? raw.duration
+    : (start && end ? Math.round((end - start) / 60000) / 60 : 0);
+
+  return {
+    id: raw.id,
+    studentId, tutorId,
+    studentName, tutorName,
+    subject: raw.subject ?? '—',
+    date: start ? fmtDate(start) : '—',
+    startTime: start ? fmtTime(start) : '—',
+    endTime: end ? fmtTime(end) : computeEndTime(start ? fmtTime(start) : '00:00', duration),
+    duration,
+    paid: !!raw.paid,
+    status: raw.status || "hasn't occurred yet",
+    total: Number(raw.total ?? 0),
+  };
+}
+
+function tsToDate(v) {            // Firestore Timestamp -> Date
+  return v && typeof v.toDate === 'function' ? v.toDate() : (v instanceof Date ? v : null);
+}
+function mergeDateTimeStrings(dateStr, timeStr) {
+  if (!dateStr || !timeStr) return null;
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const [H,M]   = timeStr.split(':').map(Number);
+  return new Date(y, m - 1, d, H, M);
+}
+function fmtDate(d) { // YYYY-MM-DD
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function fmtTime(d) { // HH:MM
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function findName(list, id) {
+  if (!id) return null;
+  return list.find(x => x.id === id)?.name || null;
+}
+export function computeEndTime(startHHMM, durationHours) {
+  const [h, m] = startHHMM.split(':').map(Number);
+  const start = h * 60 + m;
+  const end   = start + Math.round(durationHours * 60);
+  const eh = Math.floor(end / 60) % 24;
+  const em = end % 60;
+  return `${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`;
+}
+// ---------- end helpers ----------
 
 // Table rows HTML (tbody content)
 export function rowsHTML(sessions) {

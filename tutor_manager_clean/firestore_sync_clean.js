@@ -1,6 +1,6 @@
 import { db } from './firebaseconfig.js';
 import {
-  collection, getDocs, addDoc, updateDoc, deleteDoc, doc
+  collection, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Default data (only used if Firestore is empty)
@@ -96,8 +96,45 @@ export async function deleteTutor(id) {
 
 // Add new session
 export async function addSession(sessionObj) {
-  const docRef = await addDoc(collection(db, "sessions"), sessionObj);
-  sessions.push({ id: docRef.id, ...sessionObj });
+  // 1) Make a *copy* so we don't mutate the caller's object.
+  const toSave = { ...sessionObj };
+
+  // 2) Normalize dates: always store Firestore Timestamps.
+  // If caller passed JS Date, convert it.
+  if (toSave.startAt instanceof Date) {
+    toSave.startAt = Timestamp.fromDate(toSave.startAt);
+  }
+  if (toSave.endAt instanceof Date) {
+    toSave.endAt = Timestamp.fromDate(toSave.endAt);
+  }
+
+  // If caller passed strings (oops), try to parse "YYYY-MM-DDTHH:MM" safely.
+  // (Optional, but nice safety net.)
+  if (typeof toSave.startAt === 'string') {
+    const d = new Date(toSave.startAt);
+    if (!isNaN(d)) toSave.startAt = Timestamp.fromDate(d);
+  }
+  if (typeof toSave.endAt === 'string') {
+    const d = new Date(toSave.endAt);
+    if (!isNaN(d)) toSave.endAt = Timestamp.fromDate(d);
+  }
+
+  // 3) Make sure number-ish fields are numbers (not strings).
+  if (toSave.duration != null) toSave.duration = Number(toSave.duration);
+  if (toSave.rate     != null) toSave.rate     = Number(toSave.rate);
+  if (toSave.total    != null) toSave.total    = Number(toSave.total);
+
+  // 4) Defaults for booleans/strings so the UI never sees undefined.
+  if (typeof toSave.paid !== 'boolean') toSave.paid = false;
+  if (!toSave.status) toSave.status = "hasn't occurred yet";
+
+  // 5) Save to Firestore.
+  const docRef = await addDoc(collection(db, "sessions"), toSave);
+
+  // 6) Update local cache so UI can refresh immediately.
+  sessions.push({ id: docRef.id, ...toSave });
+
+  // 7) Give the new id back to the caller.
   return docRef.id;
 }
 export async function updateSession(id, updatedObj) {

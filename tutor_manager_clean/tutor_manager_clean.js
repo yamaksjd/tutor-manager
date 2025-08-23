@@ -166,6 +166,65 @@ async function start() {
     DOM.html('student-list', Students.listHTML(Students.state.list));
     DOM.html('tutor-list',   Tutors.listHTML(Tutors.state.list));
 
+    DOM.on('sessionForm', 'submit', async (e) => {
+      e.preventDefault();
+
+      const studentId = DOM.get('student-selection').value;
+      const tutorId   = DOM.get('tutor-selection').value;
+      const subject   = DOM.get('subject-selection').value;
+      const dateStr   = DOM.get('date').value;       // "YYYY-MM-DD"
+      const startStr  = DOM.get('startTime').value;  // "HH:MM"
+      const durHours  = parseFloat(DOM.get('duration').value);
+
+      if (!studentId || !tutorId || !subject || !dateStr || !startStr || isNaN(durHours)) {
+        alert('Please fill the whole form.');
+        return;
+      }
+
+      // Build start/end as JS Dates in local time
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const [H, M]    = startStr.split(':').map(Number);
+      const startAt   = new Date(y, m - 1, d, H, M);
+      const endAt     = new Date(startAt.getTime() + Math.round(durHours * 60) * 60000);
+
+      // Get rate (if stored on tutor) — otherwise default 0
+      const tutor = Tutors.state.list.find(t => t.id === tutorId);
+      const rate  = Number(tutor?.rate ?? 0);
+      const total = Math.round(durHours * rate * 100) / 100;
+
+      const newSession = {
+        studentId, tutorId, subject,
+        startAt, endAt, duration: durHours,
+        rate, total, paid: false,
+        status: "hasn't occurred yet"
+      };
+
+      // Save to Firestore (it will convert Dates -> Timestamps)
+      const id = await Sessions.addSession(newSession);
+
+      // Update UI model with normalized object
+      const saved = { id, ...newSession };
+      Sessions.state.sessions.push((function normalizeAfterSave(x){
+        // small inline normalize; same logic as sessions_clean.js/normalize
+        const studentName = Students.state.list.find(s => s.id===x.studentId)?.name || '—';
+        const tutorName   = Tutors.state.list.find(t => t.id===x.tutorId)?.name || '—';
+        return {
+          id, studentId: x.studentId, tutorId: x.tutorId,
+          studentName, tutorName, subject: x.subject,
+          date: `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`,
+          startTime: startStr,
+          endTime: Sessions.computeEndTime(startStr, durHours),
+          duration: durHours, paid: x.paid, status: x.status, total
+        };
+      })(saved));
+
+      // Re-render the table
+      DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+      // Optionally reset the form
+      DOM.get('sessionForm').reset();
+      DOM.get('subject-selection').disabled = true;
+    });
+
     // Initialize sessions and set up calendar
     //Sessions.setupCalendar();
     }
