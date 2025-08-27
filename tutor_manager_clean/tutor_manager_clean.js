@@ -131,6 +131,28 @@ function bindTruncationTooltips() {
 }
 // ---------- end tooltip ----------
 
+// ---------- Edit Session Modal ----------
+
+function openEditModal() {
+  document.getElementById('editSessionModal').classList.remove('hidden');
+}
+function closeEditModal() {
+  document.getElementById('editSessionModal').classList.add('hidden');
+}
+function fillEditSelects(studentId, tutorId, subject) {
+  // fill student + tutor lists
+  DOM.fillSelect('edit-student', Students.state.list, s => s.id, s => s.name, 'Select student');
+  DOM.fillSelect('edit-tutor',   Tutors.state.list,   t => t.id, t => t.name, 'Select tutor');
+  DOM.get('edit-student').value = studentId || '';
+  DOM.get('edit-tutor').value   = tutorId   || '';
+
+  // fill subjects based on tutor
+  const subjects = Tutors.subjectsFor(tutorId || '');
+  DOM.fillSelect('edit-subject', subjects, x => x, x => x, 'Select subject');
+  if (subject) DOM.get('edit-subject').value = subject;
+}
+
+// ---------- end Edit Session Modal ----------
 
 window.addEventListener("load", start);
 
@@ -225,6 +247,104 @@ async function start() {
       DOM.get('subject-selection').disabled = true;
     });
 
-    // Initialize sessions and set up calendar
-    //Sessions.setupCalendar();
+    // Edit/ Delete buttons in the Session History table
+    // Delegate clicks for Edit/Delete in the Session History table body
+  DOM.delegate('sessionTable', 'click', 'button[data-action="delete"]', async (e, btn) => {
+    const id = btn.dataset.id;
+    if (!confirm('Delete this session?')) return;
+
+    // remove from DB + local cache
+    await Sessions.deleteSession(id);
+    // remove from view-model
+    Sessions.state.sessions = Sessions.state.sessions.filter(s => s.id !== id);
+    // re-render table
+    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+  });
+
+  DOM.delegate('sessionTable', 'click', 'button[data-action="edit"]', (e, btn) => {
+    const id = btn.dataset.id;
+    const s = Sessions.state.sessions.find(x => x.id === id);
+    if (!s) return;
+
+    // fill the form
+    DOM.get('edit-id').value = id;
+    fillEditSelects(s.studentId, s.tutorId, s.subject);
+    DOM.get('edit-date').value   = s.date;        // "YYYY-MM-DD"
+    DOM.get('edit-start').value  = s.startTime;   // "HH:MM"
+    DOM.get('edit-duration').value = s.duration;  // number
+    DOM.get('edit-status').value   = s.status;
+    DOM.get('edit-paid').checked   = !!s.paid;
+
+    openEditModal();
+  });
+
+  // When changing tutor in the edit modal, refresh subjects list
+  DOM.on('edit-tutor', 'change', () => {
+    const tutorId = DOM.get('edit-tutor').value;
+    const subjects = Tutors.subjectsFor(tutorId);
+    DOM.fillSelect('edit-subject', subjects, x => x, x => x, 'Select subject');
+  });
+
+  // Close modal
+  DOM.on('editCancel', 'click', closeEditModal);
+
+  // Save changes from the edit form
+  DOM.on('editSessionForm', 'submit', async (e) => {
+    e.preventDefault();
+
+    const id        = DOM.get('edit-id').value;
+    const studentId = DOM.get('edit-student').value;
+    const tutorId   = DOM.get('edit-tutor').value;
+    const subject   = DOM.get('edit-subject').value;
+    const dateStr   = DOM.get('edit-date').value;    // "YYYY-MM-DD"
+    const startStr  = DOM.get('edit-start').value;   // "HH:MM"
+    const durHours  = parseFloat(DOM.get('edit-duration').value);
+    const status    = DOM.get('edit-status').value;
+    const paid      = DOM.get('edit-paid').checked;
+
+    if (!id || !studentId || !tutorId || !subject || !dateStr || !startStr || isNaN(durHours)) {
+      alert('Please fill the whole form.');
+      return;
+    }
+
+    // Build JS Dates for start/end so Firestore stores Timestamps (via updateSession)
+    const [y,m,d] = dateStr.split('-').map(Number);
+    const [H,M]   = startStr.split(':').map(Number);
+    const startAt = new Date(y, m-1, d, H, M);
+    const endStr  = Sessions.computeEndTime(startStr, durHours);
+    const [eH, eM] = endStr.split(':').map(Number);
+    const endAt   = new Date(y, m-1, d, eH, eM);
+
+    // rate + total (based on tutor)
+    const tutor = Tutors.state.list.find(t => t.id === tutorId);
+    const rate  = Number(tutor?.rate || 0);
+    const total = Math.round(durHours * rate * 100) / 100;
+
+    // Persist to Firestore (this converts Dates -> Timestamps)
+    await Sessions.updateSession(id, {
+      studentId, tutorId, subject,
+      startAt, endAt, duration: durHours,
+      paid, status, rate, total
+    });
+
+    // Update our view-model (so we don't need to reload everything)
+    const studentName = Students.state.list.find(s => s.id === studentId)?.name || '—';
+    const tutorName   = Tutors.state.list.find(t => t.id === tutorId)?.name   || '—';
+    const vm = Sessions.state.sessions.find(s => s.id === id);
+    if (vm) {
+      vm.studentId = studentId; vm.tutorId = tutorId;
+      vm.studentName = studentName; vm.tutorName = tutorName;
+      vm.subject = subject;
+      vm.date = dateStr; vm.startTime = startStr; vm.endTime = endStr;
+      vm.duration = durHours; vm.paid = paid; vm.status = status;
+      vm.rate = rate; vm.total = total;
+    }
+
+    // Re-render
+    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+    closeEditModal();
+  });
+
+      // Initialize sessions and set up calendar
+      //Sessions.setupCalendar();
     }

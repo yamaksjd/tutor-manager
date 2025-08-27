@@ -208,6 +208,10 @@ export function rowsHTML(sessions) {
       <td>${s.paid ? 'Received' : 'Not Received'}</td>
       <td>${s.status}</td>
       <td>${fmtMoney(s.total)}</td>
+      <td>
+        <button data-action="edit"   data-id="${s.id}">Edit</button>
+        <button data-action="delete" data-id="${s.id}">Delete</button>
+      </td>
     </tr>
   `).join('');
 }
