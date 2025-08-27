@@ -14,69 +14,183 @@ export async function init() {
   return state.sessions;
 }
 // ---- helpers ----
+// Turn a raw session doc (from Firestore) into a "pretty" object the table expects.
 function normalize(raw) {
-  // Handle Timestamp or Date or string date/time
-  const start = tsToDate(raw.startAt) || mergeDateTimeStrings(raw.date, raw.startTime);
-  const end   = tsToDate(raw.endAt)   || (raw.endTime ? mergeDateTimeStrings(raw.date, raw.endTime) : null);
+  // 1) Figure out the start and end Date objects.
+  // Try multiple places because old docs might use different fields/types.
+  var start =
+    firstNonNullDate(raw.startAt, raw.startTime) ||
+    mergeDateAndTime(raw.date, raw.startTime);
 
-  // Accept ids or legacy names
-  const studentId = raw.studentId || null;
-  const tutorId   = raw.tutorId   || null;
+  var end =
+    firstNonNullDate(raw.endAt, raw.endTime) ||
+    mergeDateAndTime(raw.date, raw.endTime);
 
-  // If you only have names in old docs, keep them as fallback
-  const studentName =
-    findName(Students.list, studentId) || (typeof raw.student === 'string' ? raw.student : '—');
-  const tutorName =
-    findName(Tutors.list, tutorId) || (typeof raw.tutor === 'string' ? raw.tutor : '—');
+  // 2) Work out student/tutor IDs and names (support both new IDs and old name-only docs).
+  var studentId = raw.studentId ? raw.studentId : null;
+  var tutorId   = raw.tutorId   ? raw.tutorId   : null;
 
-  const duration = typeof raw.duration === 'number'
-    ? raw.duration
-    : (start && end ? Math.round((end - start) / 60000) / 60 : 0);
+  var studentName = findName(Students.list || Students.state?.list, studentId);
+  if (!studentName && typeof raw.student === 'string') studentName = raw.student;
+  if (!studentName) studentName = '—';
 
-  return {
+  var tutorName = findName(Tutors.list || Tutors.state?.list, tutorId);
+  if (!tutorName && typeof raw.tutor === 'string') tutorName = raw.tutor;
+  if (!tutorName) tutorName = '—';
+
+  // 3) Duration (hours). If not stored, compute from start/end.
+  var durationHours = 0;
+  if (typeof raw.duration === 'number') {
+    durationHours = raw.duration;
+  } else if (start && end) {
+    var minutes = Math.round((end - start) / 60000);
+    durationHours = minutes / 60;
+  }
+
+  // 4) Money and status fields with safe defaults.
+  var total = 0;
+  if (typeof raw.total === 'number') {
+    total = raw.total;
+  } else if (typeof raw.total === 'string' && raw.total.trim() !== '') {
+    total = parseFloat(raw.total);
+    if (isNaN(total)) total = 0;
+  }
+  var paid = Boolean(raw.paid);
+  var status = raw.status ? raw.status : "hasn't occurred yet";
+
+  // 5) Build the final object the table wants (strings for date/time).
+  var result = {
     id: raw.id,
-    studentId, tutorId,
-    studentName, tutorName,
-    subject: raw.subject ?? '—',
-    date: start ? fmtDate(start) : '—',
-    startTime: start ? fmtTime(start) : '—',
-    endTime: end ? fmtTime(end) : computeEndTimeFromDB(start ? fmtTime(start) : '00:00', duration),
-    duration,
-    paid: !!raw.paid,
-    status: raw.status || "hasn't occurred yet",
-    total: Number(raw.total ?? 0),
+    studentId: studentId,
+    tutorId: tutorId,
+    studentName: studentName,
+    tutorName: tutorName,
+    subject: (raw.subject != null ? raw.subject : '—'),
+    date: (start ? formatDateYYYYMMDD(start) : '—'),
+    startTime: (start ? formatTimeHHMM(start) : '—'),
+    endTime: (end ? formatTimeHHMM(end)
+                  : computeEndTime((start ? formatTimeHHMM(start) : '00:00'), durationHours)),
+    duration: durationHours,
+    paid: paid,
+    status: status,
+    total: total
   };
+
+  return result;
 }
 
-function tsToDate(v) {            // Firestore Timestamp -> Date
-  return v && typeof v.toDate === 'function' ? v.toDate() : (v instanceof Date ? v : null);
+// Return the first value that can be converted to a JS Date.
+// Tries: Firestore Timestamp -> Date, JS Date -> Date. Anything else returns null.
+function firstNonNullDate(value1, value2) {
+  var d;
+
+  d = toJsDate(value1);
+  if (d) return d;
+
+  d = toJsDate(value2);
+  if (d) return d;
+
+  return null;
 }
-function mergeDateTimeStrings(dateStr, timeStr) {
-  if (!dateStr || !timeStr) return null;
-  const [y,m,d] = dateStr.split('-').map(Number);
-  const [H,M]   = timeStr.split(':').map(Number);
-  return new Date(y, m - 1, d, H, M);
+
+// Convert Firestore Timestamp or JS Date to JS Date. Otherwise return null.
+function toJsDate(value) {
+  // Firestore Timestamp has a .toDate() function
+  if (value && typeof value.toDate === 'function') {
+    return value.toDate();
+  }
+  // Already a JS Date
+  if (value instanceof Date) {
+    return value;
+  }
+  return null;
 }
-function fmtDate(d) { // YYYY-MM-DD
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+
+// Combine a "date" value and a "time" value into one JS Date.
+// - dateVal can be Timestamp, Date, or "YYYY-MM-DD"
+// - timeVal can be Timestamp, Date, or "HH:MM"
+function mergeDateAndTime(dateVal, timeVal) {
+  if (!dateVal || !timeVal) return null;
+
+  // Get a base date (Y, M, D) from dateVal
+  var baseDate = toJsDate(dateVal);
+  if (!baseDate && typeof dateVal === 'string') {
+    var parts = dateVal.split('-');
+    if (parts.length === 3) {
+      var y = parseInt(parts[0], 10);
+      var m = parseInt(parts[1], 10);
+      var d = parseInt(parts[2], 10);
+      baseDate = new Date(y, m - 1, d, 0, 0);
+    }
+  }
+  if (!baseDate) return null;
+
+  // Get hours/minutes from timeVal
+  var H = 0, M = 0;
+  var timeAsDate = toJsDate(timeVal);
+  if (timeAsDate) {
+    H = timeAsDate.getHours();
+    M = timeAsDate.getMinutes();
+  } else if (typeof timeVal === 'string' && timeVal.indexOf(':') !== -1) {
+    var hm = timeVal.split(':');
+    H = parseInt(hm[0], 10) || 0;
+    M = parseInt(hm[1], 10) || 0;
+  } else {
+    return null;
+  }
+
+  // Build the final Date using base date + H:M
+  return new Date(
+    baseDate.getFullYear(),
+    baseDate.getMonth(),
+    baseDate.getDate(),
+    H,
+    M
+  );
 }
-function fmtTime(d) { // HH:MM
-  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+
+// Format a Date as "YYYY-MM-DD"
+function formatDateYYYYMMDD(d) {
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
 }
+
+// Format a Date as "HH:MM"
+function formatTimeHHMM(d) {
+  var H = String(d.getHours()).padStart(2, '0');
+  var M = String(d.getMinutes()).padStart(2, '0');
+  return H + ':' + M;
+}
+
+// Find a person's name by id in a list like [{id, name}, ...]
 function findName(list, id) {
-  if (!id) return null;
-  return list.find(x => x.id === id)?.name || null;
+  if (!Array.isArray(list) || !id) return null;
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    if (item && item.id === id) return item.name || null;
+  }
+  return null;
 }
-export function computeEndTimeFromDB(startHHMM, durationHours) {
-  const [h, m] = startHHMM.split(':').map(Number);
-  const start = h * 60 + m;
-  const end   = start + Math.round(durationHours * 60);
-  const eh = Math.floor(end / 60) % 24;
-  const em = end % 60;
-  return `${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`;
+
+// Given start time string "HH:MM" and duration in hours (number),
+// return the end time string "HH:MM". (Wraps past midnight if needed.)
+function computeEndTime(startHHMM, durationHours) {
+  if (!startHHMM || typeof durationHours !== 'number') return '00:00';
+
+  var parts = startHHMM.split(':');
+  var h = parseInt(parts[0], 10) || 0;
+  var m = parseInt(parts[1], 10) || 0;
+
+  var startMinutes = h * 60 + m;
+  var durationMinutes = Math.round(durationHours * 60);
+  var endMinutes = startMinutes + durationMinutes;
+
+  var endH = Math.floor(endMinutes / 60) % 24; // wrap after 24h
+  var endM = endMinutes % 60;
+
+  return String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
 }
 // ---------- end helpers ----------
 
