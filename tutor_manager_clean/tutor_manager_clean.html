@@ -240,59 +240,65 @@
     </div>
   </div>
 
-  <!-- Edit Session Modal -->
-   <!--
-<div id="editSessionModal" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:1000;">
-  <div style="background:#fff;padding:1rem;border-radius:.5rem;width:95%;max-width:520px;">
-    <h3 style="margin-top:0">Edit Session</h3>
-    <form id="editSessionForm">
-      <input type="hidden" id="edit-id">
+<!-- Edit Session Modal -->
+<!-- Edit Session Modal (reuses existing modal classes) -->
+<div id="editSessionModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Session</h3>
+      <ion-icon name="close-outline" class="close-modal" id="editCancel"></ion-icon>
+    </div>
 
-      <label>Student
-        <select id="edit-student" required autocomplete="off"></select>
-      </label>
+    <div class="modal-body">
+      <form id="editSessionForm">
+        <input type="hidden" id="edit-id">
 
-      <label>Tutor
-        <select id="edit-tutor" required autocomplete="off"></select>
-      </label>
-
-      <label>Subject
-        <select id="edit-subject" required autocomplete="off"></select>
-      </label>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.5rem;">
-        <label>Date
-          <input type="date" id="edit-date" required autocomplete="off">
+        <label>Student
+          <select id="edit-student" required autocomplete="off"></select>
         </label>
-        <label>Start
-          <input type="time" id="edit-start" required autocomplete="off">
+
+        <label>Tutor
+          <select id="edit-tutor" required autocomplete="off"></select>
         </label>
-      </div>
 
-      <label>Duration (hours)
-        <input type="number" id="edit-duration" step="0.25" min="0.25" required autocomplete="off">
-      </label>
+        <label>Subject
+          <select id="edit-subject" required autocomplete="off"></select>
+        </label>
 
-      <label>Status
-        <select id="edit-status">
-          <option value="hasn't occurred yet">hasn't occurred yet</option>
-          <option value="occurred">occurred</option>
-          <option value="cancelled">cancelled</option>
-        </select>
-      </label>
+        <div class="form-grid">
+          <label>Date
+            <input type="date" id="edit-date" required autocomplete="off">
+          </label>
+          <label>Start
+            <input type="time" id="edit-start" required autocomplete="off">
+          </label>
+        </div>
 
-      <label style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;">
-        <input type="checkbox" id="edit-paid"> Paid
-      </label>
+        <label>Duration (hours)
+          <input type="number" id="edit-duration" step="0.25" min="0.25" required autocomplete="off">
+        </label>
 
-      <div class="form-buttons" style="display:flex;gap:.75rem;margin-top:1rem;">
-        <button type="submit">Save</button>
-        <button type="button" id="editCancel">Cancel</button>
-      </div>
-    </form>
+        <label>Status
+          <select id="edit-status">
+            <option value="hasn't occurred yet">hasn't occurred yet</option>
+            <option value="occurred">occurred</option>
+            <option value="cancelled">cancelled</option>
+          </select>
+        </label>
+
+        <label style="display:inline-flex;align-items:center;gap:.5rem;">
+          <input type="checkbox" id="edit-paid"> Paid
+        </label>
+
+        <div class="form-buttons">
+          <button type="submit">Save</button>
+          <button type="button" id="editCancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
--->
+
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>

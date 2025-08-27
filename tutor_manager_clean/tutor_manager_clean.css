@@ -397,6 +397,50 @@ input[type="checkbox"]:hover {
   background-color: #2563eb;
 }
 
+/* Actions column width & layout */
+#home-view table th:last-child,
+#home-view table td:last-child {
+  width: 84px;            /* enough for two icons with gap */
+  text-align: center;
+  white-space: nowrap;
+}
+#home-view table td.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* Reusable tiny circular icon button */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition: background .15s ease, transform .06s ease;
+}
+.btn-icon ion-icon {
+  font-size: 18px;
+  color: var(--gray-700);
+  transition: color .15s ease, transform .06s ease;
+}
+
+/* Hover/active/focus states */
+.btn-icon:hover { background: var(--gray-100); }
+.btn-icon:active { transform: scale(.96); }
+.btn-icon:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
+/* Semantic color hints on hover */
+.btn-icon.edit:hover   ion-icon { color: var(--blue-600); }
+.btn-icon.delete:hover ion-icon { color: #ef4444; }
+
 
 /* VIEWS */
 .view {
@@ -492,6 +536,14 @@ input[type="checkbox"]:hover {
   width: 100%;
   margin: 0 auto;
 }
+
+/* Small grid inside modals for date & time pair */
+.modal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+
 
 /* ========== Truncated-cell tooltip ========== */
 .tooltip-bubble {

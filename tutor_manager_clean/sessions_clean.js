@@ -209,8 +209,12 @@ export function rowsHTML(sessions) {
       <td>${s.status}</td>
       <td>${fmtMoney(s.total)}</td>
       <td>
-        <button data-action="edit"   data-id="${s.id}">Edit</button>
-        <button data-action="delete" data-id="${s.id}">Delete</button>
+        <button class="btn-icon edit"   data-action="edit"   data-id="${s.id}" title="Edit session"   aria-label="Edit session">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+        <button class="btn-icon delete" data-action="delete" data-id="${s.id}" title="Delete session" aria-label="Delete session">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
       </td>
     </tr>
   `).join('');
