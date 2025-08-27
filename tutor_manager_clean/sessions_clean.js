@@ -69,7 +69,7 @@ function normalize(raw) {
     date: (start ? formatDateYYYYMMDD(start) : '—'),
     startTime: (start ? formatTimeHHMM(start) : '—'),
     endTime: (end ? formatTimeHHMM(end)
-                  : computeEndTime((start ? formatTimeHHMM(start) : '00:00'), durationHours)),
+                  : computeEndTimeDB((start ? formatTimeHHMM(start) : '00:00'), durationHours)),
     duration: durationHours,
     paid: paid,
     status: status,
@@ -176,7 +176,7 @@ function findName(list, id) {
 
 // Given start time string "HH:MM" and duration in hours (number),
 // return the end time string "HH:MM". (Wraps past midnight if needed.)
-function computeEndTime(startHHMM, durationHours) {
+function computeEndTimeDB(startHHMM, durationHours) {
   if (!startHHMM || typeof durationHours !== 'number') return '00:00';
 
   var parts = startHHMM.split(':');
