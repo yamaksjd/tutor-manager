@@ -246,7 +246,7 @@ async function start() {
       DOM.get('sessionForm').reset();
       DOM.get('subject-selection').disabled = true;
     });
-
+/*
     // Edit/ Delete buttons in the Session History table
     // Delegate clicks for Edit/Delete in the Session History table body
   DOM.delegate('sessionTable', 'click', 'button[data-action="delete"]', async (e, btn) => {
@@ -344,7 +344,7 @@ async function start() {
     DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
     closeEditModal();
   });
-
+*/
       // Initialize sessions and set up calendar
       //Sessions.setupCalendar();
     }
