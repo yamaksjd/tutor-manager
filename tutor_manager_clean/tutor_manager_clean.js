@@ -154,6 +154,19 @@ function fillEditSelects(studentId, tutorId, subject) {
 
 // ---------- end Edit Session Modal ----------
 
+function renderSessionsTable() {
+  DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+  renderSummary();
+}
+function renderSummary() {
+  const s = Sessions.summarize(Sessions.state.sessions);
+  DOM.get('totalHours').textContent        = s.hours;
+  DOM.get('totalAmount').textContent       = s.total.toFixed(2);
+  DOM.get('totalReceived').textContent     = s.received.toFixed(2);
+  DOM.get('totalNotReceived').textContent  = s.notReceived.toFixed(2);
+}
+
+
 window.addEventListener("load", start);
 
 async function start() {
@@ -180,7 +193,8 @@ async function start() {
     });
 
     // Render existing sessions table
-    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+    renderSessionsTable();
+
     bindTruncationTooltips();
 
 
@@ -241,7 +255,8 @@ async function start() {
       })(saved));
 
       // Re-render the table
-      DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+      renderSessionsTable();
+
       // Optionally reset the form
       DOM.get('sessionForm').reset();
       DOM.get('subject-selection').disabled = true;
@@ -258,7 +273,8 @@ async function start() {
     // remove from view-model
     Sessions.state.sessions = Sessions.state.sessions.filter(s => s.id !== id);
     // re-render table
-    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+    renderSessionsTable();
+
   });
 
   DOM.delegate('sessionTable', 'click', 'button[data-action="edit"]', (e, btn) => {
@@ -341,7 +357,8 @@ async function start() {
     }
 
     // Re-render
-    DOM.html('sessionTable', Sessions.rowsHTML(Sessions.state.sessions));
+    renderSessionsTable();
+
     closeEditModal();
   });
   // close handlers (works for both)
@@ -351,3 +368,4 @@ DOM.on('editCancelBtn', 'click', closeEditModal);
       // Initialize sessions and set up calendar
       //Sessions.setupCalendar();
     }
+    

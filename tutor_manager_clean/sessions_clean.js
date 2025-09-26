@@ -236,5 +236,30 @@ function fmtMoney(n) {
   return isFinite(v) ? v.toFixed(2) : '0.00';
 }
 
+// Sum totals for the summary panel (ignore cancelled sessions)
+export function summarize(list) {
+  let hours = 0, total = 0, received = 0, notReceived = 0;
+
+  for (const s of list) {
+    if (s.status === 'cancelled') continue;  // don't count cancelled
+    const h = Number(s.duration) || 0;
+    const amt = Number(s.total) || 0;
+
+    hours  += h;
+    total  += amt;
+    if (s.paid) received += amt; else notReceived += amt;
+  }
+
+  // keep clean 2-decimals for money (hours can be fractional)
+  const round2 = n => Math.round((n || 0) * 100) / 100;
+  return {
+    hours: round2(hours),
+    total: round2(total),
+    received: round2(received),
+    notReceived: round2(notReceived),
+  };
+}
+
+
 export { addSession, updateSession, deleteSession };
 

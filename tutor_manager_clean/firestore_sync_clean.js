@@ -138,9 +138,28 @@ export async function addSession(sessionObj) {
   return docRef.id;
 }
 export async function updateSession(id, updatedObj) {
-  sessions = sessions.map(s => s.id === id ? { ...s, ...updatedObj } : s);
-  await updateDoc(doc(db, "sessions", id), updatedObj);
+  const toSave = { ...updatedObj };
+
+  // JS Date -> Firestore Timestamp
+  if (toSave.startAt instanceof Date) {
+    toSave.startAt = Timestamp.fromDate(toSave.startAt);
+  }
+  if (toSave.endAt instanceof Date) {
+    toSave.endAt = Timestamp.fromDate(toSave.endAt);
+  }
+
+  // Make sure numeric fields are really numbers
+  if (toSave.duration != null) toSave.duration = Number(toSave.duration);
+  if (toSave.rate     != null) toSave.rate     = Number(toSave.rate);
+  if (toSave.total    != null) toSave.total    = Number(toSave.total);
+
+  // Update local cache (so UI is instant)
+  sessions = sessions.map(s => s.id === id ? { ...s, ...toSave } : s);
+
+  // Persist to Firestore
+  await updateDoc(doc(db, "sessions", id), toSave);
 }
+
 export async function deleteSession(id) {
   sessions = sessions.filter(s => s.id !== id);
   await deleteDoc(doc(db, "sessions", id));
